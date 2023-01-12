@@ -1,0 +1,159 @@
+body
+{
+    margin: 0;
+}
+.container
+{
+    width: 100vw;
+    height: 100vh;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    display:grid;
+    
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows:100px 1fr 1fr 100px;
+    gap:10px;
+    padding:10px;
+    box-sizing: border-box;
+}
+
+.container div{
+    padding:10px;
+    border: 1px solid #000000;
+}
+
+/*
+Header Anfang
+*/
+
+.header
+{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    background-color: green;
+}
+
+h1{
+    text-align: center;
+    
+}
+
+.navbar
+{
+    grid-column-start: 3;
+    grid-column-end: 4;
+    background-color: yellow;
+}
+.navbar ul {
+    display: flex;
+    flex-direction: row;
+  } 
+
+.navbar li {
+    list-style: none;
+    margin: center;
+    padding-left: 5%;
+    font-size: 1.5em;  
+  }
+  /*
+Header Ende
+*/
+
+ /*
+Game Anfang
+*/
+.content-game
+{
+    grid-row-start: 2;
+    grid-row-end: span 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    background-color: crimson;
+}
+ /*
+Game Ende
+*/
+
+ /*
+Player Anfang
+*/
+.content-player{
+    grid-column-start:3;
+    grid-column-end:4;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+    background-color: cyan;
+}
+ /*
+Player Ende
+*/
+
+ /*
+Buttons Anfang
+*/
+.content-buttons{
+    grid-column-start:3;
+    grid-column-end:4;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+    background-color: lightsalmon;
+}
+
+.button
+{
+    background-color: navy;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+}
+
+.button1 {
+    border-radius: 50px;
+    margin: 10% 0% 0% 35%;
+}
+.button2 
+{
+    border-radius: 50px;
+    margin-left:38%;
+    margin-top:5%;
+   
+}
+.button3 {
+    border-radius: 50px;
+    background-color: navy;
+    text-decoration: none;
+    color: white;
+}
+
+#link
+{
+    margin: 4% 0% 0% 27%;
+    display: inline-block;
+    font-size: 16px;
+}
+
+
+
+
+ /*
+Buttons Ende
+*/
+
+ /*
+Footer Anfang
+*/
+.footer{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    background-color: aqua;
+   
+}
+ /*
+Footer ende
+*/
