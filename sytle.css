@@ -1,6 +1,7 @@
 body
 {
     margin: 0;
+    background-color:#2f261e ;
 }
 .container
 {
@@ -17,10 +18,14 @@ body
     padding:10px;
     box-sizing: border-box;
 }
-
+/*
 .container div{
     padding:10px;
     border: 1px solid #000000;
+    border-radius: 50px;
+    border-width: 5px;
+    border-color: black;
+    box-shadow: 10px 5px 5px grey;
 }
 
 /*
@@ -36,6 +41,7 @@ Header Anfang
 
 h1{
     text-align: center;
+    color: white;
     
 }
 
@@ -101,7 +107,7 @@ Player Anfang
 
 #Players
 {
-    margin: 5% 0% 0% 20%;
+    margin: 7% 0% 0% 20%;
 }
 
 
