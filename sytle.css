@@ -85,6 +85,25 @@ Player Anfang
     grid-row-end: span 1;
     background-color: cyan;
 }
+
+.button_player{
+    background-color: navy;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 1% 0% 0% 10%;
+}
+
+#Players
+{
+    margin: 5% 0% 0% 20%;
+}
+
+
  /*
 Player Ende
 */
@@ -110,6 +129,7 @@ Buttons Anfang
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    
     
 }
 
