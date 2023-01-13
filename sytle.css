@@ -94,8 +94,9 @@ Player Anfang
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 1% 0% 0% 10%;
+    font-size: 10px;
+    margin: 1% 0% 0% 9%;
+    border-radius: 50px;
 }
 
 #Players
