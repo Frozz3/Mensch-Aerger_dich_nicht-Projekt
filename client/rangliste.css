@@ -1,0 +1,108 @@
+.grid-container-all {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-gap: 5px;
+  font-family: Sans-serif;
+}
+  
+.grid-stats {
+  border:black solid;
+  background-color: lightblue;
+  width: 40%;  
+  font-family: Sans-serif;
+  margin-left: 20%;
+  margin-bottom: 30%;
+}
+  
+.grid-rang {
+  border: black solid;
+  width: 40%;
+  font-family: Sans-serif;
+  margin-left: 10%;
+}
+
+.statsh2{
+  text-align: center;
+  border: solid black;
+  width: 60%;
+  margin-left: 17%;
+}
+.rangh2{
+  text-align: center;
+  border: solid black;
+  width: 60%;
+  margin-left: 17%;
+}
+p{
+  border: black solid;
+}
+.siege{
+  text-align: center;
+}
+.benutzer{
+  text-align: center;
+}
+td
+{
+  
+  width: 20%;
+  text-align: center;
+}
+th
+{
+  border: solid black;
+  width: 30%;
+}
+.grid-stats2
+{
+  border:black solid;
+  background-color: lightblue;
+  width: 60%;  
+  font-family: Sans-serif;
+  margin-left: 10%;
+  margin-top: -31%;
+  padding-bottom: 50%;
+}
+.gewonnen
+{
+  padding-top:20%;
+  margin-right: 10%;
+  padding-left: 25%;
+  font-size: larger;
+}
+.gewanz
+{
+  padding-top:20%;
+  font-size: larger;
+}
+.verloren
+{
+  padding-top:20%;
+  margin-right: 10%;
+  padding-left: 25%;
+  font-size: larger;
+}
+.verlanz
+{
+  padding-top:20%;
+  font-size: larger;
+}
+.auto {
+  background: lightblue;
+  height: 220px;
+  overflow: auto;
+  width: 370px;
+  border: solid #000;
+  padding: 10px;
+  margin-left: -82%;
+  margin-top: 10%;
+  }
+.auto2{
+ 
+  height: 220px;
+  overflow: auto;
+  width: 285px;
+  padding: 10px;
+  margin-top: 10%;
+  margin-left:10%;
+  }
