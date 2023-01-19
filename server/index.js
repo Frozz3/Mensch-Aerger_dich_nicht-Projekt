@@ -26,14 +26,14 @@ const io = new Server(server);
 const rooms = {};
 
 app.get('/', (req, res) => {
-   __dirname = "/../client/"
-   res.sendFile(__dirname + 'index.js');
+   //var path = require('path');
+   res.sendFile('index.html',{ root: "../client/"});
 });
 
 app.get('/game/:id2', (req, res) => {
    //console.log('GET-request with parameter:' + req.params.id2)
    //roomid = req.params.id
-   res.sendFile(__dirname + '/index.html',);
+   res.sendFile('/index.html',{ root: "../client/"});
 });
 
 
