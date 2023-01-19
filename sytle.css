@@ -81,6 +81,8 @@ Game Anfang
     grid-column-start: 1;
     grid-column-end: 3;
     background-color: crimson;
+    border-top: solid;
+    border-top-color: white;
 }
  /*
 Game Ende
