@@ -25,9 +25,11 @@ const io = new Server(server);
 
 const rooms = {};
 
+app.use(express.static('../client'))
+
 app.get('/', (req, res) => {
    //var path = require('path');
-   res.sendFile('index.html',{ root: "../client/"});
+   res.sendFile('index.html',{ root: "::/client/"});
 });
 
 app.get('/game/:id2', (req, res) => {
