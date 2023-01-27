@@ -24,18 +24,19 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 const rooms = {};
+const users = {};
 
-app.use(express.static('../client'))
+//app.use(express.static('../client'))
 
 app.get('/', (req, res) => {
    //var path = require('path');
-   res.sendFile('index.html',{ root: "::/client/"});
+   res.sendFile(__dirname + '/index.html',);
 });
 
 app.get('/game/:id2', (req, res) => {
    //console.log('GET-request with parameter:' + req.params.id2)
    //roomid = req.params.id
-   res.sendFile('/index.html',{ root: "../client/"});
+   res.sendFile('/index.html', { root: "../client/" });
 });
 
 
@@ -66,12 +67,12 @@ io.use((socket, next) => {
 
             } while (existing);
             let conn1 = await pool.getConnection();
-               const res1 = await conn1.query(
-                  "INSERT INTO users (id) VALUES (0x"+ authenticationId +")"
-               );
-               //OkPacket { affectedRows: 1, insertId: 0n, warningStatus: 0 }
-               
-               console.log('Inserted authenticationId in DB');
+            const res1 = await conn1.query(
+               "INSERT INTO users (id) VALUES (0x" + authenticationId + ")"
+            );
+            //OkPacket { affectedRows: 1, insertId: 0n, warningStatus: 0 }
+
+            console.log('Inserted authenticationId in DB');
 
             socket.emit('new authenticationId', authenticationId);
             console.log("new authenticationId: " + authenticationId);
@@ -89,8 +90,16 @@ io.use((socket, next) => {
       next();
    }
 })
+io.use((socket, next) => {
+   console.log('sockedID Middelwear: ' + socket.id);
+   if (users[socket.data.id]) {
+      
+   }
+   next();
+})
    .on('connection', (socket) => {
 
+      console.log('sockedID connection: ' + socket.id);
       let currentRoomId;
       console.log(socket.data.id + ' user connected ');
       //io.emit('info update', user);
@@ -124,7 +133,7 @@ io.use((socket, next) => {
                } while (existing);
                let conn1 = await pool.getConnection();
                const res1 = await conn1.query(
-                  "INSERT INTO users (id) VALUES (0x"+ authenticationId +")"
+                  "INSERT INTO users (id) VALUES (0x" + authenticationId + ")"
                );
 
                //OkPacket { affectedRows: 1, insertId: 0n, warningStatus: 0 }
