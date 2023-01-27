@@ -3,10 +3,18 @@ http://localhost:3000
 http://localhost:3000/?game=
 */
 
-global.crypto = require('crypto');
+//aktiv socket management
+import { EventEmitter } from 'node:events';
+class MyEmitter extends EventEmitter { };
+
+//id generating
+import { v1 as uuid } from 'uuid';
+//const { createHmac } = await import('node:crypto');
+//global.crypto = require('crypto');
 
 //DB
-const mariadb = require('mariadb');
+import * as mariadb from 'mariadb';
+//const mariadb = require('mariadb');
 const pool = mariadb.createPool({
    host: 'localhost',
    user: 'root',
@@ -14,13 +22,22 @@ const pool = mariadb.createPool({
    connectionLimit: 5
 });
 
+// generatin __dirname for modules
+import * as url from 'url';
+    const __filename = url.fileURLToPath(import.meta.url);
+    const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
 // server 
-const { on } = require('events');
-const express = require('express');
+//const { on } = require('events');
+import { on } from 'events';
+//const express = require('express');
+import express from 'express';
 const app = express();
-const http = require('http');
+//const http = require('http');
+import * as http from 'http';
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+//const { Server } = require("socket.io");
+import {Server} from 'socket.io';
 const io = new Server(server);
 
 const rooms = {};
@@ -36,8 +53,7 @@ app.get('/', (req, res) => {
 app.get('/game/:id2', (req, res) => {
    //console.log('GET-request with parameter:' + req.params.id2)
    //roomid = req.params.id
-   res.sendFile('/index.html', { root: "../client/" });
-});
+   res.sendFile(__dirname + '/index.html',)});
 
 
 
@@ -53,8 +69,7 @@ io.use((socket, next) => {
             conn = await pool.getConnection();
             let existing = false;
             do {
-
-               authenticationId = crypto.randomUUID();
+               authenticationId = uuid();
                authenticationId = authenticationId.replace(/-/g, '')
                console.log('Id: ' + authenticationId);
 
@@ -92,9 +107,7 @@ io.use((socket, next) => {
 })
 io.use((socket, next) => {
    console.log('sockedID Middelwear: ' + socket.id);
-   if (users[socket.data.id]) {
-      
-   }
+   //myEmitter.emit('event ' + socket.data.id);
    next();
 })
    .on('connection', (socket) => {
@@ -104,6 +117,12 @@ io.use((socket, next) => {
       console.log(socket.data.id + ' user connected ');
       //io.emit('info update', user);
 
+      //aktiv socket management
+      /*
+      myEmitter.on('event ' + socket.data.id, () => {
+         console.log(socket.data.id + ' an event occurred!');
+      });
+      */
 
       //authentication
 
@@ -227,7 +246,7 @@ io.use((socket, next) => {
          //create room
          let tempRoomID
          do {
-            tempRoomID = crypto.randomUUID();
+            tempRoomID = uuid();
             tempRoomID = tempRoomID.replace(/-/g, '');
             tempRoomID = tempRoomID.slice(0, 8)
          } while (rooms[tempRoomID]);
