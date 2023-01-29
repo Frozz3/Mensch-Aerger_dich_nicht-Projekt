@@ -102,54 +102,51 @@
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        'use strict'
 
 
-        var info = document.getElementById('info');
-        var clients = document.getElementById('clients');
-        var msgForm = document.getElementById('form1');
-        var msgInput = document.getElementById('input1');
-        var roomForm = document.getElementById('form2');
-        var roomInput = document.getElementById('input2');
-        var sendMessage = document.getElementById('sendMessage');
-        var enterRoom = document.getElementById('enterRoom');
-        var createRoom = document.getElementById('createRoom');
+        const info = document.getElementById('info');
+        const clients = document.getElementById('clients');
+        const msgForm = document.getElementById('form1');
+        const msgInput = document.getElementById('input1');
+        const roomForm = document.getElementById('form2');
+        const roomInput = document.getElementById('input2');
+        const sendMessage = document.getElementById('sendMessage');
+        const enterRoom = document.getElementById('enterRoom');
+        const createRoom = document.getElementById('createRoom');
 
         //authentication
 
-        authenticationId = localStorage.getItem('authId');
+        let authenticationId = localStorage.getItem('authId');
 
-        var socket = io({ auth: { token: authenticationId } });
+        const socket = io({ auth: { token: authenticationId } });
 
-        socket.on('new authenticationId', function (authenticationId) {
-            console.log("authenticationId saved: " + authenticationId);
+        socket.on('newAuthenticationId', function (authenticationId) {
+            console.log("newAuthenticationId saved: " + authenticationId);
             localStorage.setItem('authId', authenticationId);
-        });
-        socket.emit('request authenticationId');
-        //handle pathname
+        })
 
-        pathnameArr = window.location.pathname.split("/");
-        roomid = pathnameArr[pathnameArr.length - 1];
-        if (roomid) {
-            socket.emit('change room', roomid);
-            console.log('roomid: ' + roomid);
+        const pathNames = window.location.pathname.split("/");
+        const roomId = pathNames[pathNames.length - 1];
+
+        if (roomId) {
+            socket.emit('joinRoom', roomId);
+            console.log('joining Room: ', roomId);
         }
 
         //messages
-
         sendMessage.addEventListener('click', function (e) {
             e.preventDefault();
             if (msgInput.value) {
-                socket.emit('chat message', msgInput.value);
+                socket.emit('chatMessage', msgInput.value);
                 msgInput.value = '';
             }
         });
 
-        socket.on('chat message', function (msg) {
-            var item = document.createElement('li');
+        socket.on('chatMessage', function (msg) {
+            let item = document.createElement('li');
             item.textContent = msg;
-            //messages.appendChild(item);
             messages.insertAdjacentElement('afterbegin', item);
-            //window.scrollTo(0, document.body.scrollHeight);
         });
 
 
@@ -157,41 +154,51 @@
         //Rooms
 
         enterRoom.addEventListener('click', function (e) {
+            const roomInputValue = roomInput.value;
+
             e.preventDefault();
-            if (roomInput.value) {
-                socket.emit('change room', roomInput.value);
+            if (roomInputValue) {
+                socket.emit('joinRoom', roomInputValue);
                 roomInput.value = '';
             }
         });
 
         createRoom.addEventListener('click', function (e) {
             e.preventDefault();
-            socket.emit('create room', '');
+            socket.emit('createRoom', null);
         });
 
-        socket.on('info update', function (msgs) {
-            console.log('info update');
-            console.log(history);
-            history.replaceState({}, null, 'http://localhost:3000/game/' + msgs[0]);
-            console.log(history);
-            info.textContent = '';
-            var item = document.createElement('a');
+        socket.on('update', function (msgs) {
+            
+            console.log('update');
+            console.table(msgs);
+
+            let _item = document.createElement('a');
+            _item.textContent = `http://localhost:3000/game/` + msgs[0];
+            info.appendChild(_item);
+            
+            history.replaceState({}, null, `http://localhost:3000/game/${msgs[0]}`);
+
+            /*
+            let _item = document.createElement('a');
+
             item.textContent = 'http://localhost:3000/game/' + msgs[0];
             info.appendChild(item);
-            for (var msg in msgs[1]) {
-                var item1 = document.createElement('li');
+            for (let msg in msgs[1]) {
+                let item1 = document.createElement('li');
                 item1.textContent = '> ' + msg + ':';
                 info.appendChild(item1);
-                var item2 = document.createElement('li');
+                let item2 = document.createElement('li');
                 item2.textContent = '>> [' + msgs[1][msg] + ']';
                 info.appendChild(item2);
             };
             var item = document.createElement('li');
             item.textContent = '->' + socket.id;
             info.appendChild(item);
+            */
         });
 
-        socket.on('change site', function (msg) {
+        socket.on('changeSite', function (msg) {
             socket = io('http://localhost:3000/' + msg)
         });
     </script>

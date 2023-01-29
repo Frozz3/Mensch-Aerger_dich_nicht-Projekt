@@ -23,10 +23,6 @@ const server = http.createServer(app);
 import { Server } from 'socket.io';
 const io = new Server(server);
 
-const rooms = {};
-const users = {};
-const sockets = {};
-
 app.get('/', (req, res) => {
    res.sendFile(__dirname + '/index.html',);
 });
@@ -35,102 +31,69 @@ app.get('/game/:id2', (req, res) => {
    res.sendFile(__dirname + '/index.html',)
 });
 
-io.use(async (socket, next) => {
-   console.log(socket.id + ' sent authenticationID: ' + socket.handshake.auth.token);
+const rooms = {};
+const users = {};
+const sockets = {};
 
-   console.log("Token:", socket.handshake.auth);
+//middleware
+io.use(async (socket, next) => {
+   console.log(socket.id + ' is logging in with ' + socket.handshake.auth.token);
 
    if (socket.handshake.auth.token == null) {
 
-      let authenticationId
+      const authenticationId = uuid();
 
-      try {
+      await pool.query("INSERT INTO users (id) VALUES (?)", [authenticationId]);
 
-         let existing = false;
-         do {
-            authenticationId = uuid();
-            authenticationId = authenticationId.replace(/-/g, '')
-            console.log('Id: ' + authenticationId);
 
-            const res = await pool.query("SELECT COUNT(*) AS existing FROM users where id = ? ", [`0x${authenticationId}`]);
-            
-            existing = (res[0].existing != 0n); // 0n == bigint
-            console.log("existing: " + existing); // 0n == bigint
+      socket.emit('newAuthenticationId', authenticationId);
+      console.log("newAuthenticationId: " + authenticationId);
 
-         } while (existing);
-
-         await pool.query("INSERT INTO users (id) VALUES (?)", [`0x${authenticationId}`]);
-
-         console.log('Inserted authenticationId in DB');
-
-         socket.emit('new authenticationId', authenticationId);
-         console.log("new authenticationId: " + authenticationId);
-         socket.data.id = authenticationId;
-         next();
-      } catch (err) {
-         throw err;
-      }
+      socket.data.authenticationId = authenticationId;
+      next();
 
    } else {
-      // need error catch
-      socket.data.id = socket.handshake.auth.token;
+      socket.data.authenticationId = socket.handshake.auth.token;
       next();
    }
 })
 
 io.on('connection', async (socket) => {
+   console.log(`new connection with id ${socket.id} and auth ${socket.data.authenticationId}`);
 
-   console.log('sockedID connection: ' + socket.id);
+   //jede connection ist eine neue socket.id
+
+   const userId = `${socket.data.authenticationId}${socket.id}`;
    let currentRoomId;
-   console.log(socket.data.id + ' user connected ');
 
    //messages
-   socket.on('chat message', (msg) => {
-      console.log(socket.data.id + ' message: ' + msg);
+   socket.on('chatMessage', (msg) => {
+      console.log(socket.id + ' message: ' + msg);
+
       if (currentRoomId) {
-         io.to(currentRoomId).emit('chat message', msg);
+         //send message to all users in room
+         io.to(currentRoomId).emit('chatMessage', msg);
       }
 
 
    });
 
    //room
-   socket.on('change room', (roomid) => {
 
-      console.log(socket.data.id + ' trys to access room: ' + roomid)
-      // check if room exists or is the one the user is in
-      if (rooms[roomid] && (roomid != currentRoomId)) {
-         //leave old room
-         if (rooms[currentRoomId]) {
-            rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(socket.data.id), 1)
-            socket.leave(currentRoomId);
-            // splice old room if empty
-            if (rooms[currentRoomId].users.length === 0) {
-               delete rooms[currentRoomId];
-            }
-         }
-         console.log(socket.data.id + ' change room form ' + currentRoomId + ' to ' + roomid)
-         // enter room
-         currentRoomId = roomid;
-         rooms[currentRoomId].users.push(socket.data.id);
-         socket.join(currentRoomId);
-         console.log('corrent room object: ' + JSON.stringify(rooms))
+   socket.on('createRoom', () => {
 
-         // send info update
-         io.to(currentRoomId).emit('info update', [currentRoomId, rooms[currentRoomId]]);
-      }
-   });
-
-   socket.on('create room', () => {
-      //leave old room
       if (rooms[currentRoomId]) {
-         rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(socket.data.id), 1)
+         //if user is already in a room, leave that one
+
+         rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(userId), 1)
          socket.leave(currentRoomId);
+
          // remove old room if empty
          if (rooms[currentRoomId].users.length === 0) {
             delete rooms[currentRoomId];
          }
-         io.to(currentRoomId).emit('info update', [currentRoomId, rooms[currentRoomId]]);
+
+         io.to(currentRoomId).emit('update', [currentRoomId, rooms[currentRoomId]]);
       }
 
       //create room
@@ -143,33 +106,66 @@ io.on('connection', async (socket) => {
       } while (rooms[tempRoomID]);
       currentRoomId = tempRoomID;
 
-      rooms[currentRoomId] = { users: [], messages: ["test1", "test2"] };
+      rooms[currentRoomId] = { users: [] };
 
-      // enter room
-      rooms[currentRoomId].users.push(socket.data.id);
+      // add user to room and join
+      rooms[currentRoomId].users.push(userId);
       socket.join(currentRoomId);
-      console.log(socket.data.id + 'created room object: ')
-      console.log(rooms);
 
-      // send info update
-      io.to(currentRoomId).emit('info update', [currentRoomId, rooms[currentRoomId]]);
+      console.log(`${userId} created and joined room ${currentRoomId}`)
+
+      io.to(currentRoomId).emit('update', [currentRoomId, rooms[currentRoomId]]);
+   });
+
+
+   socket.on('joinRoom', (roomid) => {
+
+      console.log(`${userId} is joining room ${roomid}`);
+
+      // check if room exists or is the one the user is in
+      if (rooms[roomid] && (roomid != currentRoomId)) {
+
+         //leave old room
+         if (rooms[currentRoomId]) {
+
+            rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(userId), 1)
+            socket.leave(currentRoomId);
+
+            // remove old room if empty
+            if (rooms[currentRoomId].users.length === 0) {
+               delete rooms[currentRoomId];
+            }
+
+            io.to(currentRoomId).emit('update', [currentRoomId, rooms[currentRoomId]]);
+         }
+
+         console.log(`${userId} is traveling to ${roomid}`);
+
+         currentRoomId = roomid;
+         rooms[currentRoomId].users.push(userId);
+
+         socket.join(currentRoomId);
+
+         // send info update
+         io.to(currentRoomId).emit('update', [currentRoomId, rooms[currentRoomId]]);
+      }
    });
 
    socket.on('disconnect', () => {
-      console.log(socket.data.id + ' user disconnected');
+      console.log(`${userId} disconnected`);
 
       //leave old room
       if (rooms[currentRoomId]) {
-         rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(socket.data.id), 1);
 
-         console.log(rooms[currentRoomId].users.length + ' left in room: ' + currentRoomId);
-         console.log(JSON.stringify(rooms[currentRoomId]));
-         // splice old room if empty
+         rooms[currentRoomId].users.splice(rooms[currentRoomId].users.indexOf(userId), 1)
+         socket.leave(currentRoomId);
+
+         // remove old room if empty
          if (rooms[currentRoomId].users.length === 0) {
             delete rooms[currentRoomId];
          }
-         // send info update
-         io.to(currentRoomId).emit('info update', [currentRoomId, rooms[currentRoomId]]);
+
+         io.to(currentRoomId).emit('update', [currentRoomId, rooms[currentRoomId]]);
       }
    });
 });
