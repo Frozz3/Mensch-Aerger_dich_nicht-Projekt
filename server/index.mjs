@@ -1,5 +1,8 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid'; joinRoom
 import * as mariadb from 'mariadb';
+
+import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
+import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 
 const pool = mariadb.createPool({
    host: 'localhost',
@@ -21,18 +24,23 @@ import * as http from 'http';
 const server = http.createServer(app);
 
 import { Server } from 'socket.io';
-import { count } from 'console';
 const io = new Server(server);
 
+const rooms = {};
+
+//routing
+
+app.use(express.static(__dirname + 'public'));
+
 app.get('/', (req, res) => {
-   res.sendFile(__dirname + '/index.html',);
+   //res.sendFile(__dirname + '/index.html',);
+   res.sendFile(__dirname + 'index.html',);
 });
 
 app.get('/game/:id2', (req, res) => {
    res.sendFile(__dirname + '/index.html',)
 });
 
-const rooms = {};
 
 //middleware
 io.use(async (socket, next) => {
@@ -46,8 +54,8 @@ io.use(async (socket, next) => {
       next();
 
    } else {
-      
-      const authIdOk = checkAuthId(socket.handshake.auth.token);
+
+      const authIdOk = checkAuthId(socket.handshake.auth.token, pool);
       if (!authIdOk) {
          console.log(`${socket.id} wrong authenticationId`)
          next(new Error("wrong authenticationId"));
@@ -80,12 +88,12 @@ io.on('connection', async (socket) => {
 
       //leave old room
       if (rooms[currentRoomId]) {
-         leaveRoom(currentRoomId, userId, io, socket);
+         leaveRoom(rooms, currentRoomId, userId, io, socket);
       }
 
-      let newRoomId = createRoom();
+      let newRoomId = createRoom(rooms);
 
-      joinRoom(newRoomId, userId, io, socket);
+      joinRoom(rooms, newRoomId, userId, io, socket);
       currentRoomId = newRoomId;
       console.log(`${userId} created and joined room ${currentRoomId}`);
    });
@@ -100,13 +108,13 @@ io.on('connection', async (socket) => {
 
          //leave old room
          if (rooms[currentRoomId]) {
-            leaveRoom(currentRoomId, userId, io, socket);
+            leaveRoom(rooms, currentRoomId, userId, io, socket);
          }
       } else {
-         createRoom(roomid);
+         createRoom(rooms,roomid);
       }
       currentRoomId = roomid;
-      joinRoom(currentRoomId, userId, io, socket);
+      joinRoom(rooms, currentRoomId, userId, io, socket);
    });
 
    socket.on('disconnect', () => {
@@ -114,80 +122,10 @@ io.on('connection', async (socket) => {
 
       //leave old room
       if (rooms[currentRoomId]) {
-         leaveRoom(currentRoomId, userId, io, socket);
+         leaveRoom(rooms, currentRoomId, userId, io, socket);
       }
    });
 });
-
-//room funktions
-function leaveRoom(roomId, userId, io, socket) {
-   rooms[roomId].users.splice(rooms[roomId].users.indexOf(userId), 1)
-   socket.leave(roomId);
-
-   console.log(`${userId} left room ${roomId}`);
-
-   // remove old room if empty
-   if (rooms[roomId].users.length === 0) {
-      delete rooms[roomId];
-      console.log(`room delete ${roomId}`);
-   }
-
-   io.to(roomId).emit('update', [roomId, rooms[roomId]]);
-}
-
-function createRoom(roomId) {
-   if (!roomId) {
-      //find unused roomId
-      let newRoomId
-      do {
-         newRoomId = uuid();
-         newRoomId = newRoomId.replace(/-/g, '');
-         newRoomId = newRoomId.slice(0, 5);
-
-      } while (rooms[newRoomId]);
-      roomId = newRoomId;
-   }
-   rooms[roomId] = { users: [] };
-   console.log(`room created ${roomId}`);
-   return roomId
-}
-
-function joinRoom(roomId, userId, io, socket) {
-
-   rooms[roomId].users.push(userId);
-   socket.join(roomId);
-   io.to(roomId).emit('update', [roomId, rooms[roomId]]);
-   console.log(`${userId} joined room ${roomId}`);
-}
-
-//auth funktions
-
-async function findUnusedAuthId(pool) {
-
-   let authenticationId;
-   let resultCount
-   do {
-      authenticationId = uuid();
-      const result = await pool.query("SELECT COUNT(id) as count FROM users WHERE id = (?);", [authenticationId]);
-      resultCount = result[0].count;
-
-   } while (resultCount != 0n);
-   console.log(`authId found ${authenticationId}`)
-   return authenticationId;
-}
-
-async function addAuthId(authenticationId, pool, socket) {
-   await pool.query("INSERT INTO users (id) VALUES (?)", [authenticationId]);
-   await socket.emit('newAuthenticationId', authenticationId);
-   console.log(`${socket.id} got new AuthenticationId: ${authenticationId}`);
-   socket.data.authenticationId = authenticationId;
-}
-
-async function checkAuthId(authenticationId){
-   const result = await pool.query("SELECT COUNT(id) as count FROM users WHERE id = (?);", [authenticationId]);
-   let resultCount = result[0].count;
-   return !(resultCount == 0n)
-}
 
 server.listen(3000, () => {
    console.log('listening on *:3000');
