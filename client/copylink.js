@@ -1,6 +1,6 @@
 function myFunction() {
    
-    var copyText = document.getElementById("link");
+    var copyText = document.getElementById("roomLink");
   
    
     copyText.select();
