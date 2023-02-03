@@ -75,15 +75,16 @@ socket.on('update', (msgs) => {
 });
 
 // reenter room
-const pathNames = window.location.pathname.split("game/");
-console.log(`parts of url url: '${pathNames}'`);
-const roomId = pathNames[pathNames.length - 1].slice(0,5);
+
+//pathNames[1].slice(0,5);
+let roomIdRegex = "/game\/([0-9a-f]{5})";
+const roomId = window.location.pathname.match(roomIdRegex);
 console.log(`rommId from url: '${roomId}'`);
 
-if (roomId || (roomId != "")) {
-    socket.emit('joinRoom', roomId);
+if (roomId) {
+    socket.emit('joinRoom', roomId[1]);
 
-    console.log('try joining Room:', roomId);
+    console.log('try joining Room:', roomId[1]);
 } else {
     socket.emit('createRoom');
     console.log('try createRoom');

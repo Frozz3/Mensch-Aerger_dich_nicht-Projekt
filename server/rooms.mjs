@@ -15,9 +15,9 @@ export function leaveRoom(rooms, roomId, userId, io, socket) {
          console.log(`check if time changed: '${rooms[roomId].emptySince}' and room is empty '${rooms[roomId].users.length}'`);
          if ((rooms[roomId].emptySince == emptySince) && (rooms[roomId].users.length === 0)) {
             delete rooms[roomId];
-            console.log(`${roomId}room delete`);
+            console.log(`${roomId} room delete`);
          }else{
-            console.log(`${roomId}rooms kept alive`)
+            console.log(`${roomId} rooms kept alive`)
          }
       }, 1000);
    }
@@ -42,10 +42,17 @@ export function createRoom(rooms, roomId) {
 }
 
 export function joinRoom(rooms, roomId, userId, io, socket) {
-
+   console.log(`check if room is full: ${rooms[roomId].users.length}`)
+   if (rooms[roomId].users.length >= 4){
+      
+      console.log(`${userId} did not join room ${roomId} because it was full: ${rooms[roomId].users.length}`);
+      // send to client
+      return false;
+   }
    rooms[roomId].users.push(userId);
    socket.join(roomId);
    io.to(roomId).emit('update', [roomId, rooms[roomId]]);
    console.log(`${userId} joined room ${roomId}`);
+   return true
 }
 
