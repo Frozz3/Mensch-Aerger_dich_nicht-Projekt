@@ -65,7 +65,6 @@ createRoom.addEventListener('click', function (e) {
 socket.on('update', (msgs) => {
 
     console.log('update');
-    console.table(msgs);
 
     if (infoUrl.getAttribute('value') != `http://localhost:3000/game/` + msgs[0]) {
 
@@ -76,8 +75,9 @@ socket.on('update', (msgs) => {
 });
 
 // reenter room
-const pathNames = window.location.pathname.split("/");
-const roomId = pathNames[pathNames.length - 1];
+const pathNames = window.location.pathname.split("game/");
+console.log(`parts of url url: '${pathNames}'`);
+const roomId = pathNames[pathNames.length - 1].slice(0,5);
 console.log(`rommId from url: '${roomId}'`);
 
 if (roomId || (roomId != "")) {

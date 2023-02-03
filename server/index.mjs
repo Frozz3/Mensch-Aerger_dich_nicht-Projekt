@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import * as mariadb from 'mariadb';
 import * as path from 'path';
 
@@ -57,12 +56,11 @@ io.use(async (socket, next) => {
 
    } else {
 
-      const authIdOk = await checkAuthId(socket.handshake.auth.token, pool);
+      const authIdOk = await checkAuthId(socket.handshake.auth.token, pool, socket);
       if (!authIdOk) {
          console.log(`${socket.id} wrong authenticationId`);
          next(new Error("wrong authenticationId"));
       } else {
-         socket.data.authenticationId = socket.handshake.auth.token;
          next();
       }
    }
