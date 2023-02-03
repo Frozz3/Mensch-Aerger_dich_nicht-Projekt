@@ -1,9 +1,7 @@
 //import { url } from "inspector";
 
-const info = document.getElementById('info');
 const infoUrl = document.getElementById('roomLink');
-console.log(infoUrl)
-const clients = document.getElementById('clients');
+const playerNames = document.getElementsByClassName('playerName')
 const msgForm = document.getElementById('form1');
 const msgInput = document.getElementById('input1');
 const roomForm = document.getElementById('form2');
@@ -16,6 +14,10 @@ const createRoom = document.getElementById('createRoom');
 let authenticationId = localStorage.getItem('authId');
 
 const socket = io({ auth: { token: authenticationId } });
+
+socket.on("connect", () => {
+    console.log(`socketId: ${socket.id}`);
+});
 
 socket.on("connect_error", (err) => {
     console.log("connection error");
@@ -70,6 +72,13 @@ socket.on('update', (msgs) => {
 
         infoUrl.setAttribute('value', `http://localhost:3000/game/` + msgs[0]);
         history.replaceState({}, null, `http://localhost:3000/game/${msgs[0]}`);
+    }
+    
+    for (let index = 0; index < msgs[1].users.length; index++) {
+        playerNames[index].setAttribute('value', msgs[1].users[index]);
+        if (socket.id == msgs[1].users[index]){
+            playerNames[index].setAttribute("style", 'background: #37d037')
+        }
     }
     console.table(msgs);
 });
