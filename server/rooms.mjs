@@ -46,7 +46,7 @@ export function joinRoom(rooms, roomId, userId, io, socket) {
    if (rooms[roomId].users.length >= 4){
       
       console.log(`${userId} did not join room ${roomId} because it was full: ${rooms[roomId].users.length}`);
-      // send to client
+      socket.emit('error', "room full")
       return false;
    }
    rooms[roomId].users.push(userId);
