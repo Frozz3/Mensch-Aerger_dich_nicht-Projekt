@@ -53,8 +53,10 @@ socket.on('update', (msgs) => {
 });
 
 //error
-socket.on('error', (msg) => {
+socket.on('error', (msg,data) => {
     console.log(`error message: ${msg}`);
+    console.log(data);
+    alert(`error message: ${msg}`);
 });
 
 // reenter room
