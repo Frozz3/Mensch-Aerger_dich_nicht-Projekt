@@ -9,6 +9,7 @@
     <title>Startseite</title>
     <script language="javascript" type="text/javascript" src="copylink.js"></script>
     <script language="javascript" type="text/javascript" src="change.js"></script>
+    
 </head>
 
 <body>
@@ -26,16 +27,16 @@
             <script></script>
         </div>
         <div class="content-player">
-            <input type="text" value="" readonly id="Players">
+            <input type="text" value="" readonly id="Players" class="playerName">
             <button id="button_ready" value="true" onclick="toggleText(this)" class="button_player" type="button">Not Ready</button>
             <br />
-            <input type="text" value="" readonly id="Players">
+            <input type="text" value="" readonly id="Players" class="playerName">
             <button id="button_ready" value="true" onclick="toggleText(this)" class="button_player" type="button">Not Ready</button>
             <br />
-            <input type="text" value="" readonly id="Players">
+            <input type="text" value="" readonly id="Players" class="playerName">
             <button id="button_ready" value="true" onclick="toggleText(this)" class="button_player" type="button">Not Ready</button>
             <br />
-            <input type="text" value="" readonly id="Players">
+            <input type="text" value="" readonly id="Players" class="playerName">
             <button id="button_ready" value="true" onclick="toggleText(this)" class="button_player" type="button">Not Ready</button>
 
         </div>
@@ -47,12 +48,13 @@
             <br />
             <input type="text"
                 value=""
-                readonly id="link">
+                readonly id="roomLink">
             <button class="button3" onclick="myFunction()">Copy text</button>
         </div>
         <div class="footer">Footer</div>
     </div>
 
 </body>
-
+<script src="/socket.io/socket.io.js" ></script>
+    <script src="clientSocket.js" ></script>
 </html>

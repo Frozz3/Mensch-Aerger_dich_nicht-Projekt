@@ -89,7 +89,9 @@
 </head>
 
 <body>
-    <ul id="info"></ul>
+    <ul id="info">
+        <li id="url"></li>
+    </ul>
     <ul id="messages"></ul>
     <form class="form" id="form1" action="">
         <input class="input" id="input1" autocomplete="off" placeholder="message" />
@@ -101,100 +103,7 @@
         <button id="createRoom">create room</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-
-
-        var info = document.getElementById('info');
-        var clients = document.getElementById('clients');
-        var msgForm = document.getElementById('form1');
-        var msgInput = document.getElementById('input1');
-        var roomForm = document.getElementById('form2');
-        var roomInput = document.getElementById('input2');
-        var sendMessage = document.getElementById('sendMessage');
-        var enterRoom = document.getElementById('enterRoom');
-        var createRoom = document.getElementById('createRoom');
-
-        //authentication
-
-        authenticationId = localStorage.getItem('authId');
-
-        var socket = io({ auth: { token: authenticationId } });
-
-        socket.on('new authenticationId', function (authenticationId) {
-            console.log("authenticationId saved: " + authenticationId);
-            localStorage.setItem('authId', authenticationId);
-        });
-        socket.emit('request authenticationId');
-        //handle pathname
-
-        pathnameArr = window.location.pathname.split("/");
-        roomid = pathnameArr[pathnameArr.length - 1];
-        if (roomid) {
-            socket.emit('change room', roomid);
-            console.log('roomid: ' + roomid);
-        }
-
-        //messages
-
-        sendMessage.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (msgInput.value) {
-                socket.emit('chat message', msgInput.value);
-                msgInput.value = '';
-            }
-        });
-
-        socket.on('chat message', function (msg) {
-            var item = document.createElement('li');
-            item.textContent = msg;
-            //messages.appendChild(item);
-            messages.insertAdjacentElement('afterbegin', item);
-            //window.scrollTo(0, document.body.scrollHeight);
-        });
-
-
-
-        //Rooms
-
-        enterRoom.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (roomInput.value) {
-                socket.emit('change room', roomInput.value);
-                roomInput.value = '';
-            }
-        });
-
-        createRoom.addEventListener('click', function (e) {
-            e.preventDefault();
-            socket.emit('create room', '');
-        });
-
-        socket.on('info update', function (msgs) {
-            console.log('info update');
-            console.log(history);
-            history.replaceState({}, null, 'http://localhost:3000/game/' + msgs[0]);
-            console.log(history);
-            info.textContent = '';
-            var item = document.createElement('a');
-            item.textContent = 'http://localhost:3000/game/' + msgs[0];
-            info.appendChild(item);
-            for (var msg in msgs[1]) {
-                var item1 = document.createElement('li');
-                item1.textContent = '> ' + msg + ':';
-                info.appendChild(item1);
-                var item2 = document.createElement('li');
-                item2.textContent = '>> [' + msgs[1][msg] + ']';
-                info.appendChild(item2);
-            };
-            var item = document.createElement('li');
-            item.textContent = '->' + socket.id;
-            info.appendChild(item);
-        });
-
-        socket.on('change site', function (msg) {
-            socket = io('http://localhost:3000/' + msg)
-        });
-    </script>
+   <script src="/clientSocket.js"></script>
 </body>
 
 </html>
