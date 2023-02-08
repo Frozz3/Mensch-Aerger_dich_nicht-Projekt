@@ -31,13 +31,13 @@ const rooms = {};
 //routing
 
 app.use('/', express.static(path.join(__dirname, '../client')));
-app.use('/game/:id2', express.static(path.join(__dirname, '../client')));
+app.use('/game/:roomId', express.static(path.join(__dirname, '../client')));
 
 app.get('/', (req, res) => {
    res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-app.get('/game/:id2', (req, res) => {
+app.get('/game/:roomId', (req, res) => {
    res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
@@ -67,68 +67,70 @@ io.use(async (socket, next) => {
 })
 
 io.on('connection', async (socket) => {
+   
+   console.log(`${socket.id} created a new connection`); //${socket.data.authenticationId}
 
-      console.log(`${socket.id} created a new connection`); //${socket.data.authenticationId}
+   const userId = `${socket.id}`; //${socket.data.authenticationId}
+   let currentRoomId;
 
-      const userId = `${socket.id}`; //${socket.data.authenticationId}
-      let currentRoomId;
+   //messages
+   socket.on('chatMessage', (msg) => {
+      console.log(socket.id + ' message: ' + msg);
 
-      //messages
-      socket.on('chatMessage', (msg) => {
-         console.log(socket.id + ' message: ' + msg);
+      if (currentRoomId) {
+         //send message to all users in room
+         io.to(currentRoomId).emit('chatMessage', msg);
+      }
+   });
 
-         if (currentRoomId) {
-            //send message to all users in room
-            io.to(currentRoomId).emit('chatMessage', msg);
-         }
-      });
+   //room
 
-      //room
+   socket.on('createRoom', () => {
 
-      socket.on('createRoom', () => {
+      //leave old room
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, userId, io, socket);
+      }
+
+      let newRoomId = createRoom(rooms);
+
+      joinRoom(rooms, newRoomId, userId, io, socket);
+      currentRoomId = newRoomId;
+   });
+
+
+   socket.on('joinRoom', (roomId) => {
+
+      console.log(`${userId} is trying joining room ${roomId}`);
+
+      // check if room exists
+      if (rooms[roomId]) {
 
          //leave old room
          if (rooms[currentRoomId]) {
             leaveRoom(rooms, currentRoomId, userId, io, socket);
          }
 
-         let newRoomId = createRoom(rooms);
-
-         joinRoom(rooms, newRoomId, userId, io, socket);
-         currentRoomId = newRoomId;
-      });
-
-
-      socket.on('joinRoom', (roomid) => {
-
-         console.log(`${userId} is trying joining room ${roomid}`);
-
-         // check if room exists
-         if (rooms[roomid]) {
-
-            //leave old room
-            if (rooms[currentRoomId]) {
-               leaveRoom(rooms, currentRoomId, userId, io, socket);
-            }
-         } else {
-            createRoom(rooms, roomid);
-         }
-         currentRoomId = roomid;
+         currentRoomId = roomId;
          joinRoom(rooms, currentRoomId, userId, io, socket);
-      });
 
-      socket.on('update', (msgs) => {
-         console.table(msgs)
-      });
+      } else {
+         socket.emit('error', "room dose not exist", {roomId: roomId});
+      }
+   });
 
-      socket.on('disconnect', () => {
-         console.log(`${userId} disconnected`);
+   socket.on('update', (msgs) => {
+      console.table(msgs)
+   });
 
-         //leave old room
-         if (rooms[currentRoomId]) {
-            leaveRoom(rooms, currentRoomId, userId, io, socket);
-         }
-      });
+   socket.on('disconnect', () => {
+      console.log(`${userId} disconnected`);
+
+      //leave old room
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, userId, io, socket);
+      }
+   });
 
 });
 

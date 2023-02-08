@@ -89,6 +89,13 @@ socket.on('update', (msgs) => {
     console.table(msgs);
 });
 
+//error
+socket.on('error', (msg,data) => {
+    console.log(`error message: ${msg}`);
+    console.log(data);
+    alert(`error message: ${msg}`);
+});
+
 // reenter room
 
 //pathNames[1].slice(0,5);
