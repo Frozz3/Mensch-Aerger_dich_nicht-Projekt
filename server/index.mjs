@@ -45,7 +45,7 @@ app.get('/game/:id2', (req, res) => {
 //middleware
 
 io.use(async (socket, next) => {
-   console.log(`${socket.id} is trying to logging in with '${socket.handshake.auth.token}'`);
+   console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
 
    //create new authenticationId if its not send with handshake
    if (socket.handshake.auth.token == null) {

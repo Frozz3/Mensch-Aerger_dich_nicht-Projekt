@@ -16,7 +16,7 @@ export function leaveRoom(rooms, roomId, userId, io, socket) {
          if ((rooms[roomId].emptySince == emptySince) && (rooms[roomId].users.length === 0)) {
             delete rooms[roomId];
             console.log(`${roomId} room delete`);
-         }else{
+         } else {
             console.log(`${roomId} rooms kept alive`)
          }
       }, 1000);
@@ -24,18 +24,15 @@ export function leaveRoom(rooms, roomId, userId, io, socket) {
    io.to(roomId).emit('update', [roomId, rooms[roomId]]);
 }
 
-export function createRoom(rooms, roomId) {
-   if (!roomId) {
-      //find unused roomId
-      let newRoomId
-      do {
-         newRoomId = uuid();
-         newRoomId = newRoomId.replace(/-/g, '');
-         newRoomId = newRoomId.slice(0, 5);
+export function createRoom(rooms) {
+   //find unused roomId
+   let roomId
+   do {
+      roomId = uuid();
+      roomId = roomId.replace(/-/g, '');
+      roomId = roomId.slice(0, 5);
 
-      } while (rooms[newRoomId]);
-      roomId = newRoomId;  
-   }
+   } while (rooms[roomId]);
    rooms[roomId] = { users: [], emptySince: null };
    console.log(`room created ${roomId}`);
    return roomId
@@ -43,8 +40,8 @@ export function createRoom(rooms, roomId) {
 
 export function joinRoom(rooms, roomId, userId, io, socket) {
    console.log(`check if room is full: ${rooms[roomId].users.length}`)
-   if (rooms[roomId].users.length >= 4){
-      
+   if (rooms[roomId].users.length >= 4) {
+
       console.log(`${userId} did not join room ${roomId} because it was full: ${rooms[roomId].users.length}`);
       socket.emit('error', "room full")
       return false;

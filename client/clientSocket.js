@@ -38,7 +38,10 @@ socket.on('update', (msgs) => {
         if ((msgs[1].users.length) > index) {
             playerNames[index].setAttribute('value', msgs[1].users[index]);
             if (socket.id == msgs[1].users[index])
-            {playerNames[index].setAttribute("style", 'background: #37d037');}
+            {
+                index
+                playerNames[index].setAttribute("style", 'background: #37d037');
+        }
             else
             {playerNames[index].setAttribute("style", '');}
         }else{
@@ -52,7 +55,7 @@ socket.on('update', (msgs) => {
     console.table(msgs);
 });
 
-//error
+//error message
 socket.on('error', (msg) => {
     console.log(`error message: ${msg}`);
 });
