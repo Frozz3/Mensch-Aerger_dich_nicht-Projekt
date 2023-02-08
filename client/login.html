@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="login.css" type="text/css" rel="stylesheet">
+    
+    <title>Document</title>
+</head>
+<body>
+    <div class="form">
+        <div class="tab-header">
+            <div class="active">Registrieren</div>
+            <div>Anmelden</div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-body active">
+                <div class="form-element">
+                    <input type="text" placeholder="Email">
+                </div>
+                <div class="form-element">
+                    <input type="text" placeholder="Benutzername">
+                </div>
+                <div class="form-element">
+                    <input type="password" placeholder="Passwort">
+                </div>
+                <div class="form-element">
+                    <button>Registrieren</button>
+                </div>
+            </div>
+            <div class="tab-body">
+                <div class="form-element">
+                    <input type="text" placeholder="Email / Benutzername">
+                </div>
+                <div class="form-element">
+                    <input type="text" placeholder="Passwort:">
+                </div>
+                <div class="form-element">
+                    <button>Anmelden</button>
+                </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        let tabPanes = document.getElementsByClassName("tab-header")[0].getElementsByTagName("div");
+
+for(let i=0;i<tabPanes.length;i++){
+    tabPanes[i].addEventListener("click",function(){
+        document.getElementsByClassName("tab-header")
+        [0].getElementsByClassName("active")
+        [0].classList.remove("active");
+        tabPanes[i].classList.add("active");
+
+        document.getElementsByClassName("tab-content")
+        [0].getElementsByClassName("active")
+        [0].classList.remove("active");
+
+        document.getElementsByClassName("tab-content")
+        [0].getElementsByClassName("tab-body")
+        [i].classList.add("active");
+    });
+}
+    </script>
+</body>
+</html>
