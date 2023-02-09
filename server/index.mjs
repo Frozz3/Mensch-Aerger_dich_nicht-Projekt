@@ -4,6 +4,8 @@ import * as path from 'path';
 import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 
+const serverAdress = "89.58.63.131"
+const serverPort = 3000
 const pool = mariadb.createPool({
    host: '89.58.63.131',
    user: 'MADN',
@@ -135,6 +137,6 @@ io.on('connection', async (socket) => {
 
 });
 
-server.listen(3000, () => {
-   console.log('listening on *:3000');
+server.listen(serverPort, () => {
+   console.log(`listening on *:${serverPort}`);
 });

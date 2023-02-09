@@ -68,10 +68,10 @@ socket.on('update', (msgs) => {
 
     console.log('update');
 
-    if (infoUrl.getAttribute('value') != `http://localhost:3000/game/` + msgs[0]) {
+    if (infoUrl.getAttribute('value') != `http://89.58.63.131:3000/game/` + msgs[0]) {
 
-        infoUrl.setAttribute('value', `http://localhost:3000/game/` + msgs[0]);
-        history.replaceState({}, null, `http://localhost:3000/game/${msgs[0]}`);
+        infoUrl.setAttribute('value', `http://89.58.63.131:3000/game/` + msgs[0]);
+        history.replaceState({}, null, `http://89.58.63.131:3000/game/${msgs[0]}`);
     }
 
     for (let index = 0; index < 4; index++) {
@@ -101,7 +101,7 @@ socket.on('error', (msg,data) => {
 //pathNames[1].slice(0,5);
 let roomIdRegex = "/game\/([0-9a-f]{5})";
 const roomId = window.location.pathname.match(roomIdRegex);
-console.log(`rommId from url: '${roomId}'`);
+console.log(`rommId from url(): '${roomId}'`);
 
 if (roomId) {
     socket.emit('joinRoom', roomId[1]);
