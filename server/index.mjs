@@ -5,8 +5,9 @@ import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 
 const pool = mariadb.createPool({
-   host: 'localhost',
-   user: 'root',
+   host: '89.58.63.131',
+   user: 'MADN',
+   password: 'q69Ct4o&5',
    database: 'lfup'
 });
 
