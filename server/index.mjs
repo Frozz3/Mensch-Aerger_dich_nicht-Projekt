@@ -7,9 +7,8 @@ import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 const serverAdress = "89.58.63.131"
 const serverPort = 3000
 const pool = mariadb.createPool({
-   host: '89.58.63.131',
-   user: 'MADN',
-   password: 'q69Ct4o&5',
+   host: 'localhost',
+   user: 'root',
    database: 'lfup'
 });
 
