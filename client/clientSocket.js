@@ -68,10 +68,18 @@ socket.on('update', (msgs) => {
 
     console.log('update');
 
-    if (infoUrl.getAttribute('value') != `http://localhost:3000/game/` + msgs[0]) {
+    let currentUrl = (new URL(window.location.href));
+    let hostname = currentUrl.hostname;
+    if (hostname = "localhost") {
+        hostname = "localhost:3000"
+    }
+    console.log(`hostname: '${hostname}'`);
 
-        infoUrl.setAttribute('value', `http://localhost:3000/game/` + msgs[0]);
-        history.replaceState({}, null, `http://localhost:3000/game/${msgs[0]}`);
+    if (infoUrl.getAttribute('value') != `http://${hostname}/game/` + msgs[0]) {
+
+        infoUrl.setAttribute('value', `http://${hostname}/game/` + msgs[0]);
+        history.replaceState({}, null, `http://${hostname}/game/${msgs[0]}`);
+
     }
 
     for (let index = 0; index < 4; index++) {
