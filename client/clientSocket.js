@@ -22,6 +22,7 @@ socket.on("connect", () => {
 socket.on("connect_error", (err) => {
     console.log("connection error");
     console.table(err);
+    alert(`connect_error message: ${err.message}`);
 });
 
 //authentication
