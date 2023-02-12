@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
+import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
 const pool = mariadb.createPool({
    host: 'localhost',
@@ -47,33 +48,30 @@ app.get('/game/:roomId', (req, res) => {
 io.use(async (socket, next) => {
    console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
 
-   //create new authId if its not send with handshake
    if (socket.handshake.auth.token == null) {
-
+      // create new authId
       let authId = await findUnusedAuthId(pool);
-      await addAuthId(authId, pool, socket)
+      await addAuthId(authId, pool, socket);
+      let username = "User" + socket.id.slice(0,6);
+      await storeUsername(pool,authId,username);
+      socket.data.name = username;
+      socket.emit("newUsername",username);
+      console.log(`${socket.id} got new Username: ${username}`)
       next();
-
    } else {
-
+      // check authId from handshake
       const authIdOk = await checkAuthId(socket.handshake.auth.token, pool, socket);
       if (!authIdOk) {
          console.log(`${socket.id} wrong authId`);
          next(new Error("wrong authId"));
       } else {
+         // authId valid
+
+         // store data of user in socket
+         await fetchUserdata(socket.data,pool);
          next();
       }
    }
-});
-
-io.use((socket, next) => {
-   if (socket.handshake.auth.name)
-   {
-      socket.data.name = socket.handshake.auth.name;
-      next();
-   }
-   socket.data.name = "User" + socket.id.slice(0,6);
-   next();
 });
 
 io.on('connection', async (socket) => {
