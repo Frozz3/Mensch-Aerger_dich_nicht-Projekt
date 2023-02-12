@@ -1,7 +1,7 @@
 import * as mariadb from 'mariadb';
 import * as path from 'path';
 
-import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
+import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
@@ -102,7 +102,7 @@ io.on('connection', async (socket) => {
 
       let newRoomId = createRoom(rooms);
 
-      joinRoom(rooms, newRoomId, io, socket);
+      joinRoom(rooms[newRoomId], newRoomId, io, socket);
       currentRoomId = newRoomId;
    });
 
@@ -120,14 +120,18 @@ io.on('connection', async (socket) => {
          }
 
          currentRoomId = roomId;
-         joinRoom(rooms, currentRoomId, io, socket);
+         joinRoom(rooms[currentRoomId], currentRoomId, io, socket);
 
       } else {
          socket.emit('error', "room dose not exist", {roomId: roomId});
       }
    });
 
-   socket.on('update', (msgs) => {
+   socket.on('changeReadiness', (status) => {
+      changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
+   })
+
+   socket.on('', (msgs) => {
       console.table(msgs)
    });
 

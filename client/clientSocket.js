@@ -10,7 +10,7 @@ const roomInput = document.getElementById('input2');
 const sendMessage = document.getElementById('sendMessage');
 const enterRoom = document.getElementById('enterRoom');
 const createRoom = document.getElementById('createRoom');
-
+ let playerIndex = 0;
 //connect     
 let authenticationId = localStorage.getItem('authId');
 let username = localStorage.getItem('username');
@@ -58,14 +58,18 @@ socket.on('update', (msgs) => {
     for (let index = 0; index < 4; index++) {
         if ((filledUserSlots) > index) {
             playerNames[index].setAttribute('value', msgs[1].userData[index].name);
+            toggleReadyButton(playerReadiness[index],msgs[1].userData[index].status)
             if (authenticationId == msgs[1].userAuthIds[index])
-            {playerNames[index].setAttribute("style", 'background: #37d037');}
+            {
+                playerNames[index].setAttribute("style", 'background: #37d037');
+                playerIndex = index;
+            }
             else
             {playerNames[index].setAttribute("style", '');}
         }else{
             playerNames[index].setAttribute('value', '');
             playerNames[index].setAttribute("style", '');
-            toggleText(playerReadiness[index],false)
+            toggleReadyButton(playerReadiness[index],false);
         }
     }
     console.table(msgs);
