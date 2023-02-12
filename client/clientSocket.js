@@ -2,6 +2,7 @@
 
 const infoUrl = document.getElementById('roomLink');
 const playerNames = document.getElementsByClassName('playerName')
+const playerReadiness = document.getElementsByClassName('button_player')
 const msgForm = document.getElementById('form1');
 const msgInput = document.getElementById('input1');
 const roomForm = document.getElementById('form2');
@@ -75,8 +76,9 @@ socket.on('update', (msgs) => {
         history.replaceState({}, null, `http://localhost:3000/game/${msgs[0]}`);
     }
 
+    const filledUserSlots =  msgs[1].users.length
     for (let index = 0; index < 4; index++) {
-        if ((msgs[1].users.length) > index) {
+        if ((filledUserSlots) > index) {
             playerNames[index].setAttribute('value', msgs[1].users[index]);
             if (socket.id == msgs[1].users[index])
             {playerNames[index].setAttribute("style", 'background: #37d037');}
