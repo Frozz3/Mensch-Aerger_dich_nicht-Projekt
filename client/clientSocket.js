@@ -13,8 +13,10 @@ const createRoom = document.getElementById('createRoom');
 
 //connect     
 let authenticationId = localStorage.getItem('authId');
+let username = localStorage.getItem('username');
 
-const socket = io({ auth: { token: authenticationId } });
+
+const socket = io({ auth: { token: authenticationId, name: username } });
 
 socket.on("connect", () => {
     console.log(`socketId: ${socket.id}`);
@@ -79,8 +81,8 @@ socket.on('update', (msgs) => {
     const filledUserSlots =  msgs[1].users.length
     for (let index = 0; index < 4; index++) {
         if ((filledUserSlots) > index) {
-            playerNames[index].setAttribute('value', msgs[1].users[index]);
-            if (socket.id == msgs[1].users[index])
+            playerNames[index].setAttribute('value', msgs[1].userNames[index]);
+            if (authenticationId == msgs[1].users[index])
             {playerNames[index].setAttribute("style", 'background: #37d037');}
             else
             {playerNames[index].setAttribute("style", '');}
