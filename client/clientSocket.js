@@ -2,6 +2,7 @@
 
 const infoUrl = document.getElementById('roomLink');
 const playerNames = document.getElementsByClassName('playerName')
+const playerReadiness = document.getElementsByClassName('button_player')
 const msgForm = document.getElementById('form1');
 const msgInput = document.getElementById('input1');
 const roomForm = document.getElementById('form2');
@@ -9,11 +10,13 @@ const roomInput = document.getElementById('input2');
 const sendMessage = document.getElementById('sendMessage');
 const enterRoom = document.getElementById('enterRoom');
 const createRoom = document.getElementById('createRoom');
-
+ let playerIndex = 0;
 //connect     
 let authenticationId = localStorage.getItem('authId');
+let username = localStorage.getItem('username');
 
-const socket = io({ auth: { token: authenticationId } });
+
+const socket = io({ auth: { token: authenticationId, name: username } });
 
 socket.on("connect", () => {
     console.log(`socketId: ${socket.id}`);
@@ -22,48 +25,25 @@ socket.on("connect", () => {
 socket.on("connect_error", (err) => {
     console.log("connection error");
     console.table(err);
+    alert(`connect_error message: ${err.message}`);
 });
 
-//authentication
+//user
 
-
-socket.on('newAuthenticationId', function (authenticationId) {
-    console.log("newAuthenticationId saved: " + authenticationId);
-    localStorage.setItem('authId', authenticationId);
+socket.on('newAuthenticationId', function (newAuthenticationId) {
+    authenticationId = newAuthenticationId;
+    localStorage.setItem('authId', newAuthenticationId);
+    console.log("new AuthenticationId saved: " + newAuthenticationId);
 });
 
-/*
-//messages
-sendMessage.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (msgInput.value) {
-        socket.emit('chatMessage', msgInput.value);
-        msgInput.value = '';
-    }
+socket.on('newUsername', function (newUsername) {
+    newUsername = newUsername;
+    console.log("new Username received: " + newUsername);
 });
 
-socket.on('chatMessage', function (msg) {
-    let item = document.createElement('li');
-    item.textContent = msg;
-    messages.insertAdjacentElement('afterbegin', item);
-});
 
-//Rooms
-enterRoom.addEventListener('click', function (e) {
-    const roomInputValue = roomInput.value;
-    e.preventDefault();
-    if (roomInputValue) {
-        socket.emit('joinRoom', roomInputValue);
-        roomInput.value = '';
-    }
-});
+//room
 
-createRoom.addEventListener('click', function (e) {
-    e.preventDefault();
-    socket.emit('createRoom', null);
-});
-*/
-//update
 socket.on('update', (msgs) => {
 
     console.log('update');
@@ -82,16 +62,22 @@ socket.on('update', (msgs) => {
 
     }
 
+    const filledUserSlots =  msgs[1].userAuthIds.length
     for (let index = 0; index < 4; index++) {
-        if ((msgs[1].users.length) > index) {
-            playerNames[index].setAttribute('value', msgs[1].users[index]);
-            if (socket.id == msgs[1].users[index])
-            {playerNames[index].setAttribute("style", 'background: #37d037');}
+        if ((filledUserSlots) > index) {
+            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
+            toggleReadyButton(playerReadiness[index],msgs[1].userData[index].status)
+            if (authenticationId == msgs[1].userAuthIds[index])
+            {
+                playerNames[index].setAttribute("style", 'background: #37d037');
+                playerIndex = index;
+            }
             else
             {playerNames[index].setAttribute("style", '');}
         }else{
             playerNames[index].setAttribute('value', '');
             playerNames[index].setAttribute("style", '');
+            toggleReadyButton(playerReadiness[index],false);
         }
     }
     console.table(msgs);
