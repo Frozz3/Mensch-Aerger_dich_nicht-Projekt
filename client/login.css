@@ -12,6 +12,8 @@
     width: 300px;
     background: #f5f5f5;
     box-shadow: 5px 5px 10px 5px #ccc;
+    border-radius: 10px;
+
 }
 .form .tab-header{
     height: 50px;

@@ -1,8 +1,9 @@
 import * as mariadb from 'mariadb';
 import * as path from 'path';
 
-import { leaveRoom, createRoom, joinRoom } from './rooms.mjs';
+import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
+import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
 const pool = mariadb.createPool({
    host: 'localhost',
@@ -47,30 +48,37 @@ app.get('/game/:roomId', (req, res) => {
 io.use(async (socket, next) => {
    console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
 
-   //create new authenticationId if its not send with handshake
    if (socket.handshake.auth.token == null) {
-
-      let authenticationId = await findUnusedAuthId(pool);
-      await addAuthId(authenticationId, pool, socket)
+      // create new authId
+      let authId = await findUnusedAuthId(pool);
+      await addAuthId(authId, pool, socket);
+      let username = "User" + socket.id.slice(0,6);
+      await storeUsername(pool,authId,username);
+      socket.data.name = username;
+      socket.emit("newUsername",username);
+      console.log(`${socket.id} got new Username: ${username}`)
       next();
-
    } else {
-
+      // check authId from handshake
       const authIdOk = await checkAuthId(socket.handshake.auth.token, pool, socket);
       if (!authIdOk) {
-         console.log(`${socket.id} wrong authenticationId`);
-         next(new Error("wrong authenticationId"));
+         console.log(`${socket.id} wrong authId`);
+         next(new Error("wrong authId"));
       } else {
+         // authId valid
+
+         // store data of user in socket
+         await fetchUserdata(socket.data,pool);
          next();
       }
    }
-})
+});
 
 io.on('connection', async (socket) => {
    
-   console.log(`${socket.id} created a new connection`); //${socket.data.authenticationId}
+   console.log(`${socket.id} created a new connection`); //${socket.data.authId}
 
-   const userId = `${socket.id}`; //${socket.data.authenticationId}
+   const userId = `${socket.id}`; //${socket.data.authId}
    let currentRoomId;
 
    //messages
@@ -89,12 +97,12 @@ io.on('connection', async (socket) => {
 
       //leave old room
       if (rooms[currentRoomId]) {
-         leaveRoom(rooms, currentRoomId, userId, io, socket);
+         leaveRoom(rooms, currentRoomId, io, socket);
       }
 
       let newRoomId = createRoom(rooms);
 
-      joinRoom(rooms, newRoomId, userId, io, socket);
+      joinRoom(rooms[newRoomId], newRoomId, io, socket);
       currentRoomId = newRoomId;
    });
 
@@ -108,18 +116,22 @@ io.on('connection', async (socket) => {
 
          //leave old room
          if (rooms[currentRoomId]) {
-            leaveRoom(rooms, currentRoomId, userId, io, socket);
+            leaveRoom(rooms, currentRoomId, io, socket);
          }
 
          currentRoomId = roomId;
-         joinRoom(rooms, currentRoomId, userId, io, socket);
+         joinRoom(rooms[currentRoomId], currentRoomId, io, socket);
 
       } else {
          socket.emit('error', "room dose not exist", {roomId: roomId});
       }
    });
 
-   socket.on('update', (msgs) => {
+   socket.on('changeReadiness', (status) => {
+      changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
+   })
+
+   socket.on('', (msgs) => {
       console.table(msgs)
    });
 
@@ -128,7 +140,7 @@ io.on('connection', async (socket) => {
 
       //leave old room
       if (rooms[currentRoomId]) {
-         leaveRoom(rooms, currentRoomId, userId, io, socket);
+         leaveRoom(rooms, currentRoomId, io, socket);
       }
    });
 
