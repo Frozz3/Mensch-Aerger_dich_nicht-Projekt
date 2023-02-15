@@ -13,9 +13,18 @@ body
     display:grid;
     
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows:100px 1fr 1fr 100px;
+    grid-template-rows:0.3fr 1fr 1fr 0.3fr ;
     box-sizing: border-box;
+
+    grid-template-areas:
+    "header header navbar" 
+    "content-game content-game content-player"
+    "content-game content-game content-buttons"
+    "footer footer footer";
+    
 }
+
+
 /*
 .container div{
     padding:10px;
@@ -32,8 +41,7 @@ Header Anfang
 
 .header
 {
-    grid-column-start: 1;
-    grid-column-end: 3;
+    grid-area: header;
     background-color: black;
     border-right: solid;
     border-right-color:white;
@@ -47,8 +55,7 @@ h1{
 
 .navbar
 {
-    grid-column-start: 3;
-    grid-column-end: 4;
+    grid-area: navbar;
     background-color: black;
 }
 .navbar ul {
@@ -76,10 +83,7 @@ Game Anfang
 */
 .content-game
 {
-    grid-row-start: 2;
-    grid-row-end: span 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
+    grid-area: content-game;
     background-color: crimson;
     border-top: solid;
     border-top-color: white;
@@ -92,10 +96,7 @@ Game Ende
 Player Anfang
 */
 .content-player{
-    grid-column-start:3;
-    grid-column-end:4;
-    grid-row-start: 2;
-    grid-row-end: span 1;
+    grid-area: content-player;
     background-color: white;
 }
 
@@ -126,10 +127,7 @@ Player Ende
 Buttons Anfang
 */
 .content-buttons{
-    grid-column-start:3;
-    grid-column-end:4;
-    grid-row-start: 3;
-    grid-row-end: span 1;
+    grid-area: content-buttons;
     background-color: white;
     border-top: solid;
     border-top-color:black;
@@ -185,8 +183,7 @@ Buttons Ende
 Footer Anfang
 */
 .footer{
-    grid-column-start: 1;
-    grid-column-end: 4;
+    grid-area: footer;
     background-color: black;
     border-top: solid;
     border-top-color:white;
@@ -196,3 +193,9 @@ Footer Anfang
  /*
 Footer ende
 */
+
+/* Mobile Phone/Tablet
+*/
+
+
+

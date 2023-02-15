@@ -9,10 +9,15 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="form">
+   
+   
+    <div class="form" id="popup-close">
+        <div>
+            <button class="close-button" onclick="togglePopup()">&times;</button>
+        </div>
         <div class="tab-header">
             <div class="active">Registrieren</div>
-            <div>Anmelden</div>
+            <div class="active">Anmelden</div>
         </div>
         <div class="tab-content">
             <div class="tab-body active">
@@ -62,5 +67,9 @@ for(let i=0;i<tabPanes.length;i++){
     });
 }
     </script>
+     <button onclick="togglePopup()">Show Popup</button>
+
+     <script>function togglePopup(){
+        document.getElementById("popup-close").classList.toggle("active");}</script>
 </body>
 </html>
