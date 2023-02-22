@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="login.css" type="text/css" rel="stylesheet">
+    <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
     
     <title>Document</title>
 </head>
@@ -16,8 +17,8 @@
             <button class="close-button" onclick="togglePopup()">&times;</button>
         </div>
         <div class="tab-header">
-            <div class="active">Registrieren</div>
-            <div class="active">Anmelden</div>
+            <div class="active" onclick="switchTab()">Registrieren</div>
+            <div class="active" onclick="switchTab()">Anmelden</div>
         </div>
         <div class="tab-content">
             <div class="tab-body active">
@@ -47,29 +48,9 @@
         </div>
     </div>
     </div>
-    <script>
-        let tabPanes = document.getElementsByClassName("tab-header")[0].getElementsByTagName("div");
-
-for(let i=0;i<tabPanes.length;i++){
-    tabPanes[i].addEventListener("click",function(){
-        document.getElementsByClassName("tab-header")
-        [0].getElementsByClassName("active")
-        [0].classList.remove("active");
-        tabPanes[i].classList.add("active");
-
-        document.getElementsByClassName("tab-content")
-        [0].getElementsByClassName("active")
-        [0].classList.remove("active");
-
-        document.getElementsByClassName("tab-content")
-        [0].getElementsByClassName("tab-body")
-        [i].classList.add("active");
-    });
-}
-    </script>
      <button onclick="togglePopup()">Show Popup</button>
-
-     <script>function togglePopup(){
-        document.getElementById("popup-close").classList.toggle("active");}</script>
+     <script>
+     function togglePopup(){document.getElementById("popup-close").classList.toggle("active");}
+    </script>
 </body>
 </html>
