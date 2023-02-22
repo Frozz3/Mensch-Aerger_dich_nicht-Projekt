@@ -1,108 +1,182 @@
-.grid-container-all {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-gap: 5px;
-  font-family: Sans-serif;
-}
-  
-.grid-stats {
-  border:black solid;
-  background-color: lightblue;
-  width: 40%;  
-  font-family: Sans-serif;
-  margin-left: 20%;
-  margin-bottom: 30%;
-}
-  
-.grid-rang {
-  border: black solid;
-  width: 40%;
-  font-family: Sans-serif;
-  margin-left: 10%;
+body{background-color: lightgray;}
+* {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.statsh2{
-  text-align: center;
-  border: solid black;
-  width: 60%;
-  margin-left: 17%;
+.wrapper {
+    margin: auto;
+    background-color: lightgray; 
+    display: grid;
+    /* grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr); */
+    grid-template-areas:
+    "hdr hdr hdr hdr"
+    "uda uda rng rng"
+    "sta sta rng rng"
+    "sta1 sta1 sta1 sta1"
+    "fot fot fot fot";
+    grid-auto-columns: 1fr;
+    grid-template-rows: auto repeat( 50px) auto;
+    grid-gap: 40px;
 }
-.rangh2{
-  text-align: center;
-  border: solid black;
-  width: 60%;
-  margin-left: 17%;
+
+.hdr{grid-area: hdr;}
+.uda{grid-area: uda;}
+.rng{grid-area: rng;}
+.sta0{grid-area: sta;}
+.sta1{grid-area: sta;}
+.sta{
+    grid-column: span 1;
+    grid-row: span 1;
 }
-p{
-  border: black solid;
+.fot{grid-area: fot;}
+
+.bordered{
+
+    color: black;
+    box-shadow: 0px 0px 12px 1px #2D3436;
+    font-size: 25px;
+    /*border: 1px solid black;*/
+    background-color: white;
+   
 }
-.siege{
-  text-align: center;
+
+.rounded1{
+    height: 200px;
+    border-radius: 8px;
 }
-.benutzer{
-  text-align: center;
+.rounded2{
+    border-radius: 16px;
 }
-td
-{
-  
-  width: 20%;
-  text-align: center;
+
+/*HEADER*/
+.wrapper header{
+    /* filter: brightness(80%); */
+    background-image: url('picture/spielfeld2.jpg');
 }
-th
-{
-  border: solid black;
-  width: 30%;
+h1 {
+    text-align: center;
+    font-size: 70px;
+    color: white;
 }
-.grid-stats2
-{
-  border:black solid;
-  background-color: lightblue;
-  width: 60%;  
-  font-family: Sans-serif;
-  margin-left: 10%;
-  margin-top: -31%;
-  padding-bottom: 50%;
+
+/*NAVI*/
+ul {
+    /* border: solid black;  */
+    backdrop-filter: blur(10px);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* background-color: black; 
+    /* backdrop-filter: opacity(20%);*/ 
+
 }
-.gewonnen
-{
-  padding-top:20%;
-  margin-right: 10%;
-  padding-left: 25%;
-  font-size: larger;
+
+.nav-item{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-weight: bolder;
+    font-size: 40px;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
 }
-.gewanz
-{
-  padding-top:20%;
-  font-size: larger;
+
+.nav-item:hover {
+    background-color: lightgreen;
 }
-.verloren
-{
-  padding-top:20%;
-  margin-right: 10%;
-  padding-left: 25%;
-  font-size: larger;
+
+.nav-list-item {
+    float: left;
 }
-.verlanz
-{
-  padding-top:20%;
-  font-size: larger;
-}
-.auto {
-  background: lightblue;
-  height: 220px;
-  overflow: auto;
-  width: 370px;
-  border: solid #000;
-  padding: 10px;
-  margin-left: -82%;
-  margin-top: 10%;
-  }
-.auto2{
- 
-  height: 220px;
-  overflow: auto;
-  width: 285px;
-  padding: 10px;
-  margin-top: 10%;
-  margin-left:10%;
-  }
+/*NAVI*/
+/*HEADER*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.rangtable { */
+
+    /* height: 280px; */
+    /* overflow: auto; */
+    /* width: 44%; */
+    /* font-size: 20px;
+    margin: 0 auto; */
+    /* left: 23%; */
+    /* bottom: 46%; */
+    /* border: solid black; */
+    /* padding: 5%; 
+}*/
