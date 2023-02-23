@@ -1,79 +1,91 @@
-body
-{
-    margin: 0;
-    background-color:#2f261e ;
+body{background-color: lightgray;}
+* {
+    font-family: Arial, Helvetica, sans-serif;
 }
 .container
 {
-    width: 100vw;
-    height: 100vh;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    display:grid;
+    margin: auto;
+    background-color: lightgray; 
+    display: grid;
+    /* grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr); */
+    grid-area:
+    "hdr hdr hdr hdr hdr"
+    "content-game content-game content-game";
     
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows:0.3fr 1fr 1fr 0.3fr ;
-    box-sizing: border-box;
-
-    grid-template-areas:
-    "header header navbar" 
-    "content-game content-game content-player"
-    "content-game content-game content-buttons"
-    "footer footer footer";
-    
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 2fr 1fr 0.5fr;
+    grid-gap: 20px;
 }
 
-
-/*
-.container div{
-    padding:10px;
-    border: 1px solid #000000;
-    border-radius: 50px;
-    border-width: 5px;
-    border-color: black;
-    box-shadow: 10px 5px 5px grey;
-}
 
 /*
 Header Anfang
 */
 
-.header
-{
-    grid-area: header;
-    background-color: black;
-    border-right: solid;
-    border-right-color:white;
+.hdr{
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
-h1{
+.bordered{
+
+    color: black;
+    box-shadow: 0px 0px 12px 1px #2D3436;
+    font-size: 25px;
+    /*border: 1px solid black;*/
+    background-color: white;
+   
+}
+ 
+
+/*HEADER*/
+.container header{
+    /* filter: brightness(80%); */
+    background-image: url('picture/spielfeld2.jpg');
+}
+h1 {
     text-align: center;
+    font-size: 70px;
     color: white;
-    
 }
 
-.navbar
-{
-    grid-area: navbar;
-    background-color: black;
+/*NAVI*/
+ul {
+    /* border: solid black;  */
+    backdrop-filter: blur(10px);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* background-color: black; 
+    /* backdrop-filter: opacity(20%);*/ 
+
 }
-.navbar ul {
-    display: flex;
-    flex-direction: row;
-  } 
 
-.navbar li {
-    list-style: none;
-    margin: 2% 0% 0% 10%;
-    
-    font-size: 1.5em;  
-  }
-
-  a{
+.nav-item{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-weight: bolder;
+    font-size: 40px;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
     text-decoration: none;
-    color:white
-  }
+}
+
+.nav-item:hover {
+    background-color: lightgreen;
+}
+
+.nav-list-item {
+    float: left;
+}
+/*NAVI*/
+/*HEADER*/
+
   /*
 Header Ende
 */
@@ -81,12 +93,21 @@ Header Ende
  /*
 Game Anfang
 */
+
 .content-game
 {
-    grid-area: content-game;
-    background-color: crimson;
-    border-top: solid;
-    border-top-color: white;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+}
+.content-game .bordered
+{
+    color: black;
+    box-shadow: 0px 0px 12px 1px #2D3436;
+    font-size: 25px;
+    /*border: 1px solid black;*/
+    background-color: red;
 }
  /*
 Game Ende
@@ -96,8 +117,19 @@ Game Ende
 Player Anfang
 */
 .content-player{
-    grid-area: content-player;
-    background-color: white;
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row: span 1;
+}
+
+.content-player .bordered
+{
+    color: black;
+    box-shadow: 0px 0px 12px 1px #2D3436;
+    font-size: 25px;
+    /*border: 1px solid black;*/
+    background-color: red;
 }
 
 .button_player{
@@ -127,10 +159,7 @@ Player Ende
 Buttons Anfang
 */
 .content-buttons{
-    grid-area: content-buttons;
-    background-color: white;
-    border-top: solid;
-    border-top-color:black;
+   
 }
 
 .button
@@ -183,10 +212,7 @@ Buttons Ende
 Footer Anfang
 */
 .footer{
-    grid-area: footer;
-    background-color: black;
-    border-top: solid;
-    border-top-color:white;
+    
     
    
 }
