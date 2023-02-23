@@ -14,19 +14,20 @@
 
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Mensch Ärger dich Nicht</h1>
-        </div>
-        <div class="navbar">
+        <header class="bordered hdr">
+        <h1>
+            MENSCH ÄRGERE DICH NICHT
+        </h1>
             <ul>
-                <li><button class="button-nav" href="">Rangliste/Statistik</button></li>
-                <li><button class="button-nav" href="">Anmelden</button></li>
+              <li class="nav-list-item"><a class="nav-item" href="index.html">Startseite</a></li>
+              <li class="nav-list-item"><a class="nav-item" href="rangliste.html">Rangliste/Statistik</a></li>
+              <li <button class="nav-item" style="float: right;">LOGIN</button></li>
             </ul>
-        </div>
-        <div class="content-game">Spiel
-            <script></script>
-        </div>
-        <div class="content-player">
+        </header>
+        
+        <div class="content-game bordered">Game</div>
+
+        <div class="content-player bordered">
             <input type="text" value="" readonly id="Players" class="playerName">
             <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
             <br />
@@ -40,7 +41,7 @@
             <button id="button_ready3" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
 
         </div>
-
+ <!--
         <div class="content-buttons">
             <button class="button button1" type="button">Zufälliges Spiel!</button>
             <br />
@@ -52,9 +53,12 @@
             <button class="button3" onclick="myFunction()">Copy text</button>
         </div>
         <div class="footer">Footer</div>
+        -->
     </div>
-
 </body>
+
+<!--
 <script src="/socket.io/socket.io.js" ></script>
     <script src="clientSocket.js" ></script>
+-->
 </html>
