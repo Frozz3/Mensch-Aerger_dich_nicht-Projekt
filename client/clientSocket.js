@@ -10,7 +10,7 @@ const roomInput = document.getElementById('input2');
 const sendMessage = document.getElementById('sendMessage');
 const enterRoom = document.getElementById('enterRoom');
 const createRoom = document.getElementById('createRoom');
- let playerIndex = 0;
+let playerIndex = 0;
 //connect     
 let authenticationId = localStorage.getItem('authId');
 let username = localStorage.getItem('username');
@@ -62,29 +62,36 @@ socket.on('update', (msgs) => {
 
     }
 
-    const filledUserSlots =  msgs[1].userAuthIds.length
     for (let index = 0; index < 4; index++) {
-        if ((filledUserSlots) > index) {
+        if (msgs[1].userAuthIds[index]  !== null) {
             playerNames[index].setAttribute('value', msgs[1].userData[index].name);
-            toggleReadyButton(playerReadiness[index],msgs[1].userData[index].status)
-            if (authenticationId == msgs[1].userAuthIds[index])
-            {
+            playerReadiness[index].setAttribute('value', msgs[1].userData[index].status);
+            if (authenticationId == msgs[1].userAuthIds[index]) {
+                console.log(`test${index}`)
                 playerNames[index].setAttribute("style", 'background: #37d037');
                 playerIndex = index;
             }
-            else
-            {playerNames[index].setAttribute("style", '');}
-        }else{
-            playerNames[index].setAttribute('value', '');
-            playerNames[index].setAttribute("style", '');
-            toggleReadyButton(playerReadiness[index],false);
+            else {
+                playerNames[index].setAttribute("style", '');
+            }
+            if (msgs[1].userData[index].status == true) {
+                playerReadiness[index].innerHTML = "Ready";
+            }
+            else {
+                playerReadiness[index].innerHTML = "Not Ready";
+            }
+
+        } else {
+            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
+            playerReadiness[index].setAttribute('value', null);
         }
+
     }
     console.table(msgs);
 });
 
 //error
-socket.on('error', (msg,data) => {
+socket.on('error', (msg, data) => {
     console.log(`error message: ${msg}`);
     console.log(data);
     alert(`error message: ${msg}`);
