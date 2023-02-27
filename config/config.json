@@ -1,0 +1,7 @@
+{
+    "DATABASE": {
+        "HOST": "localhost",
+        "USER": "root",
+        "SCHEMA": "lfup"
+    }
+}

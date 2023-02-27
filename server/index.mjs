@@ -1,22 +1,26 @@
+import * as dotenv from 'dotenv'
 import * as mariadb from 'mariadb';
 import * as path from 'path';
+
+// generating __dirname for modules
+import * as url from 'url';
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+dotenv.config();
 
 import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
-const port = 3000; 
+
+const port = process.env.port; 
 
 const pool = mariadb.createPool({
-   host: 'localhost',
-   user: 'root',
-   database: 'lfup'
+   host: process.env.dbhost,
+   user: process.env.dbuser,
+   database: process.env.dbschema
 });
-
-// generatin __dirname for modules
-import * as url from 'url';
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 // server 
 import express from 'express';
