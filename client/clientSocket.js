@@ -3,21 +3,15 @@
 const infoUrl = document.getElementById('roomLink');
 const playerNames = document.getElementsByClassName('playerName')
 const playerReadiness = document.getElementsByClassName('button_player')
-const msgForm = document.getElementById('form1');
-const msgInput = document.getElementById('input1');
-const roomForm = document.getElementById('form2');
-const roomInput = document.getElementById('input2');
-const sendMessage = document.getElementById('sendMessage');
-const enterRoom = document.getElementById('enterRoom');
 const createRoom = document.getElementById('createRoom');
 let playerIndex = 0;
+
 //connect     
 let authenticationId = localStorage.getItem('authId');
 let username = localStorage.getItem('username');
 
-
 const socket = io({ auth: { token: authenticationId, name: username } });
-
+-
 socket.on("connect", () => {
     console.log(`socketId: ${socket.id}`);
 });
@@ -41,16 +35,13 @@ socket.on('newUsername', function (newUsername) {
     console.log("new Username received: " + newUsername);
 });
 
-
-//room
-
 socket.on('update', (msgs) => {
 
     console.log('update');
 
     let currentUrl = (new URL(window.location.href));
     let hostname = currentUrl.hostname;
-    if (hostname = "localhost") {
+    if (hostname == "localhost") {
         hostname = "localhost:3000"
     }
     console.log(`hostname: '${hostname}'`);
@@ -66,6 +57,7 @@ socket.on('update', (msgs) => {
         if (msgs[1].userAuthIds[index]  !== null) {
             playerNames[index].setAttribute('value', msgs[1].userData[index].name);
             playerReadiness[index].setAttribute('value', msgs[1].userData[index].status);
+
             if (authenticationId == msgs[1].userAuthIds[index]) {
                 console.log(`test${index}`)
                 playerNames[index].setAttribute("style", 'background: #37d037');
@@ -75,10 +67,10 @@ socket.on('update', (msgs) => {
                 playerNames[index].setAttribute("style", '');
             }
             if (msgs[1].userData[index].status == true) {
-                playerReadiness[index].innerHTML = "Ready";
+                playerReadiness[index].innerHTML = "Bereit";
             }
             else {
-                playerReadiness[index].innerHTML = "Not Ready";
+                playerReadiness[index].innerHTML = "nicht berait";
             }
 
         } else {
@@ -90,7 +82,6 @@ socket.on('update', (msgs) => {
     console.table(msgs);
 });
 
-//error
 socket.on('error', (msg, data) => {
     console.log(`error message: ${msg}`);
     console.log(data);
@@ -102,7 +93,7 @@ socket.on('error', (msg, data) => {
 //pathNames[1].slice(0,5);
 let roomIdRegex = "/game\/([0-9a-f]{5})";
 const roomId = window.location.pathname.match(roomIdRegex);
-console.log(`rommId from url: '${roomId}'`);
+console.log(`roomID from url: '${roomId}'`);
 
 if (roomId) {
     socket.emit('joinRoom', roomId[1]);
