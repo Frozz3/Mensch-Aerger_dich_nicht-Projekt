@@ -5,7 +5,7 @@
   "main": "server/index.mjs",
   "scripts": {
     "test": "test",
-    "build": "node ."
+    "start": "node ."
   },
   "repository": {
     "type": "git",
