@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-//room funktions
+
 export function leaveRoom(rooms, roomId, io, socket) {
    const room = rooms[roomId];
    //remove socket-connection to room
