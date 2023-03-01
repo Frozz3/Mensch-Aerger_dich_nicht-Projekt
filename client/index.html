@@ -8,55 +8,131 @@
     <link href="index.css" type="text/css" rel="stylesheet">
     <title>Startseite</title>
     <script language="javascript" type="text/javascript" src="copylink.js"></script>
-    <script language="javascript" type="text/javascript" src="change.js"></script>
-    
+    <script language="javascript" type="text/javascript" src="change_button_player.js"></script>
+    <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
+
+
 </head>
 
 <body>
     <div class="container">
         <header class="bordered hdr">
-        <h1>
-            MENSCH ÄRGERE DICH NICHT
-        </h1>
+            <h1>
+                MENSCH ÄRGERE DICH NICHT
+            </h1>
             <ul>
-              <li class="nav-list-item"><a class="nav-item" href="index.html">Startseite</a></li>
-              <li class="nav-list-item"><a class="nav-item" href="rangliste.html">Rangliste/Statistik</a></li>
-              <li> <button class="nav-item" style="float: right;">LOGIN</button></li>
+                <li class="nav-list-item"><a class="nav-item" href="index.html">Startseite</a></li>
+                <li class="nav-list-item"><a class="nav-item" href="rangliste.html">Rangliste/Statistik</a></li>
+                <li> <button class="nav-item" style="float: right;" onclick="togglePopup()">Login</button></li>
+                <script>
+                    function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
+                </script>
             </ul>
+
         </header>
-        
+
+        <popup>
+            <div class="form" id="popup-close">
+                <div>
+                    <button class="close-button" onclick="togglePopup()">&times;</button>
+                </div>
+                <div class="tab-header">
+                    <div class="active" onclick="switchTab()">Registrieren</div>
+                    <div class="active" onclick="switchTab()">Anmelden</div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-body active">
+                        <div class="form-element">
+                            <input type="text" placeholder="Email">
+                        </div>
+                        <div class="form-element">
+                            <input type="text" placeholder="Benutzername">
+                        </div>
+                        <div class="form-element">
+                            <input type="password" placeholder="Passwort">
+                        </div>
+                        <div class="form-element">
+                            <button>Registrieren</button>
+                        </div>
+                    </div>
+                    <div class="tab-body">
+                        <div class="form-element">
+                            <input type="text" placeholder="Email / Benutzername">
+                        </div>
+                        <div class="form-element">
+                            <input type="text" placeholder="Passwort:">
+                        </div>
+                        <div class="form-element">
+                            <button>Anmelden</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </popup>
         <div class="content-game bordered">Game</div>
 
         <div class="content-player bordered">
-            <input type="text" value="" readonly id="Players" class="playerName">
-            <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
+            <input type="text" value="" readonly id="Players" class="playerName button-player">
+            <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                type="button">Nicht Bereit</button>
             <br />
-            <input type="text" value="" readonly id="Players" class="playerName">
-            <button id="button_ready1" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
+            <input type="text" value="" readonly id="Players" class="playerName button-player">
+            <button id="button_ready1" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                type="button">Nicht Bereit</button>
             <br />
-            <input type="text" value="" readonly id="Players" class="playerName">
-            <button id="button_ready2" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
+            <input type="text" value="" readonly id="Players" class="playerName button-player">
+            <button id="button_ready2" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                type="button">Nicht Bereit</button>
             <br />
-            <input type="text" value="" readonly id="Players" class="playerName">
-            <button id="button_ready3" value="true" onclick="toggleReadyButton(this)" class="button_player" type="button">Not Ready</button>
+            <input type="text" value="" readonly id="Players" class="playerName button-player">
+            <button id="button_ready3" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                type="button">Nicht Bereit</button>
 
         </div>
-
-        <div class="content-buttons">
-            <button class="button button1" type="button">Zufälliges Spiel!</button>
+        <div class="content-buttons bordered">
+            <button class="button button-search" type="button">Zufälliges Spiel!</button>
             <br />
-            <button class="button button2" type="button">Rangspiel</button>
+            <button class="button button-search" type="button">Rangspiel</button>
             <br />
-            <input type="text"
-                value=""
-                readonly id="roomLink">
-            <button class="button3" onclick="myFunction()">Copy text</button>
+            <div class="copy">
+                <input type="text" value="" readonly id="roomLink">
+                <button class="button3 button" onclick="myFunction()">Copy text</button>
+            </div>
         </div>
-        <div class="footer">Footer</div>
-        -->
+        <div class="fot bordered">
+            <footer>
+                <div class="fot-content">
+
+                    <h3>Mensch Ärgere Dich Nicht</h3>
+                    Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed do eiusmod tempor.
+
+
+                    <ul class="socialmedia">
+                        <li> <img src="picture/facebook.png" width="60px"></li>
+                        <li> <img src="picture/twitter.png" width="50px"></li>
+                        <li> <img src="picture/goggle.png" width="50px"></li>
+                    </ul>
+                </div>
+                <div class="copyright">
+                    <p>Copyright &copy; 2022 <a href="rangliste.html">MADN Online</a></p>
+                    <div class="fot-nav">
+                        <ul class="fot-menu">
+                            <li><a href="">Kontakt</a></li>
+                            <li><a href="">Impressum</a></li>
+                            <li><a href="">Starteite</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
     </div>
 </body>
 
-<script src="/socket.io/socket.io.js" ></script>
-    <script src="clientSocket.js" ></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="clientSocket.js"></script>
+
 </html>
