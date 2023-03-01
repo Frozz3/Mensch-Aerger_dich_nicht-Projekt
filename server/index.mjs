@@ -1,22 +1,25 @@
+import * as dotenv from 'dotenv'
 import * as mariadb from 'mariadb';
 import * as path from 'path';
+import * as url from 'url';
 
+// custom_modules
 import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
-const port = 3000; 
-
-const pool = mariadb.createPool({
-   host: 'localhost',
-   user: 'root',
-   database: 'lfup'
-});
-
-// generatin __dirname for modules
-import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+dotenv.config();
+
+
+const port = process.env.port; 
+
+const pool = mariadb.createPool({
+   host: process.env.dbhost,
+   user: process.env.dbuser,
+   database: process.env.dbschema
+});
 
 // server 
 import express from 'express';
@@ -43,7 +46,6 @@ app.get('/', (req, res) => {
 app.get('/game/:roomId', (req, res) => {
    res.sendFile(path.join(__dirname, '../client/index.html'));
 });
-
 
 //middleware
 
@@ -125,7 +127,7 @@ io.on('connection', async (socket) => {
          joinRoom(rooms[currentRoomId], currentRoomId, io, socket);
 
       } else {
-         socket.emit('error', "room dose not exist", {roomId: roomId});
+         socket.emit('error', "room does not exist", {roomId: roomId});
       }
    });
 

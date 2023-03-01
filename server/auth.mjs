@@ -1,8 +1,5 @@
 import { v4 as uuid } from 'uuid';
 
-
-//auth funktions
-
 export async function findUnusedAuthId(pool) {
    try {
       let authId;
@@ -13,7 +10,7 @@ export async function findUnusedAuthId(pool) {
          resultCount = result[0].count;
 
       } while (resultCount != 0n);
-      console.log(`unused authId found ${authId}`)
+       console.log(`unused authId found ${authId}`)
       return authId;
    } catch (error) {
       throw error
