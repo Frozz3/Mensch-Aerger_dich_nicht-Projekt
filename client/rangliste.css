@@ -54,9 +54,11 @@ body{background-color: rgb(80, 80, 80);}
 /*HEADER*/
 .wrapper header{
    
-    filter: brightness(0.5);
-
-    background-image: url('spielfeld2.jpg');
+    /* filter: brightness(0.5); */
+    background: 
+     linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
+      url(picture/spielfeld2.jpg);
+    /* background-image: url('picture/spielfeld2.jpg'); */
 }
 h1 {
     filter: brightness(1);
