@@ -1,12 +1,12 @@
 body{background-color: rgb(80, 80, 80);}
 * {
     font-family: Arial, Helvetica, sans-serif;
-
+    
 }
 
 .wrapper {
     
-    margin: auto;
+    margin: 40px;
     display: grid;
     /* grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr); */
@@ -42,6 +42,11 @@ body{background-color: rgb(80, 80, 80);}
    
 }
 
+.rounded1:hover
+{
+    transform:scale(1.1);
+}
+
 .rounded1{
     height: 200px;
     border-radius: 8px;
@@ -58,8 +63,19 @@ body{background-color: rgb(80, 80, 80);}
     background: 
      linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
       url(picture/spielfeld2.jpg);
+      background-size: 120%;
+      animation: animatedBackground 120s linear infinite;
     /* background-image: url('picture/spielfeld2.jpg'); */
 }
+
+@keyframes animatedBackground {
+    0% { background-position: -150 0; }
+    50% { background-position: -300px 0; }
+    100% { background-position: 0 0;}
+}
+
+
+
 h1 {
     filter: brightness(1);
     text-align: center;
