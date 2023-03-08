@@ -46,7 +46,12 @@ body{background-color: rgb(80, 80, 80);}
 {
     transform:scale(1.1);
 }
-
+.rounded3
+{
+    height: 200px;
+    border-radius: 8px;
+    color: white;
+}
 .rounded1{
     height: 200px;
     border-radius: 8px;
@@ -253,66 +258,101 @@ footer
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*.rangtable { */
-
-    /* height: 280px; */
-    /* overflow: auto; */
-    /* width: 44%; */
-    /* font-size: 20px;
-    margin: 0 auto; */
-    /* left: 23%; */
-    /* bottom: 46%; */
+.rangtable 
+{
+    margin: 12px 35px 0 35px;
+    display: grid;
+    /* grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr); */
+    grid-template-areas:
+    "platz spieler siege" ;
+    grid-auto-columns: 1fr;
+    grid-template-rows: auto repeat( 50px) auto;
+    /* grid-gap: 5px; */
+    color: white;
+    height: 340px; 
+    /* overflow: auto;  */
+    /* width: 400px;  */
+    /* margin: 0 auto;  */
+    /* margin-bottom: 40px;  */
     /* border: solid black; */
-    /* padding: 5%; 
-}*/
+    /* padding: 10%;  */
+}
+.rangüberschrift
+{
+    font-size: 35px;
+    margin-bottom: 0 ;
+    color: white;
+    text-align: center;
+}
+
+
+.spieler
+{
+    margin-top: 0;
+    text-align: center;
+}
+
+.rangSpieler
+{
+    border-bottom: solid;
+    font-size: 25px;
+    color: lightgray;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.spieler p
+{
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0 0 0;
+}
+
+.platz
+{
+    text-align: center;
+}
+.platz p
+{
+    font-size: 18px;
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
+.rangPlatz
+{
+    border-bottom: solid;
+    font-size: 25px;
+    margin-top: 0;
+    color: lightgray;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+
+.siege
+{
+    text-align: center;
+}
+
+.rangSiege
+{
+    border-bottom: solid;
+    font-size: 25px;
+    color: lightgray;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.siege p
+{
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0 0 0;
+}
