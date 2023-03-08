@@ -49,7 +49,7 @@ app.get('/game/:roomId', (req, res) => {
 
 io.use(async (socket, next) => {
    console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
-
+try{
    if (socket.handshake.auth.token == null) {
       // create new authId
       let authId = await findUnusedAuthId(pool);
@@ -74,6 +74,9 @@ io.use(async (socket, next) => {
          next();
       }
    }
+}catch(err){
+throw new Error(err)
+}
 });
 
 io.on('connection', async (socket) => {
