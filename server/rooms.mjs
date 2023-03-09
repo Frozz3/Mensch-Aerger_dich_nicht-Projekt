@@ -1,157 +1,157 @@
-import { v4 as uuid } from 'uuid';
-//room funktions
-export function leaveRoom(rooms, roomId, io, socket) {
-   const room = rooms[roomId];
-   //remove socket-connection to room
-   socket.leave(roomId);
+import * as mariadb from 'mariadb';
+import * as path from 'path';
 
-   let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
-   let timeStamp = Date.now();
+import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
+import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
+import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
-   // store the time the user left (override old)
-   room.userData[roomIndexOfSocket].leftSince = timeStamp;
+const port = 3000;
 
-   // if room is empty, set emptysince
-   if (countRoomAuthIds(room.userAuthIds) === 0) {
-      room.emptySince = timeStamp
-      console.log(`${roomId} room empty ${room.emptySince}`)
-   }
-   //wait for rejoin
-   setTimeout(() => {
-      //leave room if leftsince has not changed
-      if (room.userData[roomIndexOfSocket].leftSince == timeStamp) {
-         room.userAuthIds[roomIndexOfSocket] = null;
-         room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0 };
-         console.log(`${socket.data.authId} removed from room ${roomId}`);
+const pool = mariadb.createPool({
+   host: '127.0.0.1',
+   user: 'root',
+   database: 'lfup',
+   password: 'imPW4Hnfd4cW3XbsWehp'
 
-         // remove old room if empty
-         if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
-            delete rooms[roomId];
-            console.log(`${roomId} room delete`);
-         } else {
-            console.log(`${roomId} rooms kept alive`)
-         }
-      }
+});
 
-      //console.log(`check if time changed: '${room.emptySince}' and room is empty '${room.userAuthIds.length}'`);
+// generatin __dirname for modules
+import * as url from 'url';
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+// server 
+import express from 'express';
+const app = express();
+
+import * as http from 'http';
+
+const server = http.createServer(app);
+
+import { Server } from 'socket.io';
+const io = new Server(server);
+
+const rooms = {};
+
+//routing
+
+app.use('/', express.static(path.join(__dirname, '../client')));
+app.use('/game/:roomId', express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+   res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+app.get('/game/:roomId', (req, res) => {
+   res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 
 
-      io.to(roomId).emit('update', [roomId, room]);
-   }, 1000);
+//middleware
 
-}
+io.use(async (socket, next) => {
+   console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
 
-export function createRoom(rooms) {
-   //find unused roomId
-   let roomId
-   do {
-      roomId = uuid();
-      roomId = roomId.replace(/-/g, '');
-      roomId = roomId.slice(0, 5);
+   if (socket.handshake.auth.token == null) {
+      // create new authId
+      let authId = await findUnusedAuthId(pool);
+      await addAuthId(authId, pool, socket);
+      let username = "User" + socket.id.slice(0, 6);
+      await storeUsername(pool, authId, username);
+      socket.data.name = username;
+      socket.emit("newUsername", username);
+      console.log(`${socket.id} got new Username: ${username}`)
+      next();
+   } else {
+      // check authId from handshake
+      const authIdOk = await checkAuthId(socket.handshake.auth.token, pool, socket);
+      if (!authIdOk) {
+         console.log(`${socket.id} wrong authId`);
+         next(new Error("wrong authId"));
+      } else {
+         // authId valid
 
-   } while (rooms[roomId]);
-   rooms[roomId] = {
-      userAuthIds: [null, null, null, null],
-      userData: [
-         { name: null, status: null, leftSince: 0 },
-         { name: null, status: null, leftSince: 0 },
-         { name: null, status: null, leftSince: 0 },
-         { name: null, status: null, leftSince: 0 }
-      ],
-      state: 0,
-      emptySince: null
-   };
-   console.log(`room created ${roomId}`);
-   return roomId
-}
-
-export function joinRoom(room, roomId, io, socket) {
-
-   // check if user is already connected on with other socket
-   let alreadyConnected = false;
-   for (let index = 0; index < room.userAuthIds.length; index++) {
-      const element = room.userAuthIds[index];
-
-      if (element == socket.data.authId) {
-         if (room.userData[index].leftSince == 0) {
-            console.log(`${socket.data.authId} did not join room ${roomId} because it was already connected: ${element.authId}`);
-            socket.emit('error', "already connected", { roomId: roomId });
-            alreadyConnected = true;
-         } else {
-            room.userData[index].leftSince = 0;
-
-            socket.join(roomId);
-            io.to(roomId).emit('update', [roomId, room]);
-            console.log(`${socket.data.authId} joined room ${roomId}`);
-            return true;
-         }
-
+         // store data of user in socket
+         await fetchUserdata(socket.data, pool);
+         next();
       }
    }
-   if (alreadyConnected)
-      return false
+});
 
-   //check if room is full
-   console.log(`check if room is full: ${room.userAuthIds.length}`)
-   if (countRoomAuthIds(room.userAuthIds) >= 4) {
+io.on('connection', async (socket) => {
 
-      console.log(`${socket.data.authId} did not join room ${roomId} because it was full: ${rooms[roomId].userAuthIds.length}`);
-      socket.emit('error', "room full", { roomId: roomId });
-      return false;
-   }
-   //find empty place in user-array
-   let roomIndexOfSocket = (() => {
-      for (let index = 0; index < room.userAuthIds.length; index++) {
-         if (room.userAuthIds[index] === null)
-            return index;
-      }
-   }
-   )();
-   room.userAuthIds[roomIndexOfSocket] = socket.data.authId;
-   room.userData[roomIndexOfSocket] = { name: socket.data.name, status: false, leftSince: 0 };
+   console.log(`${socket.id} created a new connection`); //${socket.data.authId}
 
-   socket.join(roomId);
-   io.to(roomId).emit('update', [roomId, room]);
-   console.log(`${socket.data.authId} joined room ${roomId}`);
-   return true;
-}
+   const userId = `${socket.id}`; //${socket.data.authId}
+   let currentRoomId;
 
-function countRoomAuthIds(userAuthIds) {
-   let counter = 0;
-   userAuthIds.forEach((authId) => {
-      if (authId !== null) {
-         counter++;
-      }
-   });
-   
-   return counter;
-}
+   //messages
+   socket.on('chatMessage', (msg) => {
+      console.log(socket.id + ' message: ' + msg);
 
-export function changeReadiness(room, roomId, io, socket, status) {
-   if (room.state == 1) {
-      return;
-   }
-   const userindex = room.userAuthIds.indexOf(socket.data.authId);
-   room.userData[userindex].status = status;
-
-   // check if any user is not ready
-   let allReady = true;
-   room.userData.forEach((data) => {
-      if (data.status == false) {
-         allReady = false;
+      if (currentRoomId) {
+         //send message to all users in room
+         io.to(currentRoomId).emit('chatMessage', msg);
       }
    });
 
-   console.log(`allReady ${allReady}`);
-   
-   console.log(`more then one ${countRoomAuthIds(room.userAuthIds)}`);
+   //room
 
-   //Update roomstatus if all users are ready
-   if (allReady && (countRoomAuthIds(room.userAuthIds) > 1)) {
-      room.state = 1;
-   }
+   socket.on('createRoom', () => {
 
-   io.to(roomId).emit('update', [roomId, room]);
-   console.log(room);
+      //leave old room
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, io, socket);
+      }
 
-}
+      let newRoomId = createRoom(rooms);
+
+      joinRoom(rooms[newRoomId], newRoomId, io, socket);
+      currentRoomId = newRoomId;
+   });
+
+
+   socket.on('joinRoom', (roomId) => {
+
+      console.log(`${userId} is trying joining room ${roomId}`);
+
+      // check if room exists
+      if (rooms[roomId]) {
+
+         //leave old room
+         if (rooms[currentRoomId]) {
+            leaveRoom(rooms, currentRoomId, io, socket);
+         }
+
+         let joined_room = joinRoom(rooms[roomId], roomId, io, socket);
+         if (joined_room) {
+            currentRoomId = roomId;
+         }
+
+      } else {
+         socket.emit('error', "room dose not exist", { roomId: roomId });
+      }
+   });
+
+   socket.on('changeReadiness', (status) => {
+      changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
+   })
+
+   socket.on('', (msgs) => {
+      console.table(msgs)
+   });
+
+   socket.on('disconnect', () => {
+      console.log(`${userId} disconnected`);
+
+      //leave old room
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, io, socket);
+      }
+   });
+
+});
+
+server.listen(port, () => {
+   console.log(`listening on *:${port}`);
+});
