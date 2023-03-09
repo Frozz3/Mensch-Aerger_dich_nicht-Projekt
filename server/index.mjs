@@ -5,12 +5,14 @@ import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
 
-const port = 3000; 
+const port = 3000;
 
 const pool = mariadb.createPool({
-   host: 'localhost',
+   host: '127.0.0.1',
    user: 'root',
-   database: 'lfup'
+   database: 'lfup',
+   password: 'imPW4Hnfd4cW3XbsWehp'
+
 });
 
 // generatin __dirname for modules
@@ -49,15 +51,15 @@ app.get('/game/:roomId', (req, res) => {
 
 io.use(async (socket, next) => {
    console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
-try{
+
    if (socket.handshake.auth.token == null) {
       // create new authId
       let authId = await findUnusedAuthId(pool);
       await addAuthId(authId, pool, socket);
-      let username = "User" + socket.id.slice(0,6);
-      await storeUsername(pool,authId,username);
+      let username = "User" + socket.id.slice(0, 6);
+      await storeUsername(pool, authId, username);
       socket.data.name = username;
-      socket.emit("newUsername",username);
+      socket.emit("newUsername", username);
       console.log(`${socket.id} got new Username: ${username}`)
       next();
    } else {
@@ -70,17 +72,14 @@ try{
          // authId valid
 
          // store data of user in socket
-         await fetchUserdata(socket.data,pool);
+         await fetchUserdata(socket.data, pool);
          next();
       }
    }
-}catch(err){
-throw new Error(err)
-}
 });
 
 io.on('connection', async (socket) => {
-   
+
    console.log(`${socket.id} created a new connection`); //${socket.data.authId}
 
    const userId = `${socket.id}`; //${socket.data.authId}
@@ -124,11 +123,13 @@ io.on('connection', async (socket) => {
             leaveRoom(rooms, currentRoomId, io, socket);
          }
 
-         currentRoomId = roomId;
-         joinRoom(rooms[currentRoomId], currentRoomId, io, socket);
+         let joined_room = joinRoom(rooms[roomId], roomId, io, socket);
+         if (joined_room) {
+            currentRoomId = roomId;
+         }
 
       } else {
-         socket.emit('error', "room dose not exist", {roomId: roomId});
+         socket.emit('error', "room dose not exist", { roomId: roomId });
       }
    });
 

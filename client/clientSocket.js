@@ -1,157 +1,112 @@
-import * as mariadb from 'mariadb';
-import * as path from 'path';
+//import { url } from "inspector";
 
-import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
-import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
-import { fetchUserdata, storeUsername } from './Userdata.mjs'
+const infoUrl = document.getElementById('roomLink');
+const playerNames = document.getElementsByClassName('playerName')
+const playerReadiness = document.getElementsByClassName('button_player')
+const msgForm = document.getElementById('form1');
+const msgInput = document.getElementById('input1');
+const roomForm = document.getElementById('form2');
+const roomInput = document.getElementById('input2');
+const sendMessage = document.getElementById('sendMessage');
+const enterRoom = document.getElementById('enterRoom');
+const createRoom = document.getElementById('createRoom');
+let playerIndex = 0;
+//connect     
+let authenticationId = localStorage.getItem('authId');
+let username = localStorage.getItem('username');
 
-const port = 3000;
 
-const pool = mariadb.createPool({
-   host: '127.0.0.1',
-   user: 'root',
-   database: 'lfup',
-   password: 'imPW4Hnfd4cW3XbsWehp'
+const socket = io({ auth: { token: authenticationId, name: username } });
 
+socket.on("connect", () => {
+    console.log(`socketId: ${socket.id}`);
 });
 
-// generatin __dirname for modules
-import * as url from 'url';
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-
-// server 
-import express from 'express';
-const app = express();
-
-import * as http from 'http';
-
-const server = http.createServer(app);
-
-import { Server } from 'socket.io';
-const io = new Server(server);
-
-const rooms = {};
-
-//routing
-
-app.use('/', express.static(path.join(__dirname, '../client')));
-app.use('/game/:roomId', express.static(path.join(__dirname, '../client')));
-
-app.get('/', (req, res) => {
-   res.sendFile(path.join(__dirname, '../client/index.html'));
+socket.on("connect_error", (err) => {
+    console.log("connection error");
+    console.table(err);
+    alert(`connect_error message: ${err.message}`);
 });
 
-app.get('/game/:roomId', (req, res) => {
-   res.sendFile(path.join(__dirname, '../client/index.html'));
+//user
+
+socket.on('newAuthenticationId', function (newAuthenticationId) {
+    authenticationId = newAuthenticationId;
+    localStorage.setItem('authId', newAuthenticationId);
+    console.log("new AuthenticationId saved: " + newAuthenticationId);
+});
+
+socket.on('newUsername', function (newUsername) {
+    newUsername = newUsername;
+    console.log("new Username received: " + newUsername);
 });
 
 
-//middleware
+//room
 
-io.use(async (socket, next) => {
-   console.log(`${socket.id} is trying to logging in with auth: '${socket.handshake.auth.token}'`);
+socket.on('update', (msgs) => {
 
-   if (socket.handshake.auth.token == null) {
-      // create new authId
-      let authId = await findUnusedAuthId(pool);
-      await addAuthId(authId, pool, socket);
-      let username = "User" + socket.id.slice(0, 6);
-      await storeUsername(pool, authId, username);
-      socket.data.name = username;
-      socket.emit("newUsername", username);
-      console.log(`${socket.id} got new Username: ${username}`)
-      next();
-   } else {
-      // check authId from handshake
-      const authIdOk = await checkAuthId(socket.handshake.auth.token, pool, socket);
-      if (!authIdOk) {
-         console.log(`${socket.id} wrong authId`);
-         next(new Error("wrong authId"));
-      } else {
-         // authId valid
+    console.log('update');
 
-         // store data of user in socket
-         await fetchUserdata(socket.data, pool);
-         next();
-      }
-   }
+    let currentUrl = (new URL(window.location.href));
+    let hostname = currentUrl.hostname;
+    console.log(`hostname: '${hostname}'`);
+
+    if (infoUrl.getAttribute('value') != `http://${hostname}:3000/game/${msgs[0]}` + msgs[0]) {
+
+        infoUrl.setAttribute('value', `http://${hostname}:3000/game/` + msgs[0]);
+
+        history.pushState(null, "", `http://${hostname}:3000/game/` + msgs[0]);
+
+
+    }
+
+    for (let index = 0; index < 4; index++) {
+        if (msgs[1].userAuthIds[index] !== null) {
+            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
+            playerReadiness[index].setAttribute('value', msgs[1].userData[index].status);
+            if (authenticationId == msgs[1].userAuthIds[index]) {
+                playerNames[index].setAttribute("style", 'background: #37d037');
+                playerIndex = index;
+            }
+            else {
+                playerNames[index].setAttribute("style", '');
+            }
+            if (msgs[1].userData[index].status == true) {
+                playerReadiness[index].innerHTML = "Ready";
+            }
+            else {
+                playerReadiness[index].innerHTML = "Not Ready";
+            }
+
+        } else {
+            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
+            playerReadiness[index].setAttribute('value', null);
+        }
+
+    }
+    console.table(msgs);
 });
 
-io.on('connection', async (socket) => {
-
-   console.log(`${socket.id} created a new connection`); //${socket.data.authId}
-
-   const userId = `${socket.id}`; //${socket.data.authId}
-   let currentRoomId;
-
-   //messages
-   socket.on('chatMessage', (msg) => {
-      console.log(socket.id + ' message: ' + msg);
-
-      if (currentRoomId) {
-         //send message to all users in room
-         io.to(currentRoomId).emit('chatMessage', msg);
-      }
-   });
-
-   //room
-
-   socket.on('createRoom', () => {
-
-      //leave old room
-      if (rooms[currentRoomId]) {
-         leaveRoom(rooms, currentRoomId, io, socket);
-      }
-
-      let newRoomId = createRoom(rooms);
-
-      joinRoom(rooms[newRoomId], newRoomId, io, socket);
-      currentRoomId = newRoomId;
-   });
-
-
-   socket.on('joinRoom', (roomId) => {
-
-      console.log(`${userId} is trying joining room ${roomId}`);
-
-      // check if room exists
-      if (rooms[roomId]) {
-
-         //leave old room
-         if (rooms[currentRoomId]) {
-            leaveRoom(rooms, currentRoomId, io, socket);
-         }
-
-         let joined_room = joinRoom(rooms[roomId], roomId, io, socket);
-         if (joined_room) {
-            currentRoomId = roomId;
-         }
-
-      } else {
-         socket.emit('error', "room dose not exist", { roomId: roomId });
-      }
-   });
-
-   socket.on('changeReadiness', (status) => {
-      changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
-   })
-
-   socket.on('', (msgs) => {
-      console.table(msgs)
-   });
-
-   socket.on('disconnect', () => {
-      console.log(`${userId} disconnected`);
-
-      //leave old room
-      if (rooms[currentRoomId]) {
-         leaveRoom(rooms, currentRoomId, io, socket);
-      }
-   });
-
+//error
+socket.on('error', (msg, data) => {
+    console.log(`error message: ${msg}`);
+    console.log(data);
+    alert(`error message: ${msg}`);
 });
 
-server.listen(port, () => {
-   console.log(`listening on *:${port}`);
-});
+// reenter room
+
+//pathNames[1].slice(0,5);
+let roomIdRegex = "/game\/([0-9a-f]{5})";
+const roomId = window.location.pathname.match(roomIdRegex);
+console.log(`rommId from url: '${roomId}'`);
+
+if (roomId) {
+    socket.emit('joinRoom', roomId[1]);
+
+    console.log('try joining Room:', roomId[1]);
+} else {
+    socket.emit('createRoom');
+    console.log('try createRoom');
+}
