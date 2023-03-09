@@ -1,7 +1,9 @@
+
 body{background-color: whitesmoke;}
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+
 .container
 {
     margin: auto;
@@ -33,6 +35,8 @@ Header Anfang
    
    
 }
+
+
  
 
 /*Popup*/
@@ -196,6 +200,7 @@ ul {
 .nav-list-item {
     float: left;
 }
+
 /*NAVI*/
 
 
@@ -207,8 +212,7 @@ Game Anfang
 {  
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: span 3;
+    grid-row-end: span 2;
 }
 
  /*
@@ -240,7 +244,7 @@ Player Anfang
   
   .button_player {
     margin-left: 10px;
-    min-width: 80px;
+    width: 130px;
   }
 
  /*
@@ -295,8 +299,8 @@ Buttons Anfang
   .button3 {
     margin-left: 10px;
     border-radius: 50px;
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
   }
 
 
@@ -426,9 +430,10 @@ footer
 
 /* FOOTER */
 
- 
+
 /* Mobile Phone/Tablet
 */
+
 
 @media only screen and (max-width: 800px) {
     .container{
@@ -440,6 +445,69 @@ footer
 
 h1{
     font-size: 30px;
+    margin-top: 30px;
+}
+
+.menu-btn{
+    z-index: 50;
+    position: relative;
+    float: right;
+    margin: 20px 25px 0px 0px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    
+
+
+}
+
+.menu_btn_burger{
+    width: 50px;
+    height: 6px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(255, 101,47,.2);
+    transition: all .5s ease-in-out;
+}
+.menu_btn_burger::before,
+.menu_btn_burger::after{
+    content:'';
+    position: absolute;
+    width: 50px;
+    height: 6px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(255, 101,47,.2);
+    transition: all .5s ease-in-out;
+}
+
+.menu_btn_burger::before{
+    transform: translateY(-16px);
+}
+
+.menu_btn_burger::after{
+    transform: translateY(16px);
+}
+
+/*Animation*/
+.menu-btn.open .menu_btn_burger{
+    transform: translateX(-50px);
+    background: transparent;
+    box-shadow: none;
+}
+.menu-btn.open .menu_btn_burger::before{
+    transform: rotate(45deg) translate(35px, -35px);
+}
+.menu-btn.open .menu_btn_burger::after{
+    transform: rotate(-45deg) translate(35px, 35px);
+}
+
+#open-close-nav{
+    display: none;
 }
 
 .nav-item
@@ -470,13 +538,6 @@ h1{
 }
 
 
-
-.fot-nav
-{
-
-   display: block;
-    
-}
 
 ul{
     margin: 0 auto;
@@ -512,3 +573,4 @@ ul{
     margin: 0 10px;
   }
 }
+
