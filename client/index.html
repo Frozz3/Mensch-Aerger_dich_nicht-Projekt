@@ -16,6 +16,44 @@
 </head>
 
 <body>
+    <popup>
+        <div class="form" id="popup-close">
+            <div>
+                <button class="close-button" onclick="togglePopup()">&times;</button>
+            </div>
+            <div class="tab-header">
+                <div class="active" onclick="switchTab()">Registrieren</div>
+                <div class="active" onclick="switchTab()">Anmelden</div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-body active">
+                    <div class="form-element">
+                        <input type="text" placeholder="Email">
+                    </div>
+                    <div class="form-element">
+                        <input type="text" placeholder="Benutzername">
+                    </div>
+                    <div class="form-element">
+                        <input type="password" placeholder="Passwort">
+                    </div>
+                    <div class="form-element">
+                        <button>Registrieren</button>
+                    </div>
+                </div>
+                <div class="tab-body">
+                    <div class="form-element">
+                        <input type="text" placeholder="Email / Benutzername">
+                    </div>
+                    <div class="form-element">
+                        <input type="text" placeholder="Passwort:">
+                    </div>
+                    <div class="form-element">
+                        <button>Anmelden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </popup>
     <div class="container">
         <header class="bordered hdr">
             <div class="menu-btn" onclick="myFunction()">
@@ -38,44 +76,7 @@
 
         </header>
 
-        <popup>
-            <div class="form" id="popup-close">
-                <div>
-                    <button class="close-button" onclick="togglePopup()">&times;</button>
-                </div>
-                <div class="tab-header">
-                    <div class="active" onclick="switchTab()">Registrieren</div>
-                    <div class="active" onclick="switchTab()">Anmelden</div>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-body active">
-                        <div class="form-element">
-                            <input type="text" placeholder="Email">
-                        </div>
-                        <div class="form-element">
-                            <input type="text" placeholder="Benutzername">
-                        </div>
-                        <div class="form-element">
-                            <input type="password" placeholder="Passwort">
-                        </div>
-                        <div class="form-element">
-                            <button>Registrieren</button>
-                        </div>
-                    </div>
-                    <div class="tab-body">
-                        <div class="form-element">
-                            <input type="text" placeholder="Email / Benutzername">
-                        </div>
-                        <div class="form-element">
-                            <input type="text" placeholder="Passwort:">
-                        </div>
-                        <div class="form-element">
-                            <button>Anmelden</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </popup>
+       
         <div class="content-game bordered">Game</div>
 
         <div class="content-player bordered">
