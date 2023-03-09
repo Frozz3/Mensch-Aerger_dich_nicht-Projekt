@@ -1,4 +1,4 @@
-function myFunction() {
+function copylink() {
 
   var copyText = document.getElementById("roomLink");
   copyText.select();
