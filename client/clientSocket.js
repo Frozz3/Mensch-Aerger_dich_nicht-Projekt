@@ -50,24 +50,23 @@ socket.on('update', (msgs) => {
 
     let currentUrl = (new URL(window.location.href));
     let hostname = currentUrl.hostname;
-    if (hostname = "localhost") {
-        hostname = "localhost:3000"
-    }
     console.log(`hostname: '${hostname}'`);
 
-    if (infoUrl.getAttribute('value') != `http://${hostname}/game/` + msgs[0]) {
+    if (infoUrl.getAttribute('value') != `http://${hostname}:3000/game/${msgs[0]}` + msgs[0]) {
 
-        infoUrl.setAttribute('value', `http://${hostname}/game/` + msgs[0]);
-        history.replaceState({}, null, `http://${hostname}/game/${msgs[0]}`);
+        infoUrl.setAttribute('value', `http://${hostname}:3000/game/` + msgs[0]);
+
+        history.pushState(null, "", `http://${hostname}:3000/game/` + msgs[0]);
+        //location.replace(`http://${hostname}:3000/game/${msgs[0]}`);
+
 
     }
 
     for (let index = 0; index < 4; index++) {
-        if (msgs[1].userAuthIds[index]  !== null) {
+        if (msgs[1].userAuthIds[index] !== null) {
             playerNames[index].setAttribute('value', msgs[1].userData[index].name);
             playerReadiness[index].setAttribute('value', msgs[1].userData[index].status);
             if (authenticationId == msgs[1].userAuthIds[index]) {
-                console.log(`test${index}`)
                 playerNames[index].setAttribute("style", 'background: #37d037');
                 playerIndex = index;
             }
