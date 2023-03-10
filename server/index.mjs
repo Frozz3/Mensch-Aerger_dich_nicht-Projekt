@@ -12,6 +12,10 @@ const pool = mariadb.createPool({
    user: 'root',
    database: 'lfup',
    password: 'imPW4Hnfd4cW3XbsWehp'
+   
+   //host: 'localhost',
+   //user: 'root',
+   //database: 'lfup'
 
 });
 
@@ -40,6 +44,10 @@ app.use('/game/:roomId', express.static(path.join(__dirname, '../client')));
 
 app.get('/', (req, res) => {
    res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+app.get('/rangliste', (req, res) => {
+   res.sendFile(path.join(__dirname, '../client/rangliste.html'));
 });
 
 app.get('/game/:roomId', (req, res) => {
