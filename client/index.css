@@ -217,6 +217,7 @@ Game Ende
 Player Anfang
 */
 .content-player {
+  MIN-WIDTH: 500PX;
   grid-column-start: 2;
   grid-column-end: 2;
   grid-row-start: 2;
