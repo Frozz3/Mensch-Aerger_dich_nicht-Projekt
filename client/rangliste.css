@@ -69,7 +69,8 @@ body{background-color: rgb(80, 80, 80);}
      linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
       url(picture/spielfeld2.jpg);
       background-size: 120%;
-      
+      background-repeat: no-repeat;
+
       animation: animatedBackground 120s linear infinite;
     /* background-image: url('picture/spielfeld2.jpg'); */
 }
