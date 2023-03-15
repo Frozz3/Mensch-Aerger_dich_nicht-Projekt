@@ -156,7 +156,7 @@ export function changeReadiness(room, roomId, io, socket, status) {
       }
    });
 
-   console.log(`allReady ${allReady}`);
+   console.log(`allReady: ${allReady}`);
 
    //console.log(`more then one ${countRoomAuthIds(room.userAuthIds)}`);
 
