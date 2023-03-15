@@ -8,14 +8,15 @@ import { fetchUserdata, storeUsername } from './Userdata.mjs'
 const port = 3000;
 
 const pool = mariadb.createPool({
-   host: '127.0.0.1',
-   user: 'root',
-   database: 'lfup',
-   password: 'imPW4Hnfd4cW3XbsWehp'
    
-   //host: 'localhost',
+   //host: '127.0.0.1',
    //user: 'root',
-   //database: 'lfup'
+   //database: 'lfup',
+   //password: 'imPW4Hnfd4cW3XbsWehp'
+
+   host: 'localhost',
+   user: 'root',
+   database: 'lfup'
 
 });
 
@@ -124,20 +125,24 @@ io.on('connection', async (socket) => {
       console.log(`${userId} is trying joining room ${roomId}`);
 
       // check if room exists
-      if (rooms[roomId]) {
-
-         //leave old room
-         if (rooms[currentRoomId]) {
-            leaveRoom(rooms, currentRoomId, io, socket);
-         }
-
-         let joined_room = joinRoom(rooms[roomId], roomId, io, socket);
-         if (joined_room) {
-            currentRoomId = roomId;
-         }
-
-      } else {
+      if (!rooms[roomId]) {
          socket.emit('error', "room dose not exist", { roomId: roomId });
+         return;
+      }
+      if (rooms[roomId].state != 0) {
+         socket.emit('error', "room has started", { roomId: roomId });
+         return;
+      }
+
+
+      //leave old room
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, io, socket);
+      }
+      //join new room
+      let joined_room = joinRoom(rooms[roomId], roomId, io, socket);
+      if (joined_room) {
+         currentRoomId = roomId;
       }
    });
 
