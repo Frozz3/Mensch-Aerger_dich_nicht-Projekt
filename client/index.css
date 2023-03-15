@@ -237,6 +237,15 @@ Player Anfang
   width: 130px;
 }
 
+.input-style				{
+  font-size:18px;
+  padding:10px 10px 10px 5px;
+  background: #232220;
+  border:none;
+  border-bottom:1px solid #757575;
+  color: white;
+}
+input:focus 		{ outline:none; }
 
 /*
 Player Ende
