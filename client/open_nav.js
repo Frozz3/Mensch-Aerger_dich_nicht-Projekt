@@ -1,4 +1,4 @@
-function myFunction() {
+function open_nav() {
     var nav = document.getElementById("open-close-nav");
     if (nav.style.display === "flex") {
     nav.style.display = "none";
