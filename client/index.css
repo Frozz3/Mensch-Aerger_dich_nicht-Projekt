@@ -1,5 +1,6 @@
 body {
   background-color: rgb(80, 80, 80);
+  margin: 0;
 }
 * {
   font-family: Arial, Helvetica, sans-serif;
@@ -45,6 +46,7 @@ Header Anfang
   background: #f5f5f5;
   box-shadow: 5px 5px 10px 10px #333;
   border-radius: 10px;
+  z-index: 1;
 }
 .form .tab-header {
   height: 40px;
@@ -63,8 +65,8 @@ Header Anfang
 }
 
 .form .tab-header > div.active {
-  background: #b28735;
-  color: black;
+  background: #212121;
+  color: white;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
@@ -97,8 +99,8 @@ Header Anfang
   padding: 10px;
   border: none;
   outline: none;
-  background: #b28735;
-  color: black;
+  background: #212121;
+  color: white;
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -128,24 +130,22 @@ Header Anfang
 
 /*HEADER*/
 .container header {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
-    url(picture/spielfeld2.jpg);
-    background-size: 120%;
-    animation: animatedBackground 120s linear infinite;
+  background: 
+     linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
+      url(picture/spielfeld2.jpg);
+      background-size: 140%;
+      background-repeat: no-repeat;
+    
+      animation: animatedBackground 50s linear infinite;
+    /* background-image: url('picture/spielfeld2.jpg'); */
 }
 
 @keyframes animatedBackground {
-    0% { background-position: -150 0; }
-    50% { background-position: -300px 0; }
+    0% { background-position: -50 0; }
+    50% { background-position: -150px 0; }
     100% { background-position: 0 0;}
 }
 
-.header-content {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 10;
-}
 
 .background {
   /* filter:saturate(0.5); */
@@ -276,6 +276,12 @@ Buttons Anfang
   box-shadow: 5px 5px 2px 1px rgba(23, 23, 24, 0.2);
 }
 
+.button:active {
+  background-color: white;
+  box-shadow: 0 5px  black;
+  transform: translateY(-5px);
+}
+
 .button-search {
   display: block;
   margin: 0 auto;
@@ -336,14 +342,34 @@ footer {
   text-transform: capitalize;
   line-height: 3rem;
 }
-.fa {
-  padding: 20px;
-  font-size: 30px;
-  width: 30px;
-  text-align: center;
-  text-decoration: none;
-  margin: 5px 2px;
-  border-radius: 50%;
+.fa 
+{
+    padding: 20px;
+    font-size: 30px;
+    width: 37px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px 2px;
+    border-radius: 50%;
+}
+.fa:hover 
+{
+    opacity: 0.7;
+}
+.fa-facebook 
+{
+    background: #3B5998;
+    color: white;
+}
+.fa-twitter 
+{
+    background: #55ACEE;
+    color: white;
+}
+.fa-google 
+{
+    background: #dd4b39;
+    color: white;
 }
 
 .socialmedia {
@@ -406,6 +432,36 @@ footer {
   background-color: lightgreen;
 }
 
+.fa 
+{
+    padding: 20px;
+    font-size: 30px;
+    width: 25px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px 2px;
+    border-radius: 50%;
+}
+.fa:hover 
+{
+    opacity: 0.7;
+}
+.fa-facebook 
+{
+    background: #3B5998;
+    color: white;
+}
+.fa-twitter 
+{
+    background: #55ACEE;
+    color: white;
+}
+.fa-google 
+{
+    background: #dd4b39;
+    color: white;
+}
+
 /* FOOTER */
 
 /* FOOTER */
@@ -413,7 +469,7 @@ footer {
 /* Mobile Phone/Tablet
 */
 
-@media only screen and (max-width: 870px) {
+@media only screen and (max-width: 1300px) {
   .container {
     display: grid;
     grid-template-rows: 1fr 1fr;
@@ -482,6 +538,7 @@ footer {
 
   #open-close-nav {
     display: none;
+    width: 100%;
   }
 
   .nav-item {
@@ -513,15 +570,10 @@ footer {
     grid-row-end: 5;
   }
 
-  .hdr
-  {
-    
-  }
-
-  .fot{
+ 
     
 
-  }
+  
   ul {
     margin: 0 auto;
     flex-direction: column;
@@ -561,5 +613,22 @@ footer {
   }
 }
 
+
+
+@media only screen and (max-width: 500px)
+{
+  .copy{
+    display: block;
+    text-align: center;
+  }
+
+  h1{
+    font-size: 20px;
+  }
+
+  .container{
+    margin: 0;
+  }
+}
 
 
