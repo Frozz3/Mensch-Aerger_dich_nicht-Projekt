@@ -1,37 +1,79 @@
 import * as mariadb from 'mariadb';
 import * as path from 'path';
+import * as fs from 'fs';
 
+import express from 'express';
+import * as http from 'http';
+import * as https from 'https';
 import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
-
-const port = 3000;
-
-const pool = mariadb.createPool({
-   
-   //host: '127.0.0.1',
-   //user: 'root',
-   //database: 'lfup',
-   //password: 'imPW4Hnfd4cW3XbsWehp'
-
-   host: 'localhost',
-   user: 'root',
-   database: 'lfup'
-
-});
 
 // generatin __dirname for modules
 import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
+
+
+const httpPort = 3000;
+const httpsPort = 443;
+
+const testDBOptions = {
+   host: 'localhost',
+   user: 'root',
+   database: 'lfup'
+};
+
+const serverDBOptions = {
+   host: '127.0.0.1',
+   user: 'root',
+   database: 'lfup',
+   password: 'imPW4Hnfd4cW3XbsWehp'
+};
+
+
+
+
+
 // server 
-import express from 'express';
-const app = express();
 
-import * as http from 'http';
 
-const server = http.createServer(app);
+
+let port;
+let app;
+let pool;
+let server;
+
+switch (1) {
+   case 1:
+      port = httpPort;
+      app = express();
+      pool = mariadb.createPool(testDBOptions);
+      server = http.createServer(app);
+      break;
+   case 2:
+      
+      port = httpsPort;
+      app = express();
+      pool = mariadb.createPool(serverDBOptions);
+
+      const certOptions = {
+         key: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/privkey.pem'),
+         cert: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/fullchain.pem')
+      }
+      
+      server = https.createServer(certOptions, app);
+      break;
+
+   default:
+      break;
+}
+
+
+
+
+
 
 import { Server } from 'socket.io';
 const io = new Server(server);
@@ -160,11 +202,12 @@ io.on('connection', async (socket) => {
       let action = {
          playerNum: 0,
          type: playerAction.type,
-         value: playerAction.value};
-         
-         //do action
-         
-         //update
+         value: playerAction.value
+      };
+
+      //do action
+
+      //update
    })
 
    socket.on('disconnect', () => {
