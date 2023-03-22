@@ -23,7 +23,8 @@ body{background-color: rgb(80, 80, 80);}
 
 .hdr{grid-area: hdr;}
 .uda{grid-area: uda;}
-.rng{grid-area: rng;}
+.rng{grid-area: rng;
+}
 .sta0{grid-area: sta;}
 .sta1{grid-area: sta;}
 .sta{
@@ -68,7 +69,7 @@ body{background-color: rgb(80, 80, 80);}
     background: 
      linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
       url(picture/spielfeld2.jpg);
-      background-size: 130%;
+      background-size: 140%;
       background-repeat: no-repeat;
     
       animation: animatedBackground 50s linear infinite;
@@ -456,8 +457,18 @@ footer
         font-size: 17px;
     }
     
+    .rng
+    {
+        padding-bottom: 25px;
+    }
+
+    .body
+    {
+        
+    }
     .wrapper{
 
+        margin: 0;
         grid-template-areas:
         "hdr hdr"
         "uda uda"
