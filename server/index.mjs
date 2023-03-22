@@ -150,9 +150,22 @@ io.on('connection', async (socket) => {
       changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
    })
 
-   socket.on('', (msgs) => {
-      console.table(msgs)
-   });
+   socket.on('gameAction', (playerAction) => {
+      let room = rooms[currentRoomId]
+      if (room.state == 0) {
+         return;
+      }
+      let Roomindex
+
+      let action = {
+         playerNum: 0,
+         type: playerAction.type,
+         value: playerAction.value};
+         
+         //do action
+         
+         //update
+   })
 
    socket.on('disconnect', () => {
       console.log(`${userId} disconnected`);

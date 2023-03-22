@@ -56,32 +56,31 @@ socket.on('update', (msgs) => {
 
         infoUrl.setAttribute('value', `http://${hostname}:3000/game/` + msgs[0]);
 
-        history.pushState(null, "", `http://${hostname}:3000/game/` + msgs[0]);
-
+        window.history.pushState(null, "", `http://${hostname}:3000/game/` + msgs[0]);
 
     }
 
-    for (let index = 0; index < 4; index++) {
-        if (msgs[1].userAuthIds[index] !== null) {
-            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
-            playerReadiness[index].setAttribute('value', msgs[1].userData[index].status);
-            if (authenticationId == msgs[1].userAuthIds[index]) {
-                playerNames[index].setAttribute("style", 'background: #37d037');
-                playerIndex = index;
+    for (let i = 0; i < 4; i++) {
+        if (msgs[1].userAuthIds[i] !== null) {
+            playerNames[i].setAttribute('value', msgs[1].userData[i].name);
+            playerReadiness[i].setAttribute('value', msgs[1].userData[i].status);
+            if (authenticationId == msgs[1].userAuthIds[i]) {
+                playerNames[i].setAttribute("style", 'background: #37d037');
+                playerIndex = i;
             }
             else {
-                playerNames[index].setAttribute("style", '');
+                playerNames[i].setAttribute("style", '');
             }
-            if (msgs[1].userData[index].status == true) {
-                playerReadiness[index].innerHTML = "Ready";
+            if (msgs[1].userData[i].status == true) {
+                playerReadiness[i].innerHTML = "Ready";
             }
             else {
-                playerReadiness[index].innerHTML = "Not Ready";
+                playerReadiness[i].innerHTML = "Not Ready";
             }
 
         } else {
-            playerNames[index].setAttribute('value', msgs[1].userData[index].name);
-            playerReadiness[index].setAttribute('value', null);
+            playerNames[i].setAttribute('value', msgs[1].userData[i].name);
+            playerReadiness[i].setAttribute('value', null);
         }
 
     }
