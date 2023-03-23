@@ -184,7 +184,7 @@ ul {
     /* backdrop-filter: opacity(20%);*/
 }
 
-#open-close-nav {
+#nav-list {
   /*display: block;*/
   width: 100%;
 }
@@ -212,8 +212,8 @@ ul {
   .menu-btn-container {
     display: none;
   }
-
-  #open-close-nav #login-list-item {
+  
+  #login-list-item {
     float: right;
   }
 
