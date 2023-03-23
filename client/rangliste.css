@@ -480,18 +480,15 @@ footer
         "fot fot"
     }
 
+    body
+    {
+        margin: 0;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    #open-close-nav
+    {
+        width: 100%;
+    }
     .menu-btn {
         z-index: 50;
         position: relative;
