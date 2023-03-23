@@ -17,9 +17,9 @@
     "url": "https://github.com/Frozz3/Mensch-Aerger_dich_nicht-Projekt/issues"
   },
   "homepage": "https://madn.it-assistant.de/",
-
   "dependencies": {
     "express": "^4.18.2",
+    "js-madn": "github:HaukeOtt/js-madn",
     "mariadb": "^3.0.2",
     "nodemon": "^2.0.21",
     "socket.io": "^4.5.4",
