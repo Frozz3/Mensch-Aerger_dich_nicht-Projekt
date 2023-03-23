@@ -1,8 +1,15 @@
 function open_nav() {
     var nav = document.getElementById("open-close-nav");
-    if (nav.style.display === "flex") {
-    nav.style.display = "none";
+    let navId = nav.id;
+    console.log(`id of NAV: ${navId}`);
+    console.log(`classes: ${nav.classList}`);
+    //.dontShowOnSmall
+    if (nav.classList.contains("dontShowOnSmall")){
+
+        nav.classList.remove("dontShowOnSmall");
+        //nav.classList.add("dontShowOnSmall");
     } else {
-    nav.style.display = "flex";
+        nav.classList.add("dontShowOnSmall");
+        //nav.classList.add("dontShowOnSmall");
     }
-    }
+}
