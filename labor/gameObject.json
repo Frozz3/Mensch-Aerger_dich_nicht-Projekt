@@ -1,0 +1,129 @@
+
+    {
+      "userAuthIds": [
+        "3b4544e2-1dc4-4cdc-80b7-8fe3f2f5e269",
+        null,
+        null,
+        null
+      ],
+      "userData": [
+        {
+          "name": "User1Fs3j1",
+          "status": true,
+          "leftSince": 0,
+          "index": 0
+        },
+        {
+          "name": null,
+          "status": null,
+          "leftSince": 0
+        },
+        {
+          "name": null,
+          "status": null,
+          "leftSince": 0,
+          "index": null
+        },
+        {
+          "name": null,
+          "status": null,
+          "leftSince": 0,
+          "index": null
+        }
+      ],
+      "game": {
+        "playerInLine": 0,
+        "inputState": 1,
+        "temp": {
+          "dicevelue": 4,
+          "moveablepawns": null,
+          "positionsWhenMoved": null,
+          "msg": null
+        },
+        "players": [
+          {
+            "num": 0,
+            "pawns": [
+              {
+                "pos": 0
+              },
+              {
+                "pos": 1
+              },
+              {
+                "pos": 2
+              },
+              {
+                "pos": 3
+              }
+            ],
+            "lastDiceValue": 4
+          },
+          {
+            "num": null,
+            "pawns": [
+              {
+                "pos": 44
+              },
+              {
+                "pos": 1
+              },
+              {
+                "pos": 2
+              },
+              {
+                "pos": 3
+              }
+            ],
+            "lastDiceValue": null
+          },
+          {
+            "num": 1,
+            "pawns": [
+              {
+                "pos": 0
+              },
+              {
+                "pos": 1
+              },
+              {
+                "pos": 2
+              },
+              {
+                "pos": 3
+              }
+            ],
+            "lastDiceValue": null
+          },
+          {
+            "num": null,
+            "pawns": [
+              {
+                "pos": 0
+              },
+              {
+                "pos": 1
+              },
+              {
+                "pos": 2
+              },
+              {
+                "pos": 3
+              }
+            ],
+            "lastDiceValue": null
+          }
+        ],
+        "dice": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "winner": -1
+      },
+      "state": 1,
+      "emptySince": null
+    }

@@ -49,14 +49,15 @@ socket.on('update', (msgs) => {
     console.log('update');
 
     let currentUrl = (new URL(window.location.href));
-    let hostname = currentUrl.hostname;
-    console.log(`hostname: '${hostname}'`);
+    let origin = currentUrl.origin;
+    console.log(`origin: '${origin}'`);
 
-    if (infoUrl.getAttribute('value') != `http://${hostname}:3000/game/${msgs[0]}` + msgs[0]) {
+    if (infoUrl.getAttribute('value') != `${origin}/game/${msgs[0]}` + msgs[0]) {
 
-        infoUrl.setAttribute('value', `http://${hostname}:3000/game/` + msgs[0]);
+        infoUrl.setAttribute('value', `${origin}/game/` + msgs[0]);
 
-        window.history.pushState(null, "", `http://${hostname}:3000/game/` + msgs[0]);
+        history.pushState(null, "", `${origin}/game/` + msgs[0]);
+
 
     }
 

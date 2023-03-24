@@ -13,7 +13,7 @@
     <script language="javascript" type="text/javascript" src="change_button_player.js"></script>
     <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
     <script language="javascript" type="text/javascript" src="open_nav.js"></script>
-   
+
 
 
 </head>
@@ -59,19 +59,23 @@
     </popup>
     <div class="container">
         <header class="bordered hdr">
-            <div class="menu-btn" onclick="open_nav()">
-                <div class="menu_btn_burger">
+            <div class="menu-btn-container">
+                <div class="menu-btn" onclick="open_nav()">
+                    <div class="menu_btn_burger">
+                    </div>
                 </div>
+                <script src="burger.js"></script>
             </div>
-            <script src="burger.js"></script>
             <h1>
                 MENSCH ÄRGERE DICH NICHT
             </h1>
 
-            <ul id="open-close-nav" class="open-close-nav">
-                <li class="nav-list-item"><a class="nav-item" href="/">Startseite</a></li>
+            <ul id="nav-list" class="open-close-nav dontShowOnSmall">
+                <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
                 <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
-                <li> <button class="nav-item" style="float: right;" onclick="togglePopup()">Login</button></li>
+                <li id="login-list-item" class="nav-list-item">
+                    <button id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
+                </li>
                 <script>
                     function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
                 </script>
@@ -82,22 +86,22 @@
 
         <div class="content-player bordered">
             <div class="player-box">
-            <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
-            <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player button "
-                type="button">Nicht Bereit</button>
-            <br />
-            <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
-            <button id="button_ready1" value="true" onclick="toggleReadyButton(this)" class="button_player button"
-                type="button">Nicht Bereit</button>
-            <br />
-            <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
-            <button id="button_ready2" value="true" onclick="toggleReadyButton(this)" class="button_player button"
-                type="button">Nicht Bereit</button>
-            <br />
-            <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
-            <button id="button_ready3" value="true" onclick="toggleReadyButton(this)" class="button_player button"
-                type="button">Nicht Bereit</button>
-                </div>
+                <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
+                <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player button "
+                    type="button">Nicht Bereit</button>
+                <br />
+                <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
+                <button id="button_ready1" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                    type="button">Nicht Bereit</button>
+                <br />
+                <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
+                <button id="button_ready2" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                    type="button">Nicht Bereit</button>
+                <br />
+                <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
+                <button id="button_ready3" value="true" onclick="toggleReadyButton(this)" class="button_player button"
+                    type="button">Nicht Bereit</button>
+            </div>
         </div>
         <div class="content-buttons bordered">
             <button class="button button-search" type="button">Zufälliges Spiel!</button>
