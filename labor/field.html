@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .pawn {
+            position: absolute;
+            box-sizing: border-box;
+
+            border-radius: 100%;
+            height: calc(100% / 11);
+            width: calc(100% / 11);
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game"
+        style=" background-color: blueviolet; aspect-ratio: 1 / 1; max-height: 90vh; margin: 0 auto; position: relative">
+        <div id="pawn-0-0" class="pawn yellow"></div>
+        <div id="pawn-0-1" class="pawn yellow"></div>
+        <div id="pawn-0-2" class="pawn yellow"></div>
+        <div id="pawn-0-3" class="pawn yellow"></div>
+        <div id="pawn-1-0" class="pawn green"></div>
+        <div id="pawn-1-1" class="pawn green"></div>
+        <div id="pawn-1-2" class="pawn green"></div>
+        <div id="pawn-1-3" class="pawn green"></div>
+        <div id="pawn-2-0" class="pawn red"></div>
+        <div id="pawn-2-1" class="pawn red"></div>
+        <div id="pawn-2-2" class="pawn red"></div>
+        <div id="pawn-2-3" class="pawn red"></div>
+        <div id="pawn-3-0" class="pawn blue"></div>
+        <div id="pawn-3-1" class="pawn blue"></div>
+        <div id="pawn-3-2" class="pawn blue"></div>
+        <div id="pawn-3-3" class="pawn blue"></div>
+    </div>
+</body>
+<script type="text/javascript" src="gameObject.json"></script>
+<script>
+
+    function getCoordinates(playerIndex, pos) {
+        const parkFieldsCoordinates = [
+            [
+                [0, 0], [0, 1], [1, 1], [1, 0]
+            ],
+            [
+                [0, 9], [0, 10], [1, 10], [1, 9]
+            ],
+            [
+                [9, 9], [9, 10], [10, 10], [10, 9]
+            ],
+            [
+                [9, 0], [10, 0], [10, 1], [9, 1]
+            ],
+        ];
+
+        const finishFieldsCoordinates = [
+            [
+                [5, 1], [5, 2], [5, 3], [5, 4],
+            ],
+            [
+                [1, 5], [2, 5], [3, 5], [4, 5],
+            ],
+            [
+                [5, 6], [5, 7], [5, 8], [5, 9],
+            ],
+            [
+                [6, 5], [7, 5], [8, 5], [9, 5],
+            ],
+        ];
+
+        const openFieldsCoordinates = [
+            [4, 0], [4, 1], [4, 2], [4, 3], [4, 4],
+            [3, 4], [2, 4], [1, 4], [0, 4], [0, 5],
+
+            [0, 6], [1, 6], [2, 6], [3, 6], [4, 6],
+            [4, 7], [4, 8], [4, 9], [4, 10], [5, 10],
+
+            [6, 10], [6, 9], [6, 8], [6, 7], [6, 6],
+            [7, 6], [8, 6], [9, 6], [10, 6], [10, 5],
+
+            [10, 4], [9, 4], [8, 4], [7, 4], [6, 4],
+            [6, 3], [6, 2], [6, 1], [6, 0], [5, 0]
+        ];
+
+        if (pos < 4) {
+            return parkFieldsCoordinates[playerIndex][pos];
+        } else if (pos > 43) {
+            let arrayIndex = pos - 43;
+            console.log(playerIndex)
+            return finishFieldsCoordinates[playerIndex][arrayIndex];
+        } else {
+            let fromPos = pos - 4;
+            let absolutePos = (fromPos + 10 * playerIndex) % 40;
+            return openFieldsCoordinates[absolutePos];
+        }
+
+    }
+
+    fetch('./gameObject.json')
+        .then((response) => response.json())
+        .then((room) => {
+            console.log(room);
+
+            const gameDiv = document.getElementById('game');
+            if (room.state) {
+
+                console.log("roomstate !!!");
+                let game = room.game;
+
+                gameDiv.style.display = "block";
+
+                for (let playerIndex = 0; playerIndex < game.players.length; playerIndex++) {
+                    console.log(`palyers: ${game.players.length}`)
+                    const player = game.players[playerIndex];
+                    for (let pawnIndex = 0; pawnIndex < player.pawns.length; pawnIndex++) {
+                        console.log(player);
+                        const pawn = player.pawns[pawnIndex];
+                        const pawnElement = document.getElementById("pawn-" + playerIndex + "-" + pawnIndex);
+                        const [top, left] = getCoordinates(playerIndex, pawn.pos);
+                        console.log("test",getCoordinates(playerIndex, pawn.pos));
+
+                        pawnElement.style.top = top * (100 / 11) + '%';
+                        pawnElement.style.left = left * (100 / 11) + '%';
+                    }
+
+                }
+
+
+
+            } else {
+                gameDiv.style.display = "none";
+            }
+        });
+
+
+</script>
+
+</html>
