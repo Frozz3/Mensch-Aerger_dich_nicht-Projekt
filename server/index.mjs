@@ -171,11 +171,6 @@ io.on('connection', async (socket) => {
          socket.emit('error', "room dose not exist", { roomId: roomId });
          return;
       }
-      if (rooms[roomId].state != 0) {
-         socket.emit('error', "room has started", { roomId: roomId });
-         return;
-      }
-
 
       //leave old room
       if (rooms[currentRoomId]) {
