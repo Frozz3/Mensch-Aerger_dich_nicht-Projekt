@@ -8,6 +8,7 @@ import * as https from 'https';
 import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
 import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
 import { fetchUserdata, storeUsername } from './Userdata.mjs'
+import { handleAction } from 'js-madn'
 
 // generatin __dirname for modules
 import * as url from 'url';
@@ -53,7 +54,7 @@ switch (1) {
       server = http.createServer(app);
       break;
    case 2:
-      
+
       port = httpsPort;
       app = express();
       pool = mariadb.createPool(serverDBOptions);
@@ -62,7 +63,7 @@ switch (1) {
          key: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/privkey.pem'),
          cert: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/fullchain.pem')
       }
-      
+
       server = https.createServer(certOptions, app);
       break;
 
@@ -188,21 +189,34 @@ io.on('connection', async (socket) => {
    })
 
    socket.on('gameAction', (playerAction) => {
-      let room = rooms[currentRoomId]
-      if (room.state == 0) {
-         return;
+      try {
+
+         const room = rooms[currentRoomId];
+         if (room.state == 0) {
+            return;
+         }
+
+         const action = {
+            playerNum: room.userData[room.userAuthIds.indexOf(socket.data.authId)].num,
+            type: playerAction.type,
+            value: playerAction.value
+         };
+
+         //do action
+         const response = handleAction(room.game, action);
+         console.log(action);
+         if (!response.ok) {
+            console.log(`error: ${response.msg}`)
+            socket.emit('error', response.msg, action);
+         } else {
+
+            io.to(currentRoomId).emit('update', [currentRoomId, room]);
+         }
+      } catch (error) {
+         console.log(rooms[currentRoomId]);
+         throw error;
       }
-      let Roomindex
 
-      let action = {
-         playerNum: 0,
-         type: playerAction.type,
-         value: playerAction.value
-      };
-
-      //do action
-
-      //update
    })
 
    socket.on('disconnect', () => {

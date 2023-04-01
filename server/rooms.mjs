@@ -1,4 +1,6 @@
 import { v4 as uuid } from 'uuid';
+
+import * as madn  from 'js-madn'
 //room funktions
 export function leaveRoom(rooms, roomId, io, socket) {
    try {
@@ -58,11 +60,12 @@ export function createRoom(rooms) {
    rooms[roomId] = {
       userAuthIds: [null, null, null, null],
       userData: [
-         { name: null, status: null, leftSince: 0, index: null },
-         { name: null, status: null, leftSince: 0, index: null },
-         { name: null, status: null, leftSince: 0, index: null },
-         { name: null, status: null, leftSince: 0, index: null }
+         { name: null, status: null, leftSince: 0, num: null },
+         { name: null, status: null, leftSince: 0, num: null },
+         { name: null, status: null, leftSince: 0, num: null },
+         { name: null, status: null, leftSince: 0, num: null }
       ],
+      game: null,
       state: 0,
       emptySince: null
    };
@@ -97,6 +100,13 @@ export function joinRoom(room, roomId, io, socket) {
       if (alreadyConnected)
          return false
 
+      //check if has started
+      
+      if (room.state != 0) {
+         socket.emit('error', "room has started", { roomId: roomId });
+         return false;
+      }
+      
       //check if room is full
       console.log(`check if room is full: ${room.userAuthIds.length}`)
       if (countRoomAuthIds(room.userAuthIds) >= 4) {
@@ -113,8 +123,14 @@ export function joinRoom(room, roomId, io, socket) {
          }
       }
       )();
+
       room.userAuthIds[roomIndexOfSocket] = socket.data.authId;
-      room.userData[roomIndexOfSocket] = { name: socket.data.name, status: false, leftSince: 0 };
+      room.userData[roomIndexOfSocket].name = socket.data.name;
+      room.userData[roomIndexOfSocket].status = false;
+      room.userData[roomIndexOfSocket].leftSince = 0;
+      room.userData[roomIndexOfSocket].num = null;
+
+
 
       socket.join(roomId);
       io.to(roomId).emit('update', [roomId, room]);
@@ -162,21 +178,33 @@ export function changeReadiness(room, roomId, io, socket, status) {
    //console.log(`more then one ${countRoomAuthIds(room.userAuthIds)}`);
 
    //Update roomstatus if all users are ready
-   if (allReady && (countRoomAuthIds(room.userAuthIds) > 1)) {
-      room.state = 1;
-      let counter = 0
-      for (let i = 0; i < room.userAuthIds.length; i++) {
-         if (room.userAuthIds[i]) {
-            room.userData.index = counter;
-            counter++;
-         }
-
-      }
+   let numberOfAuthIds = countRoomAuthIds(room.userAuthIds);
+   if (!allReady || (numberOfAuthIds <= 1)) {
+      console.log("sockets in group:");
+      console.log(io.sockets.adapter.rooms);
+      console.log("roomId: " + roomId);
+      console.log(room);
+      io.to(roomId).emit('update', [roomId, room]);
+      return;
    }
 
+   room.state = 1;
+
+   let counter = 0
+   for (let i = 0; i < room.userAuthIds.length; i++) {
+      console.log(`index: ${i} authId: ${room.userAuthIds[i]} counter is: ${counter}`);
+      if (room.userAuthIds[i]) {
+         room.userData[i].num = counter;
+         counter++;
+      }
+   }
+   
+   room.game=madn.createGameObject(numberOfAuthIds);
+
+
+
+
    io.to(roomId).emit('update', [roomId, room]);
-   console.log("sockets in group:");
-   console.log(io.sockets.adapter.rooms);
    console.log("roomId: " + roomId);
    console.log(room);
 

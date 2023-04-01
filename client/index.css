@@ -212,7 +212,7 @@ ul {
   .menu-btn-container {
     display: none;
   }
-  
+
   #login-list-item {
     float: right;
   }
@@ -229,9 +229,10 @@ ul {
   }
 
   #login-list-item {
-    float:none;
+    float: none;
   }
-  #login-button{
+
+  #login-button {
     margin: 0 auto;
   }
 
@@ -682,4 +683,188 @@ footer {
   .container {
     margin: 0;
   }
+}
+
+/*game*/
+
+.game-info {
+  margin-left: 16px;
+}
+
+#game {
+  aspect-ratio: 1 / 1;
+  max-height: 90vh;
+  margin: 0 auto;
+  position: relative;
+
+
+}
+
+.game-grid {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 1%;
+  gap: 1%;
+
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+#background-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(238, 218, 106);
+}
+
+#field-container {
+  height: 100%;
+  width: 100%;
+}
+
+.field {
+
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  border-radius: 100%;
+}
+
+.field>div {
+  margin: 8%;
+  height: 84%;
+  width: 84%;
+  border-radius: 100%;
+}
+
+.pawn {
+  height: 100%;
+  width: 100%;
+}
+
+.pawn_graphic {
+  border-radius: 100%;
+  height: 100%;
+  width: 100%;
+}
+
+.pawnWhenMoved {
+  animation: blink-animation 1s steps(2, start) infinite;
+  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.light-yellow {
+  background-color: rgb(255, 255, 88);
+}
+
+.green {
+  background-color: green;
+}
+
+.light-green {
+  background-color: rgb(88, 128, 88);
+}
+
+.red {
+  background-color: red;
+}
+
+.light-red {
+  background-color: rgb(255, 88, 88);
+}
+
+.blue {
+  background-color: blue;
+}
+
+.light-blue {
+  background-color: rgb(88, 88, 255);
+}
+
+.white {
+  background-color: white;
+}
+
+#foreground-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: none;
+}
+
+#foreground-container>.blur {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: gray;
+  opacity: 0.9;
+}
+
+#role-dice {
+  display: none;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: #212121;
+  color: white;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#game-message-conteiner {
+
+  background-color: gray;
+  padding: 10px;
+  border-radius: 5px;
+  display: none;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#game-message {}
+
+#accapt-game-message {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: #212121;
+  color: white;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 5px;
 }
