@@ -1,5 +1,6 @@
 //import { url } from "inspector";
 const gameDiv = document.getElementById('game');
+const gameInfoDiv = document.getElementById('game-info');
 const infoUrl = document.getElementById('roomLink');
 const playerNames = document.getElementsByClassName('playerName')
 const playerReadiness = document.getElementsByClassName('button_player')
@@ -332,8 +333,10 @@ socket.on('update', (msgs) => {
             });
         }
         gameDiv.style.display = "block";
+        gameInfoDiv.style.display = "block";
     } else {
         gameDiv.style.display = "none";
+        gameInfoDiv.style.display = "block";
     }
     console.log(msgs);
 });
