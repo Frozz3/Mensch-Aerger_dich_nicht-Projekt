@@ -336,7 +336,7 @@ socket.on('update', (msgs) => {
         gameInfoDiv.style.display = "block";
     } else {
         gameDiv.style.display = "none";
-        gameInfoDiv.style.display = "block";
+        gameInfoDiv.style.display = "none";
     }
     console.log(msgs);
 });
