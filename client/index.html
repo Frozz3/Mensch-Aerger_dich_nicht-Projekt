@@ -16,6 +16,7 @@
 
 
 
+
 </head>
 
 <body>
@@ -80,7 +81,10 @@
                     function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
                 </script>
             </ul>
+            
+            <button type="button" id="toggleColl" class="collapsible">&triangledown;</button>
 
+            
         </header>
         <div class="content-game bordered">
 
@@ -379,7 +383,7 @@
 
 
 
-        <div class="content-player bordered">
+        <div id="test123" class="content-player bordered hidden">
             <div class="player-box">
                 <input type="text" value="" readonly id="Players" class="playerName button-player input-style">
                 <button id="button_ready" value="true" onclick="toggleReadyButton(this)" class="button_player button "
@@ -398,10 +402,8 @@
                     type="button">Nicht Bereit</button>
             </div>
         </div>
-        <div class="content-buttons bordered">
+        <div id="collapsible_item2" class="content-buttons bordered hidden">
             <button class="button button-search" type="button">Zufälliges Spiel!</button>
-            <br />
-            <button class="button button-search" type="button">Rangspiel</button>
             <br />
             <div class="copy">
                 <input type="text" value="" class="input-style" readonly id="roomLink">
@@ -443,5 +445,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="clientSocket.js"></script>
+<script src="collabsible.js"></script>
 
 </html>
