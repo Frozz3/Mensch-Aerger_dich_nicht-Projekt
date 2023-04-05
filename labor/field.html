@@ -7,57 +7,482 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .pawn {
+        .game-info {
+            margin-left: 16px;
+        }
+
+        #game {
+            aspect-ratio: 1 / 1;
+            max-height: 90vh;
+            margin: 0 auto;
+            position: relative;
+
+
+        }
+
+        .game-grid {
             position: absolute;
             box-sizing: border-box;
+            padding: 1%;
+            gap: 1%;
 
+            height: 100%;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+
+        #background-container {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-color: rgb(238, 218, 106);
+        }
+
+        #field-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .field {
+
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            background-color: black;
             border-radius: 100%;
-            height: calc(100% / 11);
-            width: calc(100% / 11);
+        }
+
+        .field>div {
+            margin: 8%;
+            height: 84%;
+            width: 84%;
+            border-radius: 100%;
+        }
+
+        .pawn {
+            height: 100%;
+            width: 100%;
+        }
+
+        .pawn_graphic {
+            border-radius: 100%;
+            height: 100%;
+            width: 100%;
+        }
+
+        .pawnWhenMoved {
+            animation: blink-animation 1s steps(2, start) infinite;
+            -webkit-animation: blink-animation 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
         }
 
         .yellow {
             background-color: yellow;
         }
 
+        .light-yellow {
+            background-color: rgb(255, 255, 88);
+        }
+
         .green {
             background-color: green;
+        }
+
+        .light-green {
+            background-color: rgb(88, 128, 88);
         }
 
         .red {
             background-color: red;
         }
 
+        .light-red {
+            background-color: rgb(255, 88, 88);
+        }
+
         .blue {
             background-color: blue;
+        }
+
+        .light-blue {
+            background-color: rgb(88, 88, 255);
+        }
+
+        .white {
+            background-color: white;
+        }
+
+        #foreground-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+        }
+
+        #foreground-container>.blur {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: gray;
+            opacity: 0.9;
+        }
+
+        #role-dice {
+            display: none;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #212121;
+            color: white;
+            font-size: 16px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #game-message-conteiner {
+
+            background-color: gray;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        #accapt-game-message {
+            display: block;
+            margin: 0 auto;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #212121;
+            color: white;
+            font-size: 16px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 5px;
         }
     </style>
 </head>
 
 <body>
-    <div id="game"
-        style=" background-color: blueviolet; aspect-ratio: 1 / 1; max-height: 90vh; margin: 0 auto; position: relative">
-        <div id="pawn-0-0" class="pawn yellow"></div>
-        <div id="pawn-0-1" class="pawn yellow"></div>
-        <div id="pawn-0-2" class="pawn yellow"></div>
-        <div id="pawn-0-3" class="pawn yellow"></div>
-        <div id="pawn-1-0" class="pawn green"></div>
-        <div id="pawn-1-1" class="pawn green"></div>
-        <div id="pawn-1-2" class="pawn green"></div>
-        <div id="pawn-1-3" class="pawn green"></div>
-        <div id="pawn-2-0" class="pawn red"></div>
-        <div id="pawn-2-1" class="pawn red"></div>
-        <div id="pawn-2-2" class="pawn red"></div>
-        <div id="pawn-2-3" class="pawn red"></div>
-        <div id="pawn-3-0" class="pawn blue"></div>
-        <div id="pawn-3-1" class="pawn blue"></div>
-        <div id="pawn-3-2" class="pawn blue"></div>
-        <div id="pawn-3-3" class="pawn blue"></div>
+    <div id="game-info">
+        <span id="player-in-line" class="game-info">Player:</span>
+        <span id="player-in-line-color" class="player-in-line"></span>
+        </span>
+        <span id="dice">
+            <span>Würfelwert:</span>
+            <span id="dice-value">3</span>
+        </span>
+    </div>
+    <div id="game">
+        <div id="background-container">
+            <div id="field-container" class="game-grid">
+                <div class="field" style="grid-area: 5 / 1 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 2 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 3 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 4 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 4 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 3 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 6 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 3 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 4 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 8 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 9 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 10 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 11 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 11 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 11 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 10 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 9 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 8 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 8 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 9 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 7 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 6 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 9 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 8 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 5 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 4 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 3 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 2 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 1 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 1 / span 1 / span 1;">
+                    <div class=" white"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 2 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 3 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 4 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 5 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 5 / 6 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 4 / 6 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 3 / 6 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 6 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 7 / 6 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 8 / 6 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 9 / 6 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 6 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 7 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 8 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 9 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 6 / 10 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 1 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 2 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 1 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 2 / span 1 / span 1;">
+                    <div class=" light-yellow"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 10 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 1 / 11 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 11 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 2 / 10 / span 1 / span 1;">
+                    <div class=" light-green"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 10 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 11 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 11 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 10 / span 1 / span 1;">
+                    <div class=" light-red"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 1 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 10 / 2 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 2 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+                <div class="field" style="grid-area: 11 / 1 / span 1 / span 1;">
+                    <div class=" light-blue"></div>
+                </div>
+            </div>
+        </div>
+        <div id="pawn-container" class="game-grid">
+            <div id="pawn-0-0" class="pawn" style="grid-area: 1 / 1 / span 1 / span 1;">
+                <div class="pawn_graphic yellow"></div>
+            </div>
+            <div id="pawn-0-1" class="pawn" style="grid-area: 1 / 2 / span 1 / span 1;">
+                <div class="pawn_graphic yellow"></div>
+            </div>
+            <div id="pawn-0-2" class="pawn" style="grid-area: 2 / 1 / span 1 / span 1;">
+                <div class="pawn_graphic yellow"></div>
+            </div>
+            <div id="pawn-0-3" class="pawn" style="grid-area: 2 / 2 / span 1 / span 1;">
+                <div class="pawn_graphic yellow"></div>
+            </div>
+            <div id="pawn-1-0" class="pawn" style="grid-area: 1 / 10 / span 1 / span 1;">
+                <div class="pawn_graphic green"></div>
+            </div>
+            <div id="pawn-1-1" class="pawn" style="grid-area: 1 / 11 / span 1 / span 1;">
+                <div class="pawn_graphic green"></div>
+            </div>
+            <div id="pawn-1-2" class="pawn" style="grid-area: 2 / 11 / span 1 / span 1;">
+                <div class="pawn_graphic green"></div>
+            </div>
+            <div id="pawn-1-3" class="pawn" style="grid-area: 2 / 10 / span 1 / span 1;">
+                <div class="pawn_graphic green"></div>
+            </div>
+            <div id="pawn-2-0" class="pawn" style="grid-area: 10 / 10 / span 1 / span 1;">
+                <div class="pawn_graphic red"></div>
+            </div>
+            <div id="pawn-2-1" class="pawn" style="grid-area: 10 / 11 / span 1 / span 1;">
+                <div class="pawn_graphic red"></div>
+            </div>
+            <div id="pawn-2-2" class="pawn" style="grid-area: 11 / 11 / span 1 / span 1;">
+                <div class="pawn_graphic red"></div>
+            </div>
+            <div id="pawn-2-3" class="pawn" style="grid-area: 11 / 10 / span 1 / span 1;">
+                <div class="pawn_graphic red"></div>
+            </div>
+            <div id="pawn-3-0" class="pawn" style="grid-area: 10 / 1 / span 1 / span 1;">
+                <div class="pawn_graphic blue"></div>
+            </div>
+            <div id="pawn-3-1" class="pawn" style="grid-area: 10 / 2 / span 1 / span 1;">
+                <div class="pawn_graphic blue"></div>
+            </div>
+            <div id="pawn-3-2" class="pawn" style="grid-area: 11 / 2 / span 1 / span 1;">
+                <div class="pawn_graphic blue"></div>
+            </div>
+            <div id="pawn-3-3" class="pawn" style="grid-area: 11 / 1 / span 1 / span 1;">
+                <div class="pawn_graphic blue"></div>
+            </div>
+        </div>
+        <div id="foreground-container">
+            <div class="blur"></div>
+            <button id="role-dice">Würfeln</button>
+            <div id="game-message-conteiner">
+                <p id="game-message"></p>
+                <button id="accapt-game-message">Akzeptieren</button>
+            </div>
+        </div>
     </div>
 </body>
 <script type="text/javascript" src="gameObject.json"></script>
 <script>
-
+    const COORD_RANGE = 11;
     function getCoordinates(playerIndex, pos) {
         const parkFieldsCoordinates = [
             [
@@ -82,10 +507,10 @@
                 [1, 5], [2, 5], [3, 5], [4, 5],
             ],
             [
-                [5, 6], [5, 7], [5, 8], [5, 9],
+                [5, 9], [5, 8], [5, 7], [5, 6],
             ],
             [
-                [6, 5], [7, 5], [8, 5], [9, 5],
+                [9, 5], [8, 5], [7, 5], [6, 5],
             ],
         ];
 
@@ -106,8 +531,7 @@
         if (pos < 4) {
             return parkFieldsCoordinates[playerIndex][pos];
         } else if (pos > 43) {
-            let arrayIndex = pos - 43;
-            console.log(playerIndex)
+            let arrayIndex = pos - 44;
             return finishFieldsCoordinates[playerIndex][arrayIndex];
         } else {
             let fromPos = pos - 4;
@@ -117,43 +541,188 @@
 
     }
 
+    function getPlayerIndexByNum(players, num) {
+        for (let i = 0; i < players.length; i++) {
+            if (players[i].num == num) {
+                return i;
+            }
+
+        }
+    }
+
+    function getColorOfPlayerIndex(playerIndex) {
+        let color;
+        let colorText
+        switch (playerIndex) {
+            case 0:
+                color = "yellow";
+
+                colorText = "gelb";
+                break;
+            case 1:
+                color = "green";
+                colorText = "grün";
+                break;
+            case 2:
+                color = "red";
+                colorText = "rot";
+                break;
+            case 3:
+                color = "blue";
+                colorText = "blue";
+                break;
+            default:
+                break;
+        }
+        return [color, colorText]
+    }
+
     fetch('./gameObject.json')
         .then((response) => response.json())
         .then((room) => {
-            console.log(room);
+            const gameDiv = document.getElementById("game");
 
-            const gameDiv = document.getElementById('game');
             if (room.state) {
-
-                console.log("roomstate !!!");
+                const pawnConteiner = document.getElementById('pawn-container');
                 let game = room.game;
+                let clientIsPlayerInLine = false;
 
-                gameDiv.style.display = "block";
+                //check if client is player in line
+                for (let i = 0; i < room.userAuthIds.length; i++) {
 
-                for (let playerIndex = 0; playerIndex < game.players.length; playerIndex++) {
-                    console.log(`palyers: ${game.players.length}`)
-                    const player = game.players[playerIndex];
-                    for (let pawnIndex = 0; pawnIndex < player.pawns.length; pawnIndex++) {
-                        console.log(player);
-                        const pawn = player.pawns[pawnIndex];
-                        const pawnElement = document.getElementById("pawn-" + playerIndex + "-" + pawnIndex);
-                        const [top, left] = getCoordinates(playerIndex, pawn.pos);
-                        console.log("test",getCoordinates(playerIndex, pawn.pos));
-
-                        pawnElement.style.top = top * (100 / 11) + '%';
-                        pawnElement.style.left = left * (100 / 11) + '%';
+                    console.log(" clientIsPlayerInLine");
+                    if (game.playerInLine == room.userData[i].num) {
+                        clientIsPlayerInLine = true;
                     }
-
                 }
 
 
 
+
+                //game-info
+                const diceValue = document.getElementById("dice-value");
+                diceValue.innerHTML = game.temp.dicevelue;
+                let playerIndex = getPlayerIndexByNum(game.players, game.playerInLine);
+                const [color, colorText] = getColorOfPlayerIndex(playerIndex);
+
+                const colorElement = document.getElementById("player-in-line-color");
+                colorElement.innerHTML = colorText;
+                colorElement.style.color = color;
+
+
+                //draw pawnpositions
+                for (let playerIndex = 0; playerIndex < game.players.length; playerIndex++) {
+                    const player = game.players[playerIndex];
+                    let pawnsPlayerInLine = [];
+                    const [color, _] = getColorOfPlayerIndex(playerIndex);
+                    for (let pawnIndex = 0; pawnIndex < player.pawns.length; pawnIndex++) {
+                        const pawn = player.pawns[pawnIndex];
+
+                        const pawnElement = document.getElementById("pawn-" + playerIndex + "-" + pawnIndex);
+                        const [row, column] = getCoordinates(playerIndex, pawn.pos);
+                        pawnElement.style.gridRow = `${row + 1} / span 1`;
+                        pawnElement.style.gridColumn = `${column + 1} / span 1`;
+                        if (clientIsPlayerInLine && game.inputState == 3 && player.num == game.playerInLine) {
+                            let moveablepawnIndex = game.temp.moveablepawns.indexOf(pawnIndex);
+                            if (moveablepawnIndex != -1) {
+                                pawnsPlayerInLine.push(pawnElement);
+                                const pawnWhenMoved = document.createElement("div");
+                                pawnWhenMoved.classList.add("pawnWhenMoved");
+                                pawnWhenMoved.id = "pawnWhenMoved-" + pawnIndex;
+                                pawnWhenMoved.classList.add(color);
+                                pawnWhenMoved.classList.add("pawn_graphic");
+                                const [row, column] = getCoordinates(playerIndex, game.temp.positionsWhenMoved[moveablepawnIndex]);
+                                pawnWhenMoved.style.gridRow = `${row + 1} / span 1`;
+                                pawnWhenMoved.style.gridColumn = `${column + 1} / span 1`;
+                                pawnWhenMoved.style.display = "none";
+                                pawnConteiner.appendChild(pawnWhenMoved);
+                                pawnElement.addEventListener("mouseenter", (event) => { pawnWhenMoved.style.display = "block"; });
+                                pawnElement.addEventListener("mouseleave", (event) => { pawnWhenMoved.style.display = "none"; });
+                                pawnElement.addEventListener("click", (event) => {
+
+                                    let pawnsWhenMoved = document.getElementsByClassName("pawnWhenMoved");
+                                    pawnsWhenMoved = [...pawnsWhenMoved];
+                                    for (let i = 0; i < pawnsWhenMoved.length; i++) {
+                                        const pawn = pawnsWhenMoved[i];
+                                        console.log(`pown ${i} removed`);
+                                        pawn.parentNode.removeChild(pawn);
+                                    }
+
+                                    pawnsPlayerInLine.forEach(pawn => {
+                                        pawn.replaceWith(pawn.cloneNode(true));
+                                    });
+
+                                    //output
+                                    //socket.emit("gameAction", { type: 3, value: moveablepawnIndex })
+                                    console.log(`output 3, value: ${moveablepawnIndex}`);
+                                });
+                            }
+                        }
+                    }
+                }
+
+                //dice
+                if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
+                    const foreground = document.getElementById("foreground-container");
+                    foreground.style.display = "block";
+                    const roleDiceButton = document.getElementById("role-dice");
+                    roleDiceButton.style.display = "block";
+                    roleDiceButton.addEventListener("click", (event) => {
+                        roleDiceButton.replaceWith(roleDiceButton.cloneNode(true));
+                        foreground.style.display = "none";
+                        roleDiceButton.style.display = "none";
+                        //socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        console.log(`output ${game.inputState}`);
+                    });
+                }
+                //message
+                if (clientIsPlayerInLine && game.inputState == 4) {
+                    const gameMessage = document.getElementById("game-message");
+                    gameMessage.innerHTML = game.temp.msg
+                    const foreground = document.getElementById("foreground-container");
+                    foreground.style.display = "block";
+                    const gameMessageConteiner = document.getElementById("game-message-conteiner");
+                    gameMessageConteiner.style.display = "block";
+                    const accaptGameMessageButton = document.getElementById("accapt-game-message");
+                    accaptGameMessageButton.addEventListener("click", (event) => {
+                        accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
+
+                        foreground.style.display = "none";
+                        gameMessageConteiner.style.display = "none";
+
+                        //socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        console.log(`output ${game.inputState}`);
+                    });
+                }
+                //end
+                if (game.inputState == 5 && game.winner > -1) {
+                    console.log("game ended")
+                    const winnerNum = getPlayerIndexByNum(game.players, game.winner);
+                    const [color, colorText] = getColorOfPlayerIndex(playerIndex);
+
+                    const gameMessage = document.getElementById("game-message");
+                    gameMessage.innerHTML = `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`;
+                    const foreground = document.getElementById("foreground-container");
+                    foreground.style.display = "block";
+                    const gameMessageConteiner = document.getElementById("game-message-conteiner");
+                    gameMessageConteiner.style.display = "block";
+                    const accaptGameMessageButton = document.getElementById("accapt-game-message");
+                    accaptGameMessageButton.addEventListener("click", (event) => {
+                        accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
+
+                        foreground.style.display = "none";
+                        gameMessageConteiner.style.display = "none";
+
+                        //socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        console.log(`output ${game.inputState}`);
+                    });
+                }
+                gameDiv.style.display = "block";
             } else {
                 gameDiv.style.display = "none";
             }
         });
-
+    
 
 </script>
-
 </html>
