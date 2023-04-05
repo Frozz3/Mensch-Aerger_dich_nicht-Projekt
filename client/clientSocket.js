@@ -332,10 +332,8 @@ socket.on('update', (msgs) => {
                 console.log(`output ${game.inputState}`);
             });
         }
-        gameDiv.style.display = "block";
         gameInfoDiv.style.display = "block";
     } else {
-        gameDiv.style.display = "none";
         gameInfoDiv.style.display = "none";
     }
     console.log(msgs);
