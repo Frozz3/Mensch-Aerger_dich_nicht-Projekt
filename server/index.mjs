@@ -137,16 +137,6 @@ io.on('connection', async (socket) => {
    const userId = `${socket.id}`; //${socket.data.authId}
    let currentRoomId;
 
-   //messages
-   socket.on('chatMessage', (msg) => {
-      console.log(socket.id + ' message: ' + msg);
-
-      if (currentRoomId) {
-         //send message to all users in room
-         io.to(currentRoomId).emit('chatMessage', msg);
-      }
-   });
-
    //room
 
    socket.on('createRoom', () => {
