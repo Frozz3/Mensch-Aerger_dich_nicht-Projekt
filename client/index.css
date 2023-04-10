@@ -208,7 +208,13 @@ ul {
 }
 
 
+
+
 @media screen and (min-width: 801px) {
+
+  .collapsible{
+    display: none;
+  }
   .menu-btn-container {
     display: none;
   }
@@ -224,6 +230,19 @@ ul {
 
 
 @media screen and (max-width: 800px) {
+
+  .collapsible{
+    display: block;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background: transparent;
+    font-size: 40px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
   .dontShowOnSmall {
     display: none;
   }
@@ -334,7 +353,7 @@ Buttons Anfang
 .button-search {
   display: block;
   margin: 0 auto;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .copy {
@@ -439,6 +458,7 @@ footer {
   border: 1.1px solid white;
   padding: 5px;
   border-radius: 50%;
+  width: 40px;
 }
 
 .copyright {
@@ -528,6 +548,8 @@ footer {
 */
 
 @media only screen and (max-width: 1300px) {
+
+ 
   .container {
     display: grid;
     grid-template-rows: 1fr 1fr;
@@ -671,6 +693,20 @@ footer {
 
 
 @media only screen and (max-width: 500px) {
+
+  .collapsible{
+    display: block;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background: transparent;
+    font-size: 40px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+ 
   .copy {
     display: block;
     text-align: center;
@@ -683,6 +719,19 @@ footer {
   .container {
     margin: 0;
   }
+
+ .hidden{
+  display: none;
+ }
+
+ .hidden{
+  display: none;
+}
+
+ .visible
+ {
+  display: block;
+ }
 }
 
 /*game*/
