@@ -118,7 +118,7 @@ let authenticationId = localStorage.getItem('authId');
 let username = localStorage.getItem('username');
 
 
-const socket = io({ auth: { token: authenticationId, name: username } });
+const socket = io({ auth: { token: authenticationId} });
 
 socket.on("connect", () => {
     console.log(`socketId: ${socket.id}`);
@@ -145,6 +145,11 @@ socket.on('newUsername', function (newUsername) {
 
 
 //room
+let indexInRoom;
+socket.on('newIndexInRoom', (newIndexInRoom) => {
+    indexInRoom = newIndexInRoom;
+    console.log(`newIndexInRoom: ${indexInRoom}` );
+})
 
 socket.on('update', (msgs) => {
 
@@ -174,7 +179,7 @@ socket.on('update', (msgs) => {
         if (room.userAuthIds[i] !== null) {
             playerNames[i].setAttribute('value', room.userData[i].name);
             playerReadiness[i].setAttribute('value', room.userData[i].status);
-            if (authenticationId == room.userAuthIds[i]) {
+            if (indexInRoom == i) {
                 playerNames[i].setAttribute("style", 'background: #37d037');
                 playerIndex = i;
             }
@@ -205,7 +210,7 @@ socket.on('update', (msgs) => {
         //check if client is player in line
         for (let i = 0; i < room.userAuthIds.length; i++) {
 
-            if (authenticationId == room.userAuthIds[i] && game.playerInLine == room.userData[i].num) {
+            if (indexInRoom == i && game.playerInLine == room.userData[i].num) {
                 clientIsPlayerInLine = true;
             }
         }
@@ -337,6 +342,8 @@ socket.on('update', (msgs) => {
         gameInfoDiv.style.display = "none";
     }
     console.log(msgs);
+    
+    console.log(socket);
 });
 
 //error

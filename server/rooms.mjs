@@ -1,51 +1,26 @@
 import { v4 as uuid } from 'uuid';
 
-import * as madn  from 'js-madn'
+import * as madn from 'js-madn'
 //room funktions
-export function leaveRoom(rooms, roomId, io, socket) {
-   try {
 
-      const room = rooms[roomId];
-      //remove socket-connection to room
-      socket.leave(roomId);
-
-      let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
-      let timeStamp = Date.now();
-
-      // store the time the user left (override old)
-      room.userData[roomIndexOfSocket].leftSince = timeStamp;
-
-      // if room is empty, set emptysince
-      if (countRoomAuthIds(room.userAuthIds) === 0) {
-         room.emptySince = timeStamp
-         console.log(`${roomId} room empty ${room.emptySince}`)
+function countRoomAuthIds(userAuthIds) {
+   let counter = 0;
+   userAuthIds.forEach((authId) => {
+      if (authId !== null) {
+         counter++;
       }
-      //wait for rejoin
-      setTimeout(() => {
-         //leave room if leftsince has not changed
-         if (room.userData[roomIndexOfSocket].leftSince == timeStamp) {
-            room.userAuthIds[roomIndexOfSocket] = null;
-            room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0 };
-            console.log(`${socket.data.authId} removed from room ${roomId}`);
+   });
 
-            // remove old room if empty
-            if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
-               delete rooms[roomId];
-               console.log(`${roomId} room delete`);
-            } else {
-               console.log(`${roomId} rooms kept alive`)
-            }
-         }
+   return counter;
+}
 
-         //console.log(`check if time changed: '${room.emptySince}' and room is empty '${room.userAuthIds.length}'`);
-
-
-         io.to(roomId).emit('update', [roomId, room]);
-      }, 1000);
-   } catch (error) {
-      console.log(rooms[roomId]);
-      throw new Error(error);
-   }
+export function formateRoomForUpdate(room) {
+   return {
+      userData: room.userData,
+      game: room.game,
+      state: room.state,
+      emptySince: room.emptySince
+   };
 }
 
 export function createRoom(rooms) {
@@ -90,7 +65,9 @@ export function joinRoom(room, roomId, io, socket) {
                room.userData[index].leftSince = 0;
 
                socket.join(roomId);
-               io.to(roomId).emit('update', [roomId, room]);
+               console.log(`roomIndexOfSocket: ${index}`);
+               socket.emit('newIndexInRoom', index);
+               io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
                console.log(`${socket.data.authId} joined room ${roomId}`);
                return true;
             }
@@ -101,18 +78,19 @@ export function joinRoom(room, roomId, io, socket) {
          return false
 
       //check if has started
-      
+
       if (room.state != 0) {
+         console.log(`${socket.data.authId} did not join room ${roomId} because it has already started: ${room.state}`);
          socket.emit('error', "room has started", { roomId: roomId });
          return false;
       }
-      
-      //check if room is full
-      console.log(`check if room is full: ${room.userAuthIds.length}`)
-      if (countRoomAuthIds(room.userAuthIds) >= 4) {
 
-         console.log(`${socket.data.authId} did not join room ${roomId} because it was full: ${room.userAuthIds.length}`);
-         socket.emit('error', "room full", { roomId: roomId });
+      //check if room is full
+      const numberOfUserAuthIds = countRoomAuthIds(room.userAuthIds);
+      if (numberOfUserAuthIds >= 4) {
+
+         console.log(`${socket.data.authId} did not join room ${roomId} because it was full: ${numberOfUserAuthIds}`);
+         socket.emit('error', "room is full", { roomId: roomId });
          return false;
       }
       //find empty place in user-array
@@ -130,10 +108,11 @@ export function joinRoom(room, roomId, io, socket) {
       room.userData[roomIndexOfSocket].leftSince = 0;
       room.userData[roomIndexOfSocket].num = null;
 
-
+      console.log(`roomIndexOfSocket: ${roomIndexOfSocket}`);
+      socket.emit('newIndexInRoom', roomIndexOfSocket);
 
       socket.join(roomId);
-      io.to(roomId).emit('update', [roomId, room]);
+      io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
       console.log(`${socket.data.authId} joined room ${roomId}`);
       return true;
 
@@ -143,15 +122,50 @@ export function joinRoom(room, roomId, io, socket) {
    }
 }
 
-function countRoomAuthIds(userAuthIds) {
-   let counter = 0;
-   userAuthIds.forEach((authId) => {
-      if (authId !== null) {
-         counter++;
-      }
-   });
+export function leaveRoom(rooms, roomId, io, socket) {
+   try {
 
-   return counter;
+      const room = rooms[roomId];
+      //remove socket-connection to room
+      socket.leave(roomId);
+
+      let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
+      let timeStamp = Date.now();
+
+      // store the time the user left (override old)
+      room.userData[roomIndexOfSocket].leftSince = timeStamp;
+
+      // if room is empty, set emptysince
+      if (countRoomAuthIds(room.userAuthIds) === 0) {
+         room.emptySince = timeStamp
+         console.log(`${roomId} room empty ${room.emptySince}`)
+      }
+      //wait for rejoin
+      setTimeout(() => {
+         //leave room if leftsince has not changed
+         if (room.userData[roomIndexOfSocket].leftSince == timeStamp) {
+            room.userAuthIds[roomIndexOfSocket] = null;
+            room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0 };
+            console.log(`${socket.data.authId} removed from room ${roomId}`);
+
+            // remove old room if empty
+            if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
+               delete rooms[roomId];
+               console.log(`${roomId} room delete`);
+            } else {
+               console.log(`${roomId} rooms kept alive`)
+            }
+         }
+
+         //console.log(`check if time changed: '${room.emptySince}' and room is empty '${room.userAuthIds.length}'`);
+
+
+         io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
+      }, 1000);
+   } catch (error) {
+      console.log(rooms[roomId]);
+      throw new Error(error);
+   }
 }
 
 export function changeReadiness(room, roomId, io, socket, status) {
@@ -184,7 +198,7 @@ export function changeReadiness(room, roomId, io, socket, status) {
       console.log(io.sockets.adapter.rooms);
       console.log("roomId: " + roomId);
       console.log(room);
-      io.to(roomId).emit('update', [roomId, room]);
+      io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
       return;
    }
 
@@ -198,13 +212,9 @@ export function changeReadiness(room, roomId, io, socket, status) {
          counter++;
       }
    }
-   
-   room.game=madn.createGameObject(numberOfAuthIds);
 
-
-
-
-   io.to(roomId).emit('update', [roomId, room]);
+   room.game = madn.createGameObject(numberOfAuthIds);
+   io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
    console.log("roomId: " + roomId);
    console.log(room);
 
