@@ -176,7 +176,7 @@ socket.on('update', (msgs) => {
 
     //users
     for (let i = 0; i < 4; i++) {
-        if (room.userAuthIds[i] !== null) {
+        if (room.userData[i].name !== null) {
             playerNames[i].setAttribute('value', room.userData[i].name);
             playerReadiness[i].setAttribute('value', room.userData[i].status);
             if (indexInRoom == i) {
@@ -208,7 +208,7 @@ socket.on('update', (msgs) => {
         let clientIsPlayerInLine = false;
 
         //check if client is player in line
-        for (let i = 0; i < room.userAuthIds.length; i++) {
+        for (let i = 0; i < room.userData.length; i++) {
 
             if (indexInRoom == i && game.playerInLine == room.userData[i].num) {
                 clientIsPlayerInLine = true;

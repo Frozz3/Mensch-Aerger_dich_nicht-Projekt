@@ -33,13 +33,7 @@ const serverDBOptions = {
    password: 'imPW4Hnfd4cW3XbsWehp'
 };
 
-
-
-
-
 // server 
-
-
 
 let port;
 let app;
@@ -200,7 +194,7 @@ io.on('connection', async (socket) => {
             socket.emit('error', response.msg, action);
          } else {
 
-            io.to(currentRoomId).emit('update', [currentRoomId, room]);
+            io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }
       } catch (error) {
          console.log(rooms[currentRoomId]);
