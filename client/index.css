@@ -725,12 +725,12 @@ footer {
  }
 
  .hidden{
-  display: none;
+  display: block;
 }
 
  .visible
  {
-  display: block;
+  display: none;
  }
 }
 
