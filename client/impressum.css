@@ -11,9 +11,7 @@ body{background-color: rgb(80, 80, 80);}
     grid-template-rows: repeat(5, 1fr); */
     grid-template-areas:
     "hdr hdr hdr hdr"
-    "uda uda rng rng"
-    "sta sta rng rng"
-    "sta1 sta1 sta1 sta1"
+    "hau hau hau hau"
     "fot fot fot fot";
     grid-auto-columns: 1fr;
     grid-template-rows: auto repeat( 50px) auto;
@@ -22,15 +20,7 @@ body{background-color: rgb(80, 80, 80);}
 }
 
 .hdr{grid-area: hdr;}
-.uda{grid-area: uda;}
-.rng{grid-area: rng;
-}
-.sta0{grid-area: sta;}
-.sta1{grid-area: sta;}
-.sta{
-    grid-column: span 1;
-    grid-row: span 1;
-}
+.hau{grid-area: hau;}
 .fot{grid-area: fot;}
 
 .bordered{
@@ -123,23 +113,17 @@ ul {
 }
 /*NAVI*/
 /*HEADER*/
-.played
-{
-    
-    text-align: center;
-    margin: auto;
-}
 
-.statp
-{
-    margin: 0 auto;
-    padding-top: 60px;
-}
-
-.numbersp
-{
-    margin: 0 auto;
-    padding-top: 20px;
+.hau{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: auto;
+    box-sizing: border-box;
+    padding-top: 5px;
 }
 
 /* FOOTER */
@@ -273,105 +257,7 @@ footer
 
 
 
-.rangtable 
-{
-    margin: 12px 35px 0 35px;
-    display: grid;
-    /* grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr); */
-    grid-template-areas:
-    "platz spieler siege" ;
-    grid-auto-columns: 1fr;
-    grid-template-rows: auto repeat( 50px) auto;
-    /* grid-gap: 5px; */
-    color: white;
-    height: 340px; 
-    /* overflow: auto;  */
-    /* width: 400px;  */
-    /* margin: 0 auto;  */
-    /* margin-bottom: 40px;  */
-    /* border: solid black; */
-    /* padding: 10%;  */
-}
-.rangüberschrift
-{
-    font-size: 35px;
-    margin-bottom: 0 ;
-    margin-top: 15px;
-    color: white;
-    text-align: center;
-}
 
-
-.spieler
-{
-    margin-top: 0;
-    text-align: center;
-}
-
-.rangSpieler
-{
-    border-bottom: solid;
-    font-size: 25px;
-    color: lightgray;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
-
-.spieler p
-{
-    text-align: center;
-    font-size: 18px;
-    margin: 10px 0 0 0;
-}
-
-.platz
-{
-    text-align: center;
-}
-.platz p
-{
-    font-size: 18px;
-    margin: 10px 0 0 0;
-    text-align: center;
-}
-
-.rangPlatz
-{
-    border-bottom: solid;
-    font-size: 25px;
-    margin-top: 0;
-    color: lightgray;
-    margin-bottom: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
-
-
-.siege
-{
-    text-align: center;
-}
-
-.rangSiege
-{
-    border-bottom: solid;
-    font-size: 25px;
-    color: lightgray;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
-
-.siege p
-{
-    text-align: center;
-    font-size: 18px;
-    margin: 10px 0 0 0;
-}
 
 
 @media screen and (max-width: 800px)
@@ -381,30 +267,7 @@ footer
         font-size: 20px;
     }
 
-    .rangüberschrift
-    {
-        font-size: 19px;
-    }
-
-    .platz
-    {
-        font-size: 20px;
-    }
-    .rangSpieler
-    {
-        font-size: 17px;
-    }
-
-    .rangPlatz
-    {
-        font-size: 17px;
-    }
-
-    .rangSiege
-    {
-        font-size: 17px;
-    }
-
+    
     .fot-content h3
     {
         margin: 0;
@@ -440,39 +303,14 @@ footer
         text-decoration: none;
     }
 
-    .copyright
-    {
-        font-size: 15px;
-    }
-    .siege p
-    {
-        font-size: 17px;
-    }
-    .platz p
-    {
-        font-size: 17px;
-    }
-    .spieler p
-    {
-        font-size: 17px;
-    }
-    
-    .rng
-    {
-        padding-bottom: 25px;
-    }
 
     .wrapper{
 
         margin: 0;
         grid-template-areas:
         "hdr hdr"
-        "uda uda"
-        "rng rng"
-        "rng rng"
-        "sta sta"
-        "sta1 sta1"
-        "sta1 sta1"
+        "hau hau"
+        "hau hau"
         "fot fot"
     }
 
