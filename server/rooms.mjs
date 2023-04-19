@@ -157,9 +157,6 @@ export function leaveRoom(rooms, roomId, io, socket) {
             }
          }
 
-         //console.log(`check if time changed: '${room.emptySince}' and room is empty '${room.userAuthIds.length}'`);
-
-
          io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
       }, 1000);
    } catch (error) {

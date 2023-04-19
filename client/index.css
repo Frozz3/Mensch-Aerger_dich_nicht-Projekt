@@ -902,8 +902,6 @@ footer {
   transform: translate(-50%, -50%);
 }
 
-#game-message {}
-
 #accapt-game-message {
   display: block;
   margin: 0 auto;
