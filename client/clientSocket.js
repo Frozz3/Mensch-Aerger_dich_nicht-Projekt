@@ -64,7 +64,6 @@ function getCoordinates(playerIndex, pos) {
     if (pos < 4) {
         coordinates = parkFieldsCoordinates[playerIndex][pos];
     } else if (pos > 43) {
-        console.log(pos);
         let arrayIndex = pos - 44;
         coordinates = finishFieldsCoordinates[playerIndex][arrayIndex];
     } else {
@@ -72,7 +71,6 @@ function getCoordinates(playerIndex, pos) {
         let absolutePos = (fromPos + 10 * playerIndex) % 40;
         coordinates = openFieldsCoordinates[absolutePos];
     }
-    console.log(coordinates);
     return coordinates;
 
 }
@@ -118,7 +116,7 @@ let authenticationId = localStorage.getItem('authId');
 let username = localStorage.getItem('username');
 
 
-const socket = io({ auth: { token: authenticationId} });
+const socket = io({ auth: { token: authenticationId } });
 
 socket.on("connect", () => {
     console.log(`socketId: ${socket.id}`);
@@ -148,9 +146,10 @@ socket.on('newUsername', function (newUsername) {
 let indexInRoom;
 socket.on('newIndexInRoom', (newIndexInRoom) => {
     indexInRoom = newIndexInRoom;
-    console.log(`newIndexInRoom: ${indexInRoom}` );
+    console.log(`newIndexInRoom: ${indexInRoom}`);
 })
 
+let lastInputState;
 socket.on('update', (msgs) => {
 
     console.log('update');
@@ -202,9 +201,18 @@ socket.on('update', (msgs) => {
 
     //game
 
-    if (room.state) {
+    gameDrawing: if (room.state) {
         const pawnConteiner = document.getElementById('pawn-container');
         let game = room.game;
+        if (game.inputState == lastInputState) {
+
+            console.log("same inputtype");
+            break gameDrawing;
+        }
+        console.log("new inputtype");
+
+        lastInputState = game.inputState;
+
         let clientIsPlayerInLine = false;
 
         //check if client is player in line
@@ -227,8 +235,6 @@ socket.on('update', (msgs) => {
         const colorElement = document.getElementById("player-in-line-color");
         colorElement.innerHTML = colorText;
         colorElement.style.color = color;
-
-
 
         //draw pawnpositions
         for (let playerIndex = 0; playerIndex < game.players.length; playerIndex++) {
@@ -342,7 +348,7 @@ socket.on('update', (msgs) => {
         gameInfoDiv.style.display = "none";
     }
     console.log(msgs);
-    
+
     console.log(socket);
 });
 
