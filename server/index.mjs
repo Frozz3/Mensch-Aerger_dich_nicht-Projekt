@@ -5,9 +5,8 @@ import * as fs from 'fs';
 import express from 'express';
 import * as http from 'http';
 import * as https from 'https';
-import { leaveRoom, createRoom, joinRoom, changeReadiness } from './rooms.mjs';
-import { findUnusedAuthId, addAuthId, checkAuthId } from './auth.mjs'
-import { fetchUserdata, storeUsername } from './Userdata.mjs'
+import { leaveRoom, createRoom, joinRoom, changeReadiness ,formateRoomForUpdate} from './rooms.mjs';
+import { fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
 import { handleAction } from 'js-madn'
 
 // generatin __dirname for modules
@@ -101,10 +100,8 @@ io.use(async (socket, next) => {
    if (socket.handshake.auth.token == null) {
       // create new authId
       let authId = await findUnusedAuthId(pool);
-      await addAuthId(authId, pool, socket);
       let username = "User" + socket.id.slice(0, 6);
-      await storeUsername(pool, authId, username);
-      socket.data.name = username;
+      await addUser(authId, username, pool, socket);
       socket.emit("newUsername", username);
       console.log(`${socket.id} got new Username: ${username}`)
       next();
