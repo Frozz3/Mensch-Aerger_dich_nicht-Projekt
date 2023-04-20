@@ -18,13 +18,11 @@ export async function findUnusedAuthId(pool) {
    } catch (error) {
       throw error;
    }
-
-
 }
 
 export async function addUser(authId, username, pool, socket) {
    try {
-      await pool.query("INSERT INTO users (authId, username) VALUES (?,?)", [authId,username]);
+      await pool.query("INSERT INTO users (authId, username) VALUES (?,?)", [authId, username]);
       await socket.emit('newAuthenticationId', authId);
       console.log(`${socket.id} got new authId: ${authId}`);
       socket.data.authId = authId;
@@ -40,7 +38,7 @@ export async function checkAuthId(authId, pool, socket) {
       let resultCount = result[0].count;
       if (resultCount == 0n) {
          console.log(`wrong authId ${authId}`);
-      return false;
+         return false;
       } else
          socket.data.authId = socket.handshake.auth.token;
       return true;
@@ -50,17 +48,41 @@ export async function checkAuthId(authId, pool, socket) {
 }
 
 export async function fetchUserdata(socketData, pool) {
-    try {
-        const result = await pool.query("SELECT * FROM users WHERE authId = (?);", [socketData.authId]);
-        socketData.name = result[0].username;
-    } catch (error) {
-        throw error;
-    }
+   try {
+      const result = await pool.query("SELECT * FROM users WHERE authId = (?);", [socketData.authId]);
+      socketData.name = result[0].username;
+   } catch (error) {
+      throw error;
+   }
 }
 export async function updateUsername(pool, authId, username) {
-    try {
-        const result = await pool.query("UPDATE users SET username = (?) WHERE authId = (?);",[username,authId]);
-    } catch (error) {
-        throw error;
-    }
+   try {
+      const result = await pool.query("UPDATE users SET username = (?) WHERE authId = (?);", [username, authId]);
+   } catch (error) {
+      throw error;
+   }
+}
+
+export async function getStats(pool, authId) {
+   try {
+      const result = await pool.query(
+         "select cs.playedGames, cs.wonGames, cs.lostGames, cs.lostFigures, cs.timesRolled, cs.knockedFigures FROM current_stats cs JOIN users u on cs.usersId = u.id WHERE u.authId = (?)",
+         [authId]
+      );
+
+      if (result.length == 0) {
+         return {
+            playedGames: 0,
+            wonGames: 0,
+            lostGames: 0,
+            lostFigures: 0,
+            timesRolled: 0,
+            knockedFigures: 0
+         }
+      }
+      return result[0];
+
+   } catch (error) {
+      throw error;
+   }
 }

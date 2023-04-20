@@ -1,160 +1,170 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Combatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="/" />
-    <link rel="stylesheet" href="rangliste.css" >
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>TEST</title>
-    <script language="javascript" type="text/javascript" src="open_nav.js"></script>
-  </head>
-  <body>
-   
-    <div class="wrapper">
-      <header class="bordered hdr">
-        <div class="menu-btn-container">
-            <div class="menu-btn" onclick="open_nav()">
-                <div class="menu_btn_burger">
-                </div>
-            </div>
-            <script src="burger.js"></script>
-        </div>
-        <h1>
-            MENSCH ÄRGERE DICH NICHT
-        </h1>
 
-        <ul id="nav-list" class="open-close-nav dontShowOnSmall">
-            <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
-            <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
-            <li id="login-list-item" class="nav-list-item">
-                <button style="float: right;" id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
-            </li>
-            <script>
-                function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
-            </script>
-        </ul>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Combatible" content="IE-edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/" />
+  <link rel="stylesheet" href="rangliste.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>TEST</title>
+  <script language="javascript" type="text/javascript" src="open_nav.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="socketConnection.js"></script>
+  <script src="statsSideSocket.js"></script>
+
+  <script src="onloadStats.js"></script>
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header class="bordered hdr">
+      <div class="menu-btn-container">
+        <div class="menu-btn" onclick="open_nav()">
+          <div class="menu_btn_burger">
+          </div>
+        </div>
+        <script src="burger.js"></script>
+      </div>
+      <h1>
+        MENSCH ÄRGERE DICH NICHT
+      </h1>
+
+      <ul id="nav-list" class="open-close-nav dontShowOnSmall">
+        <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
+        <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
+        <li id="login-list-item" class="nav-list-item">
+          <button style="float: right;" id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
+        </li>
+        <script>
+          function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
+        </script>
+      </ul>
 
     </header>
 
-      <div class="uda bordered rounded3">
-        uda
-      </div>
-      <div id="ranked" class="rng bordered rounded2">
-        <h2 class="rangüberschrift">Rangliste</h2>
-         <div id="rankedT" class="rangtable">
-            <div class="platz">
-              <h3 class="rangPlatz">Platz</h3>
-              <p>1.</p>
-              <p>2.</p>
-              <p>3.</p>
-              <p>4.</p>
-              <p>5.</p>
-              <p>6.</p>
-              <p>7.</p>
-              <p>8.</p>
-              <p>9.</p>
-              <p>10.</p> 
-            </div>
-            <div class="spieler">
-              <h3 class="rangSpieler">Spieler</h3>
-              <p>Hauke</p>
-              <p>Leon</p>
-              <p>Nicolas</p>
-              <p>Marvin</p>
-              <p>Ben</p>
-              <p>Sanji</p>
-              <p>Nils</p>
-              <p>Michel</p>
-              <p>Lukas</p>
-              <p>Jay</p>
-            </div>
-            <div class="siege">
-              <h3 class="rangSiege">Siege</h3>
-              <p>100</p>
-              <p>1000</p>
-              <p>1200</p>
-              <p>1005</p>
-              <p>1020</p>
-              <p>1003</p>
-              <p>1040</p>
-              <p>1700</p>
-              <p>1070</p>
-              <p>1200</p>
-            </div>
+    <div class="uda bordered rounded3">
+      uda
+    </div>
+    <div id="ranked" class="rng bordered rounded2">
+      <h2 class="rangüberschrift">Rangliste</h2>
+      <div id="rankedT" class="rangtable">
+        <div class="platz">
+          <h3 class="rangPlatz">Platz</h3>
+          <p>1.</p>
+          <p>2.</p>
+          <p>3.</p>
+          <p>4.</p>
+          <p>5.</p>
+          <p>6.</p>
+          <p>7.</p>
+          <p>8.</p>
+          <p>9.</p>
+          <p>10.</p>
         </div>
+        <div class="spieler">
+          <h3 class="rangSpieler">Spieler</h3>
+          <p>Hauke</p>
+          <p>Leon</p>
+          <p>Nicolas</p>
+          <p>Marvin</p>
+          <p>Ben</p>
+          <p>Sanji</p>
+          <p>Nils</p>
+          <p>Michel</p>
+          <p>Lukas</p>
+          <p>Jay</p>
+        </div>
+        <div class="siege">
+          <h3 class="rangSiege">Siege</h3>
+          <p>100</p>
+          <p>1000</p>
+          <p>1200</p>
+          <p>1005</p>
+          <p>1020</p>
+          <p>1003</p>
+          <p>1040</p>
+          <p>1700</p>
+          <p>1070</p>
+          <p>1200</p>
+        </div>
+      </div>
 
+    </div>
+    <div class="sta0 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Spiele Gemacht</p>
+        <p id="played-games" class="numbersp">2540</p>
       </div>
-      <div class="sta0 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Spiele Gemacht</p>
-          <p class="numbersp">2540</p>
-        </div>
+    </div>
+    <div class="sta0 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Siege Insgesamt</p>
+        <p class="numbersp">2540</p>
       </div>
-      <div class="sta0 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Siege Insgesamt</p>
-          <p class="numbersp">2540</p>
-        </div>
+    </div>
+    <div class="sta1 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Niederlagen Insgesamt</p>
+        <p class="numbersp">2540</p>
       </div>
-      <div class="sta1 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Niederlagen Insgesamt</p>
-          <p class="numbersp">2540</p>
-        </div>
+    </div>
+    <div class="sta1 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Figuren Verloren</p>
+        <p class="numbersp">2540</p>
       </div>
-      <div class="sta1 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Figuren Verloren</p>
-          <p class="numbersp">2540</p>
-        </div>
+    </div>
+    <div class="sta1 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Figuren Besiegt</p>
+        <p class="numbersp">2540</p>
       </div>
-      <div class="sta1 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Figuren Besiegt</p>
-          <p class="numbersp">2540</p>
-        </div>
+    </div>
+    <div class="sta1 sta bordered rounded1">
+      <div class="played">
+        <p class="statp">Wie oft Gewürfelt</p>
+        <p class="numbersp">2540</p>
       </div>
-      <div class="sta1 sta bordered rounded1">
-        <div class="played">
-          <p class="statp">Wie oft Gewürfelt</p>
-          <p class="numbersp">2540</p>
-        </div>
-      </div>
-      <div class="fot bordered">
-        <footer>
-          <div class="fot-content">
+    </div>
+    <div class="fot bordered">
+      <footer>
+        <div class="fot-content">
 
-            <h3>Mensch Ärgere Dich Nicht</h3>
-            <p>
-            Lorem ipsum dolor sit amet, consectetur 
-            adipiscing elit, sed do eiusmod tempor 
+          <h3>Mensch Ärgere Dich Nicht</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum.
-            </p>
-            <ul class="socialmedia">
+          </p>
+          <ul class="socialmedia">
             <li><a href="#" class="fa fa-facebook"></a></li>
             <li><a href="#" class="fa fa-twitter"></a></li>
             <li><a href="#" class="fa fa-google"></a></li>
+          </ul>
+        </div>
+        <div class="copyright">
+          <p>Copyright &copy; 2022 <a href="rangliste.html">MADN Online</a></p>
+          <div class="fot-nav">
+            <ul class="fot-menu">
+              <li><a href="">Kontakt</a></li>
+              <li><a href="">Impressum</a></li>
+              <li><a href="index.html">Starteite</a></li>
             </ul>
           </div>
-          <div class="copyright">
-            <p>Copyright &copy; 2022 <a href="rangliste.html">MADN Online</a></p>
-            <div class="fot-nav">
-              <ul class="fot-menu">
-                 <li><a href="">Kontakt</a></li>
-                 <li><a href="">Impressum</a></li>
-                 <li><a href="index.html">Starteite</a></li>
-              </ul>
-             </div>
-          </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </div>
+  </div>
 
-  </body>
-  </html>
+</body>
+
+</html>

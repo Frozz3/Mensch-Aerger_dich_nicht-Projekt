@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import express from 'express';
 import * as http from 'http';
 import * as https from 'https';
-import { leaveRoom, createRoom, joinRoom, changeReadiness ,formateRoomForUpdate} from './rooms.mjs';
+import { leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
 import { fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
 import { handleAction } from 'js-madn'
 
@@ -13,8 +13,6 @@ import { handleAction } from 'js-madn'
 import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-
-
 
 const httpPort = 3000;
 const httpsPort = 443;
@@ -63,11 +61,6 @@ switch (1) {
    default:
       break;
 }
-
-
-
-
-
 
 import { Server } from 'socket.io';
 const io = new Server(server);
@@ -199,6 +192,14 @@ io.on('connection', async (socket) => {
       }
 
    })
+
+
+   //stats
+   socket.on('readStats', async () => {
+      const stats = await getStats(pool, authId);
+      socket.emit('stats', stats)
+   });
+
 
    socket.on('disconnect', () => {
       console.log(`${userId} disconnected`);
