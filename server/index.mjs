@@ -1,68 +1,43 @@
 import * as mariadb from 'mariadb';
 import * as path from 'path';
 import * as fs from 'fs';
-
+import { Server } from 'socket.io';
 import express from 'express';
 import * as http from 'http';
 import * as https from 'https';
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
 import { fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
 import { handleAction } from 'js-madn'
-
-// generatin __dirname for modules
 import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-const httpPort = 3000;
-const httpsPort = 443;
+dotenv.config()
 
-const testDBOptions = {
-   host: 'localhost',
-   user: 'root',
+const DBOptions = {
+   host: process.env.HOST, //'127.0.0.1'
+   user: process.env.USER, //'root'
+   password: process.env.PASSWORD, //'imPW4Hnfd4cW3XbsWehp'
    database: 'lfup'
 };
-
-const serverDBOptions = {
-   host: '127.0.0.1',
-   user: 'root',
-   database: 'lfup',
-   password: 'imPW4Hnfd4cW3XbsWehp'
-};
-
 // server 
 
-let port;
-let app;
-let pool;
+let port = process.env.PORT; //443 80
+let app = express();
+let pool = mariadb.createPool(DBOptions);
 let server;
 
-switch (1) {
-   case 1:
-      port = httpPort;
-      app = express();
-      pool = mariadb.createPool(testDBOptions);
-      server = http.createServer(app);
-      break;
-   case 2:
-
-      port = httpsPort;
-      app = express();
-      pool = mariadb.createPool(serverDBOptions);
-
-      const certOptions = {
-         key: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/privkey.pem'),
-         cert: fs.readFileSync('/etc/letsencrypt/live/madn.it-assistant.de/fullchain.pem')
-      }
-
-      server = https.createServer(certOptions, app);
-      break;
-
-   default:
-      break;
+if (process.env.IS_HTTPS == "true") {
+   const certOptions = {
+      key: fs.readFileSync(process.env.HTTPS_KEY_PATH),//'/etc/letsencrypt/live/madn.it-assistant.de/privkey.pem'
+      cert: fs.readFileSync(process.env.HTTPS_CERT_PATH)//'/etc/letsencrypt/live/madn.it-assistant.de/fullchain.pem'
+   }
+   server = https.createServer(certOptions, app);
+} else {
+   server = http.createServer(app);
 }
 
-import { Server } from 'socket.io';
 const io = new Server(server);
 
 const rooms = {};
