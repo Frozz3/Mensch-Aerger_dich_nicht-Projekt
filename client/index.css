@@ -274,6 +274,12 @@ Game Anfang
 
 }
 
+#game-info{
+  text-align: center;
+  color: white;
+  padding: 20px;
+}
+
 /*
 Game Ende
 */
@@ -654,9 +660,7 @@ footer {
 
   ul {
     margin: 0 auto;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    
   }
 
   .copyright {

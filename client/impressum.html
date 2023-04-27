@@ -9,9 +9,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>TEST</title>
     <script language="javascript" type="text/javascript" src="open_nav.js"></script>
+    <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
   </head>
   <body>
-   
+    <popup>
+      <div class="form" id="popup-close">
+          <div>
+              <button class="close-button" onclick="togglePopup()">&times;</button>
+          </div>
+          <div class="tab-header">
+              <div class="active" onclick="switchTab()">Registrieren</div>
+              <div class="active2" onclick="switchTab()">Anmelden</div>
+          </div>
+          <div class="tab-content">
+              <div class="tab-body active">
+                  <div class="form-element">
+                      <input type="text" placeholder="Email">
+                  </div>
+                  <div class="form-element">
+                      <input type="text" placeholder="Benutzername">
+                  </div>
+                  <div class="form-element">
+                      <input type="password" placeholder="Passwort">
+                  </div>
+                  <div class="form-element">
+                      <button>Registrieren</button>
+                  </div>
+              </div>
+              <div class="tab-body">
+                  <div class="form-element">
+                      <input type="text" placeholder="Email / Benutzername">
+                  </div>
+                  <div class="form-element">
+                      <input type="text" placeholder="Passwort:">
+                  </div>
+                  <div class="form-element">
+                      <button>Anmelden</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </popup>
+
     <div class="wrapper">
       <header class="bordered hdr">
         <div class="menu-btn-container">
@@ -21,7 +60,7 @@
             </div>
             <script src="burger.js"></script>
         </div>
-        <h1>
+        <h1> 
             MENSCH ÄRGERE DICH NICHT
         </h1>
 
