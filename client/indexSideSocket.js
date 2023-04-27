@@ -122,6 +122,7 @@ function indexSideSocket() {
     })
 
     let lastInputState;
+    let lastPlayerInLine;
     socket.on('update', (msgs) => {
 
         console.log('update');
@@ -176,14 +177,13 @@ function indexSideSocket() {
         gameDrawing: if (room.state) {
             const pawnConteiner = document.getElementById('pawn-container');
             let game = room.game;
-            if (game.inputState == lastInputState) {
+            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine) {
 
-                console.log("same inputtype");
                 break gameDrawing;
             }
-            console.log("new inputtype");
 
             lastInputState = game.inputState;
+            lastPlayerInLine = game.playerInLine;
 
             let clientIsPlayerInLine = false;
 
