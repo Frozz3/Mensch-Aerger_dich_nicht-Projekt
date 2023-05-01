@@ -1,36 +1,51 @@
 //connection
 let authenticationId = localStorage.getItem('authId');
+let loginStatus = false;
 const socket = io({ auth: { token: authenticationId } });
 
-socket.on("connect", () => {
-    console.log(`socketId: ${socket.id}`);
-});
+function socketConnection() {
 
-socket.on("connect_error", (err) => {
-    console.log("connection error");
-    console.table(err);
-    alert(`connect_error message: ${err.message}`);
-});
+    socket.on("connect", () => {
+        console.log(`socketId: ${socket.id}`);
+    });
 
-//user
+    socket.on('connectionInfo', (loggedIn) => {
 
-socket.on('newAuthenticationId', function (newAuthenticationId) {
-    authenticationId = newAuthenticationId;
-    localStorage.setItem('authId', newAuthenticationId);
-    console.log("new AuthenticationId saved: " + newAuthenticationId);
-});
+        console.log('loginStatus: ' + loggedIn)
+        if (loggedIn) {
+            logoutLogic();
+        }
+    })
 
-socket.on('newUsername', function (newUsername) {
-    newUsername = newUsername;
-    console.log("new Username received: " + newUsername);
-});
+    socket.on("connect_error", (err) => {
+        console.log("connection error");
+        console.table(err);
+        alert(`connect_error message: ${err.message}`);
+    });
 
-//error
+    //user
 
-socket.on('error', (msg, data) => {
-    console.log(`error message: ${msg}`);
-    console.log(data);
-    alert(`error message: ${msg}`);
-});
+    socket.on('newAuthenticationId', function (newAuthenticationId) {
+        authenticationId = newAuthenticationId;
+        localStorage.setItem('authId', newAuthenticationId);
+        console.log("new AuthenticationId saved: " + newAuthenticationId);
+        
+    });
+
+    socket.on('loggedIn',(newAuthenticationId ) => {
+        authenticationId = newAuthenticationId;
+        localStorage.setItem('authId', newAuthenticationId);
+        console.log("new AuthenticationId saved: " + newAuthenticationId);
+        
+        location.reload();
+    });
+
+    //error
+    socket.on('error', (msg, data) => {
+        console.log(`error message: ${msg}`);
+        console.log(data);
+        alert(`error message: ${msg}`);
+    });
 
 
+}

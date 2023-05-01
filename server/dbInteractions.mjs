@@ -1,4 +1,7 @@
 import { v4 as uuid } from 'uuid';
+import * as bcrypt from 'bcrypt';
+
+const saltRounds = 10;
 
 
 //auth funktions
@@ -23,10 +26,10 @@ export async function findUnusedAuthId(pool) {
 export async function addUser(authId, username, pool, socket) {
    try {
       await pool.query("INSERT INTO users (authId, username) VALUES (?,?)", [authId, username]);
-      await socket.emit('newAuthenticationId', authId);
       console.log(`${socket.id} got new authId: ${authId}`);
       socket.data.authId = authId;
       socket.data.name = username;
+      await socket.emit('newAuthenticationId', authId);
    } catch (error) {
       throw error;
    }
@@ -49,8 +52,10 @@ export async function checkAuthId(authId, pool, socket) {
 
 export async function fetchUserdata(socketData, pool) {
    try {
-      const result = await pool.query("SELECT * FROM users WHERE authId = (?);", [socketData.authId]);
+      const result = await pool.query("select ld.id ldId, u.* from users u left join login_data ld on u.id = ld.usersId WHERE u.authId = (?);", [socketData.authId]);
       socketData.name = result[0].username;
+      socketData.loggedIn = (result[0].ldId == null) ? false : true;
+      console.log(socketData.logedIn);
    } catch (error) {
       throw error;
    }
@@ -85,4 +90,39 @@ export async function getStats(pool, authId) {
    } catch (error) {
       throw error;
    }
+}
+export async function registerUser(pool, authId, name, pw, email) {
+   try {
+      const result = await pool.query("select count(ld.id) existing from login_data ld join users u on u.id = ld.usersId where u.authId = (?);", [authId]);
+      let registrated = (result[0].existing != 0n);
+      if (registrated) {
+         return false;
+      }
+      const hash = await bcrypt.hash(pw, saltRounds);
+      console.log(hash)
+      await pool.query("insert into login_data (usersId, email, password) select id, (?),(?) from users where authId = (?);", [email, hash, authId]);
+
+      await pool.query("update users set username = (?) where authId = (?);", [name, authId]);
+      return true;
+   } catch (err) {
+      throw new Error(err)
+   }
+}
+
+export async function checkLogin(pool, name, pw) {
+   try {
+      const result = await pool.query("select login_data.*, users.authId from users join login_data on login_data.usersId = users.id where users.username = (?);", [name])
+
+      let authId;
+      for (let i = 0; i < result.length; i++) {
+         const user = result[i];
+         if (bcrypt.compareSync(pw, user.password)) {
+            return user.authId;
+         }
+      }
+      return false;
+   } catch (err) {
+      throw new Error(err)
+   }
+
 }

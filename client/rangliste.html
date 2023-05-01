@@ -11,12 +11,15 @@
   <title>TEST</title>
   <script language="javascript" type="text/javascript" src="open_nav.js"></script>
   <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
-  
+
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="socketConnection.js"></script>
   <script src="statsSideSocket.js"></script>
   <script src="onloadStats.js"></script>
+
+
+  <script src="loginLogic.js"></script>
 
 </head>
 
@@ -24,71 +27,78 @@
 
   <popup>
     <div class="form" id="popup-close">
-        <div>
-            <button class="close-button" onclick="togglePopup()">&times;</button>
+      <div>
+        <button class="close-button" onclick="togglePopup()">&times;</button>
+      </div>
+      <div class="tab-header">
+        <div class="active" onclick="switchTab()">Registrieren</div>
+        <div class="active2" onclick="switchTab()">Anmelden</div>
+      </div>
+      <div class="tab-content">
+        <div id="reg-form" class="tab-body active">
+          <div class="form-element">
+            <input id="reg-email" type="text" placeholder="Email">
+          </div>
+          <div class="form-element">
+            <input id="reg-name" type="text" placeholder="Benutzername">
+          </div>
+          <div class="form-element">
+            <input id="reg-pw" type="password" placeholder="Passwort">
+          </div>
+          <div class="form-element">
+            <button id="reg-btn">Registrieren</button>
+          </div>
         </div>
-        <div class="tab-header">
-            <div class="active" onclick="switchTab()">Registrieren</div>
-            <div class="active2" onclick="switchTab()">Anmelden</div>
+        <div id="log-form" class="tab-body">
+          <div class="form-element">
+            <input id="log-name" type="text" placeholder="Email / Benutzername">
+          </div>
+          <div class="form-element">
+            <input id="log-pw" type="text" placeholder="Passwort">
+          </div>
+          <div class="form-element">
+            <button id="log-btn">Anmelden</button>
+          </div>
         </div>
-        <div class="tab-content">
-            <div class="tab-body active">
-                <div class="form-element">
-                    <input type="text" placeholder="Email">
-                </div>
-                <div class="form-element">
-                    <input type="text" placeholder="Benutzername">
-                </div>
-                <div class="form-element">
-                    <input type="password" placeholder="Passwort">
-                </div>
-                <div class="form-element">
-                    <button>Registrieren</button>
-                </div>
-            </div>
-            <div class="tab-body">
-                <div class="form-element">
-                    <input type="text" placeholder="Email / Benutzername">
-                </div>
-                <div class="form-element">
-                    <input type="text" placeholder="Passwort:">
-                </div>
-                <div class="form-element">
-                    <button>Anmelden</button>
-                </div>
-            </div>
+      </div>
+      <div class="tab-content1" style="display: none;">
+        <div class="tab-body">
+          <div class="form-element">
+            <button id="logout-btn">Abmelden</button>
+          </div>
         </div>
+      </div>
     </div>
-</popup>
+  </popup>
 
   <div class="wrapper">
     <header class="bordered hdr">
       <div class="menu-btn-container">
-          <div class="menu-btn" onclick="open_nav()">
-              <div class="menu_btn_burger">
-              </div>
+        <div class="menu-btn" onclick="open_nav()">
+          <div class="menu_btn_burger">
           </div>
-          <script src="burger.js"></script>
+        </div>
+        <script src="burger.js"></script>
       </div>
       <h1>
-          MENSCH ÄRGERE DICH NICHT
+        MENSCH ÄRGERE DICH NICHT
       </h1>
 
       <ul id="nav-list" class="open-close-nav dontShowOnSmall">
-          <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
-          <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
-          <li id="login-list-item" class="nav-list-item">
-              <button id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
-          </li>
-          <script>
-              function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
-          </script>
+        <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
+        <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
+        <li id="login-list-item" class="nav-list-item">
+          <button id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
+        </li>
+        <script>
+          function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
+        </script>
       </ul>
-      
-     
 
-      
-  </header>
+
+
+
+    </header>
 
     <div class="uda bordered rounded3">
       uda

@@ -14,12 +14,13 @@
     <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
     <script language="javascript" type="text/javascript" src="open_nav.js"></script>
     <script src="collabsible.js"></script>
-    
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="socketConnection.js"></script>
     <script src="indexSideSocket.js"></script>
-    
+
     <script src="onloadIndex.js"></script>
+    <script src="loginLogic.js"></script>
 
 
 </head>
@@ -35,29 +36,36 @@
                 <div class="active2" onclick="switchTab()">Anmelden</div>
             </div>
             <div class="tab-content">
-                <div class="tab-body active">
+                <div id="reg-form" class="tab-body active">
                     <div class="form-element">
-                        <input type="text" placeholder="Email">
+                        <input id="reg-email" type="text" placeholder="Email">
                     </div>
                     <div class="form-element">
-                        <input type="text" placeholder="Benutzername">
+                        <input id="reg-name" type="text" placeholder="Benutzername">
                     </div>
                     <div class="form-element">
-                        <input type="password" placeholder="Passwort">
+                        <input id="reg-pw" type="password" placeholder="Passwort">
                     </div>
                     <div class="form-element">
-                        <button>Registrieren</button>
+                        <button id="reg-btn">Registrieren</button>
                     </div>
                 </div>
+                <div id="log-form" class="tab-body">
+                    <div class="form-element">
+                        <input id="log-name" type="text" placeholder="Email / Benutzername">
+                    </div>
+                    <div class="form-element">
+                        <input id="log-pw" type="text" placeholder="Passwort">
+                    </div>
+                    <div class="form-element">
+                        <button id="log-btn">Anmelden</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content1" style="display: none;">
                 <div class="tab-body">
                     <div class="form-element">
-                        <input type="text" placeholder="Email / Benutzername">
-                    </div>
-                    <div class="form-element">
-                        <input type="text" placeholder="Passwort:">
-                    </div>
-                    <div class="form-element">
-                        <button>Anmelden</button>
+                        <button id="logout-btn">Abmelden</button>
                     </div>
                 </div>
             </div>
@@ -87,10 +95,10 @@
                     function togglePopup() { document.getElementById("popup-close").classList.toggle("active"); }
                 </script>
             </ul>
-            
-           
 
-            
+
+
+
         </header>
         <div class="content-game bordered">
 

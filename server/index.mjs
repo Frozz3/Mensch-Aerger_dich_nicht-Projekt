@@ -6,8 +6,8 @@ import express from 'express';
 import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from 'dotenv'
-import { leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
-import { fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
+import { countRoomAuthIds, leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
+import { checkLogin, registerUser, fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
 import { handleAction } from 'js-madn'
 import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
@@ -16,8 +16,8 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 dotenv.config()
 
 const DBOptions = {
-   host: process.env.HOST, 
-   user: process.env.USER, 
+   host: process.env.HOST,
+   user: process.env.USER,
    password: process.env.PASSWORD,
    database: 'lfup'
 };
@@ -70,8 +70,7 @@ io.use(async (socket, next) => {
       let authId = await findUnusedAuthId(pool);
       let username = "User" + socket.id.slice(0, 6);
       await addUser(authId, username, pool, socket);
-      socket.emit("newUsername", username);
-      console.log(`${socket.id} got new Username: ${username}`)
+      console.log(`${socket.id} got new Username: ${username}`);
       next();
    } else {
       // check authId from handshake
@@ -81,15 +80,16 @@ io.use(async (socket, next) => {
          next(new Error("wrong authId"));
       } else {
          // authId valid
-
          // store data of user in socket
          await fetchUserdata(socket.data, pool);
+         socket.emit('connectionInfo', socket.data.loggedIn)
          next();
       }
    }
 });
 
 io.on('connection', async (socket) => {
+   
 
    console.log(`${socket.id} created a new connection`); //${socket.data.authId}
 
@@ -175,6 +175,43 @@ io.on('connection', async (socket) => {
       socket.emit('stats', stats)
    });
 
+   //login
+
+   socket.on('login', async (loginData) => {
+      if (currentRoomId) {
+         if (countRoomAuthIds(rooms[currentRoomId].userAuthIds) > 1) {
+            socket.emit('error', "cant log in, when other are in the same room", { roomId: currentRoomId });
+            return;
+         }
+      }
+      if (loginData.name == '') {
+         socket.emit('error', "username is empty", { roomId: currentRoomId });
+         return;
+      }
+      if (loginData.pw == '') {
+         socket.emit('error', "password is empty", { roomId: currentRoomId });
+         return;
+      }
+
+
+      let authId = await checkLogin(pool, loginData.name, loginData.pw)
+      if (authId == false) {
+         socket.emit('error', "password or username is wrong", { roomId: currentRoomId });
+         return;
+      }
+      socket.emit('loggedIn', authId);
+   });
+
+   socket.on('logout', async ()=>{
+
+      leaveRoom(rooms, currentRoomId, io, socket);
+      currentRoomId = null;
+      let authId = await findUnusedAuthId(pool);
+      let username = "User" + socket.id.slice(0, 6);
+      await addUser(authId, username, pool, socket);
+      socket.emit('loggedIn',authId)
+      console.log(`${socket.id} got new Username: ${username}`);
+   })
 
    socket.on('disconnect', () => {
       console.log(`${userId} disconnected`);

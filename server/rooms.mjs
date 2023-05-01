@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import * as madn from 'js-madn'
 //room funktions
 
-function countRoomAuthIds(userAuthIds) {
+export function countRoomAuthIds(userAuthIds) {
    let counter = 0;
    userAuthIds.forEach((authId) => {
       if (authId !== null) {
@@ -19,7 +19,7 @@ export function formateRoomForUpdate(room) {
       userData: room.userData,
       game: room.game,
       state: room.state,
-      emptySince: room.emptySince
+   emptySince: room.emptySince
    };
 }
 
@@ -131,6 +131,8 @@ export function leaveRoom(rooms, roomId, io, socket) {
 
       let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
       let timeStamp = Date.now();
+      console.log("authId:", socket.data.authId);
+      console.log(room);
 
       // store the time the user left (override old)
       room.userData[roomIndexOfSocket].leftSince = timeStamp;
@@ -160,7 +162,7 @@ export function leaveRoom(rooms, roomId, io, socket) {
          io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
       }, 1000);
    } catch (error) {
-      console.log(rooms[roomId]);
+      console.log(error);
       throw new Error(error);
    }
 }
