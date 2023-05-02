@@ -2,6 +2,8 @@ function logoutLogic() {
     document.getElementsByClassName("tab-content1").item(0).style.display = "block";
     document.getElementsByClassName("tab-header").item(0).style.display = "none";
     document.getElementsByClassName("tab-content").item(0).style.display = "none";
+    document.getElementById('login-button').style.display = 'none';
+    document.getElementById('logout-button').style.display = 'block';
 
     let logoutBtn = document.getElementById("logout-btn");
     

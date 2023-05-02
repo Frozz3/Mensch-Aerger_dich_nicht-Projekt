@@ -96,14 +96,20 @@ export async function registerUser(pool, authId, name, pw, email) {
       const result = await pool.query("select count(ld.id) existing from login_data ld join users u on u.id = ld.usersId where u.authId = (?);", [authId]);
       let registrated = (result[0].existing != 0n);
       if (registrated) {
-         return false;
+         return { ok: false, msg: "already logged in" };
       }
+      const result1 = await pool.query("select count(*) existing from users where username = (?);", [name]);
+      let usernameInUse = (result1[0].existing != 0n);
+      if (usernameInUse) {
+         return { ok: false, msg: "username already in use" };
+      }
+
       const hash = await bcrypt.hash(pw, saltRounds);
       console.log(hash)
       await pool.query("insert into login_data (usersId, email, password) select id, (?),(?) from users where authId = (?);", [email, hash, authId]);
 
       await pool.query("update users set username = (?) where authId = (?);", [name, authId]);
-      return true;
+      return { ok: true };
    } catch (err) {
       throw new Error(err)
    }

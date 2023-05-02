@@ -89,7 +89,7 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', async (socket) => {
-   
+
 
    console.log(`${socket.id} created a new connection`); //${socket.data.authId}
 
@@ -202,16 +202,40 @@ io.on('connection', async (socket) => {
       socket.emit('loggedIn', authId);
    });
 
-   socket.on('logout', async ()=>{
+   socket.on('logout', async () => {
 
       leaveRoom(rooms, currentRoomId, io, socket);
       currentRoomId = null;
       let authId = await findUnusedAuthId(pool);
       let username = "User" + socket.id.slice(0, 6);
       await addUser(authId, username, pool, socket);
-      socket.emit('loggedIn',authId)
+      socket.emit('loggedIn', authId)
       console.log(`${socket.id} got new Username: ${username}`);
-   })
+   });
+
+   socket.on('regist', async (registrationData) => {
+      if (currentRoomId) {
+         if (countRoomAuthIds(rooms[currentRoomId].userAuthIds) > 1) {
+            socket.emit('error', "cant registrate, when other are in the same room", { roomId: currentRoomId });
+            return;
+         }
+      }
+      if (registrationData.name == '') {
+         socket.emit('error', "username is empty", { roomId: currentRoomId });
+         return;
+      }
+      if (registrationData.pw == '') {
+         socket.emit('error', "password is empty", { roomId: currentRoomId });
+         return;
+      }
+
+      let result = await registerUser(pool, socket.data.authId, registrationData.name,registrationData.pw,registrationData.email)
+      if (!result.ok) {
+         socket.emit('error', `regirtration failed, ${result.msg}`, { roomId: currentRoomId });
+         return;
+      }
+      socket.emit('loggedIn', socket.data.authId);
+   });
 
    socket.on('disconnect', () => {
       console.log(`${userId} disconnected`);
