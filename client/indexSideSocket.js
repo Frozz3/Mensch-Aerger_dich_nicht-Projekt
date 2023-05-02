@@ -159,14 +159,14 @@ function indexSideSocket() {
                     playerNames[i].setAttribute("style", '');
                 }
                 if (room.userData[i].status == true) {
-                    playerReadiness[i].innerHTML = "Ready";
+                    playerReadiness[i].innerHTML = "Bereit";
                 }
                 else {
-                    playerReadiness[i].innerHTML = "Not Ready";
+                    playerReadiness[i].innerHTML = "Nicht Breit";
                 }
 
             } else {
-                playerNames[i].setAttribute('value', room.userData[i].name);
+                playerNames[i].setAttribute('value', "");
                 playerReadiness[i].setAttribute('value', null);
             }
 
