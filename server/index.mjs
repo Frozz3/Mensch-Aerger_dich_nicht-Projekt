@@ -19,7 +19,8 @@ const DBOptions = {
    host: process.env.HOST,
    user: process.env.USER,
    password: process.env.PASSWORD,
-   database: 'lfup'
+   database: 'lfup',
+   port: process.env.DBPORT
 };
 // server 
 
