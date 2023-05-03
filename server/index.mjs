@@ -172,8 +172,7 @@ io.on('connection', async (socket) => {
 
    //stats
    socket.on('readStats', async () => {
-      //const stats = await getStats(pool, authId);
-      const stats = {}
+      const stats = await getStats(pool, socket.data.authId);
       socket.emit('stats', stats)
    });
 

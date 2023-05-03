@@ -36,15 +36,9 @@ body {
   grid-area: rng;
 }
 
-.sta0 {
-  grid-area: sta;
-}
-
-.sta1 {
-  grid-area: sta;
-}
 
 .sta {
+  grid-area: sta;
   grid-column: span 1;
   grid-row: span 1;
 }
