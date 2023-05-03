@@ -7,7 +7,7 @@ import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from 'dotenv'
 import { countRoomAuthIds, leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
-import { checkLogin, registerUser, fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
+import { getStats, checkLogin, registerUser, fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
 import { handleAction } from 'js-madn'
 import * as url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
@@ -171,7 +171,8 @@ io.on('connection', async (socket) => {
 
    //stats
    socket.on('readStats', async () => {
-      const stats = await getStats(pool, authId);
+      //const stats = await getStats(pool, authId);
+      const stats = {}
       socket.emit('stats', stats)
    });
 
@@ -203,8 +204,10 @@ io.on('connection', async (socket) => {
    });
 
    socket.on('logout', async () => {
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, io, socket);
+      }
 
-      leaveRoom(rooms, currentRoomId, io, socket);
       currentRoomId = null;
       let authId = await findUnusedAuthId(pool);
       let username = "User" + socket.id.slice(0, 6);
@@ -229,7 +232,7 @@ io.on('connection', async (socket) => {
          return;
       }
 
-      let result = await registerUser(pool, socket.data.authId, registrationData.name,registrationData.pw,registrationData.email)
+      let result = await registerUser(pool, socket.data.authId, registrationData.name, registrationData.pw, registrationData.email)
       if (!result.ok) {
          socket.emit('error', `regirtration failed, ${result.msg}`, { roomId: currentRoomId });
          return;
