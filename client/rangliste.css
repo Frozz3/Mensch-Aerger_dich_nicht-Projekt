@@ -582,37 +582,7 @@ footer {
     font-size: 17px;
   }
 
-  .fot-content h3 {
-    margin: 0;
-    font-size: 17px;
-  }
-
-  .fot-content p {
-    margin: 0;
-    font-size: 15px;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .copyright p {
-    font-size: 15px;
-
-  }
-
-  .fot-nav a {
-    font-size: 15px;
-    left: 200px;
-    float: none;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    font-weight: bolder;
-    display: inline;
-    color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-  }
+  
 
   .copyright {
     font-size: 15px;
@@ -827,9 +797,6 @@ footer {
 
   ul {
     margin: 0 auto;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 
   .copyright {
