@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Passwortgeschützter Bereich"
-AuthUserFile C:\Users\Hauke\Documents\Projects\Mensch-Aerger_dich_nicht-Projekt\client\.htpasswd
-Require valid-user
