@@ -234,7 +234,9 @@ ul {
 }
 
 
-
+.collapsible {
+  display: none;
+}
 
 @media screen and (min-width: 801px) {
 
@@ -255,10 +257,7 @@ ul {
 
 @media screen and (max-width: 800px) {
 
-  .collapsible {
-    display: none;
-  }
-
+  
   .dontShowOnSmall {
     display: none;
   }
