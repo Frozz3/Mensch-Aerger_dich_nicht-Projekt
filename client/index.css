@@ -207,7 +207,7 @@ ul {
   padding: 0;
   overflow: hidden;
   /* background-color: black; 
-    /* backdrop-filter: opacity(20%);*/
+      /* backdrop-filter: opacity(20%);*/
 }
 
 #nav-list {
@@ -234,13 +234,13 @@ ul {
 }
 
 
-
+.collapsible {
+  display: none;
+}
 
 @media screen and (min-width: 801px) {
 
-  .collapsible{
-    display: none;
-  }
+
   .menu-btn-container {
     display: none;
   }
@@ -257,7 +257,8 @@ ul {
 
 @media screen and (max-width: 800px) {
 
-  .collapsible{
+  
+  .dontShowOnSmall {
     display: none;
   }
 
@@ -268,9 +269,7 @@ ul {
   #login-button {
     margin: 0 auto;
   }
-  #logout-button {
-    margin: 0 auto;
-  }
+
   .nav-list-item {
     text-align: center;
   }
