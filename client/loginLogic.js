@@ -3,7 +3,7 @@ function logoutLogic() {
     document.getElementsByClassName("tab-header").item(0).style.display = "none";
     document.getElementsByClassName("tab-content").item(0).style.display = "none";
     document.getElementById('login-button').style.display = 'none';
-    document.getElementById('logout-button').style.display = 'block';
+    document.getElementById('logout-button').style.display = 'inline';
 
     let logoutBtn = document.getElementById("logout-btn");
     
