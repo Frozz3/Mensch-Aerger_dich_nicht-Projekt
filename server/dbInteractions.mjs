@@ -70,22 +70,33 @@ export async function updateUsername(pool, authId, username) {
 
 export async function getStats(pool, authId) {
    try {
-      const result = await pool.query(
+      let result = await pool.query(
          "select cs.playedGames, cs.wonGames, cs.lostGames, cs.lostFigures, cs.timesRolled, cs.knockedFigures FROM current_stats cs JOIN users u on cs.usersId = u.id WHERE u.authId = (?)",
          [authId]
       );
 
       if (result.length == 0) {
-         return {
+         result[0] = {
             playedGames: 0,
             wonGames: 0,
             lostGames: 0,
             lostFigures: 0,
             timesRolled: 0,
             knockedFigures: 0
-         }
+         };
       }
-      return result[0];
+      let result1 = await pool.query(
+         " select wonGames, username from current_stats c join users u on c.usersId = u.id order by wonGames desc limit 10;"
+      );
+
+      if(result1.length == 0){
+         result1[0] = {
+            wonGames: null,
+            username: null
+         };
+      }
+
+      return [result[0], result1];
 
    } catch (error) {
       throw error;

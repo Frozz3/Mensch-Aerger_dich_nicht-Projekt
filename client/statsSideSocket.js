@@ -2,15 +2,18 @@ function indexSideSocket() {
 
     socket.emit('readStats');
 
-    // 1. element suchen (element-id)
-    let playedGames = document.querySelector("#stat-played-games > div > .numbersp");
-    let wonGames = document.querySelector("#stat-won-games > div > .numbersp"); 
-    let lostGames = document.querySelector("#stat-lost-games > div > .numbersp"); 
-    let lostPawns = document.querySelector("#stat-lost-pawns > div > .numbersp");
-    let kickedPawns = document.querySelector("#stat-kicked-pawns > div > .numbersp");
-    let roledDices = document.querySelector("#stat-roled-dices > div > .numbersp");
+    const playedGames = document.querySelector("#stat-played-games > div > .numbersp");
+    const wonGames = document.querySelector("#stat-won-games > div > .numbersp"); 
+    const lostGames = document.querySelector("#stat-lost-games > div > .numbersp"); 
+    const lostPawns = document.querySelector("#stat-lost-pawns > div > .numbersp");
+    const kickedPawns = document.querySelector("#stat-kicked-pawns > div > .numbersp");
+    const roledDices = document.querySelector("#stat-roled-dices > div > .numbersp");
 
-    socket.on('stats', (stats) => {
+    const rankPlace = document.querySelector("#rankedT > .platz");
+    const rankPlayer = document.querySelector("#rankedT > .spieler");
+    const rankWins = document.querySelector("#rankedT > .siege");
+
+    socket.on('stats', (stats,ranklist) => {
         console.log("stats");
         console.log(stats);
         playedGames.innerHTML = stats.playedGames;
@@ -19,6 +22,33 @@ function indexSideSocket() {
         lostPawns.innerHTML = stats.lostFigures;
         kickedPawns.innerHTML = stats.knockedFigures;
         roledDices.innerHTML = stats.timesRolled;
-        // 2. werte schreiben ( = stats.playedgames)
+        
+        let rankPlaceContent = [];
+        let rankPlayerContent = [];
+        let rankWinsContent = [];
+        
+        console.log('ranklist');
+        console.log(ranklist);
+        
+        for (let i = 0; i < ranklist.length; i++) {
+            const element = ranklist[i];
+            const number = (i + 1) + "."
+
+            let place = document.createElement("p");
+            let player = document.createElement("p");
+            let wins = document.createElement("p");
+
+            place.innerHTML = number;
+            player.innerHTML =  element.username;
+            wins.innerHTML = element.wonGames
+
+            rankPlaceContent[i] = place;
+            rankPlayerContent[i] = player;
+            rankWinsContent[i] = wins;
+
+        }
+        rankPlace.replaceChildren(...rankPlaceContent)
+        rankPlayer.replaceChildren(...rankPlayerContent)
+        rankWins.replaceChildren(...rankWinsContent)
     })
 }
