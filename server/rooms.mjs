@@ -19,7 +19,7 @@ export function formateRoomForUpdate(room) {
       userData: room.userData,
       game: room.game,
       state: room.state,
-   emptySince: room.emptySince
+      emptySince: room.emptySince
    };
 }
 
@@ -62,6 +62,7 @@ export function joinRoom(room, roomId, io, socket) {
                socket.emit('error', "already connected", { roomId: roomId });
                alreadyConnected = true;
             } else {
+               room.userData[index].name = socket.data.name;
                room.userData[index].leftSince = 0;
 
                socket.join(roomId);
@@ -69,9 +70,10 @@ export function joinRoom(room, roomId, io, socket) {
                socket.emit('newIndexInRoom', index);
                io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
                console.log(`${socket.data.authId} joined room ${roomId}`);
+
+
                return true;
             }
-
          }
       }
       if (alreadyConnected)
