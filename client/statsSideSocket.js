@@ -47,8 +47,8 @@ function indexSideSocket() {
             rankWinsContent[i] = wins;
 
         }
-        rankPlace.replaceChildren(...rankPlaceContent)
-        rankPlayer.replaceChildren(...rankPlayerContent)
-        rankWins.replaceChildren(...rankWinsContent)
+        rankPlace.replaceChildren(...rankPlaceContent);
+        rankPlayer.replaceChildren(...rankPlayerContent);
+        rankWins.replaceChildren(...rankWinsContent);
     })
 }

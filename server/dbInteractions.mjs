@@ -143,3 +143,32 @@ export async function checkLogin(pool, name, pw) {
    }
 
 }
+
+export async function insertGameStats(pool, playersStats) {
+   const result = await pool.query(
+       "insert into games () values ();"
+   );
+   //console.log(result);
+   const gameId = Number(result.insertId);
+
+   for (let i = 0; i < playersStats.length; i++) {
+       const authId = playersStats[i].authId;
+       const stats = playersStats[i].stats;
+
+       const result = await pool.query(
+           "insert into user_games ( usersId, playedGames, gamesId, wonGames, lostGames, lostFigures, knockedFigures, timesRolled) " +
+           "select  u.id, 1,(?),(?),(?),(?),(?), (?) from users u where u.authId = (?);",
+           [
+               gameId,
+               stats.won ? 1 : 0,
+               stats.won ? 0 : 1,
+               stats.lostPawns,
+               stats.kicktPawns,
+               stats.roledDices,
+               authId
+           ]
+       );
+       //console.log(result);
+   }
+   console.log("inserted stats");
+}

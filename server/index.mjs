@@ -1,15 +1,16 @@
 import * as mariadb from 'mariadb';
 import * as path from 'path';
+import * as url from 'url';
 import * as fs from 'fs';
 import { Server } from 'socket.io';
 import express from 'express';
 import * as http from 'http';
 import * as https from 'https';
-import * as dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
+import * as login from './login.mjs';
 import { countRoomAuthIds, leaveRoom, createRoom, joinRoom, changeReadiness, formateRoomForUpdate } from './rooms.mjs';
-import { getStats, checkLogin, registerUser, fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
-import { handleAction } from 'js-madn'
-import * as url from 'url';
+import { insertGameStats, getStats, checkLogin, registerUser, fetchUserdata, updateUsername, findUnusedAuthId, addUser, checkAuthId } from './dbInteractions.mjs'
+import { handleAction, getPlayerStats } from 'js-madn'
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -44,7 +45,7 @@ const io = new Server(server);
 const rooms = {};
 
 //routing
-
+app.use(login.login);
 app.use('/', express.static(path.join(__dirname, '../client')));
 app.use('/game/:roomId', express.static(path.join(__dirname, '../client')));
 
@@ -160,6 +161,38 @@ io.on('connection', async (socket) => {
             socket.emit('error', response.msg, action);
          } else {
 
+            if (room.game.winner > -1) {
+               /*
+               [
+                  { won: false, lostPawns: 0, kicktPawns: 0, roledDices: 6 },
+                  { won: false, lostPawns: 0, kicktPawns: 0, roledDices: 4 },
+                  { won: false, lostPawns: 0, kicktPawns: 0, roledDices: 6 },
+                  { won: false, lostPawns: 0, kicktPawns: 0, roledDices: 5 }
+               ]
+               */
+
+               // write stats to database
+
+               const gamePlayersStats = getPlayerStats(room.game);
+
+               let playersStats = [];
+               for (let i = 0; i < room.userAuthIds.length; i++) {
+                  const authId = room.userAuthIds[i];
+                  if (authId === null) {
+                     continue;
+                  }
+
+                  const num = room.userData[i].num;
+                  const stats = gamePlayersStats[num];
+
+                  playersStats.push({ authId: authId, stats: stats });
+                  // insert into user_games (gamesId, usersId, playedGames, wonGames, lostGames, lostFigures, knockedFigures, timesRolled) select 4, u.id, 1,0,1,5,3, 42 from users u where u.authId = '01634f56-dad4-40ff-b92a-192cc75edca1'; 
+
+               }
+               insertGameStats(pool, playersStats);
+
+            }
+
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }
       } catch (error) {
@@ -169,15 +202,13 @@ io.on('connection', async (socket) => {
 
    })
 
-
    //stats
    socket.on('readStats', async () => {
-      const [stats,ranklist] = await getStats(pool, socket.data.authId);
+      const [stats, ranklist] = await getStats(pool, socket.data.authId);
       socket.emit('stats', stats, ranklist)
    });
 
    //login
-
    socket.on('login', async (loginData) => {
       if (currentRoomId) {
          if (countRoomAuthIds(rooms[currentRoomId].userAuthIds) > 1) {
