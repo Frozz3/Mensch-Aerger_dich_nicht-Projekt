@@ -176,6 +176,31 @@ body {
   display: block;
 }
 
+.text-logout{
+  text-align: center;
+display: block;
+font-size: 19px;
+width: 90%;
+margin-left: 0px;
+margin: 0 auto;
+}
+
+#logout-btn{
+  margin-top: 5px;
+  width: 250px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: #212121;
+  color: white;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
 /*Popup end*/
 
 /*HEADER*/
