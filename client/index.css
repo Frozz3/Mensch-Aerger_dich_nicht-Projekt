@@ -883,6 +883,10 @@ footer {
 }
 
 #role-dice {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
   display: none;
   margin: 0;
   position: absolute;
