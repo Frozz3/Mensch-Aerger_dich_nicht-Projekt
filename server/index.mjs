@@ -14,7 +14,7 @@ import { handleAction, getPlayerStats } from 'js-madn'
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-dotenv.config({path:__dirname+'..\\.env'})
+dotenv.config({path:__dirname+'../.env'})
 
 const DBOptions = {
    host: process.env.HOST,
