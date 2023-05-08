@@ -273,6 +273,15 @@ ul {
   .nav-list-item {
     text-align: center;
   }
+
+  .copy{
+    margin-bottom: 10px;
+  }
+
+  .button-search{
+    margin-top: 20px;
+  }
+
 }
 
 /*NAVI*/
@@ -374,7 +383,7 @@ Buttons Anfang
 .button-search {
   display: block;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .copy {
@@ -425,6 +434,8 @@ footer {
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  color: white;
+  margin-bottom: 20px;
 }
 
 .fot-content h3 {
@@ -432,6 +443,7 @@ footer {
   font-weight: 500;
   text-transform: capitalize;
   line-height: 3rem;
+  
 }
 
 .fa {
@@ -463,22 +475,7 @@ footer {
   color: white;
 }
 
-.socialmedia {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem 0 3rem 0;
-}
 
-.socialmedia a {
-  text-decoration: none;
-  color: #fff;
-  border: 1.1px solid white;
-  padding: 5px;
-  border-radius: 50%;
-  width: 40px;
-}
 
 .copyright {
   padding-left: 15px;
@@ -660,7 +657,13 @@ footer {
     grid-row-end: 5;
   }
 
+.button-search{
+  margin-top: 20px;
+}
 
+.copy{
+  margin-bottom: 10px;
+}
 
 
 
@@ -675,10 +678,7 @@ footer {
     justify-content: center;
   }
 
-  .socialmedia {
-    margin-top: 50px;
-    display: -webkit-box;
-  }
+  
 
   .copyright p {
     margin: 0;
@@ -723,6 +723,7 @@ footer {
   .copy {
     display: block;
     text-align: center;
+    margin-bottom: 30px;
   }
 
   h1 {
