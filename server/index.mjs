@@ -14,7 +14,7 @@ import { handleAction, getPlayerStats } from 'js-madn'
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-dotenv.config({path:__dirname+'../.env'})
+dotenv.config({ path: __dirname + '../.env' })
 
 const DBOptions = {
    host: process.env.HOST,
@@ -137,8 +137,18 @@ io.on('connection', async (socket) => {
    });
 
    socket.on('changeReadiness', (status) => {
-      changeReadiness(rooms[currentRoomId], currentRoomId, io, socket, status);
-   })
+      const room = rooms[currentRoomId]
+      changeReadiness(room, currentRoomId, io, socket, status);
+
+      if (room.state == 1) {
+         room.game.temp.data = {
+            new: {
+               value: room.game.temp.dicevelue,
+               player: room.game.playerInLine,
+            }, old: null
+         }
+      }
+   });
 
    socket.on('gameAction', (playerAction) => {
       try {
@@ -147,12 +157,20 @@ io.on('connection', async (socket) => {
          if (room.state == 0) {
             return;
          }
+         let tempData;
+         if (room.game.inputState == 1) {
+            tempData = {
+               value: room.game.temp.dicevelue,
+               player: room.game.playerInLine,
+            };
+         }
 
          const action = {
             playerNum: room.userData[room.userAuthIds.indexOf(socket.data.authId)].num,
             type: playerAction.type,
             value: playerAction.value
          };
+
 
          //do action
          const response = handleAction(room.game, action);
@@ -193,6 +211,8 @@ io.on('connection', async (socket) => {
                insertGameStats(pool, playersStats);
 
             }
+
+            room.game.temp.data = { old: room.game.temp.data.new, new: tempData }
 
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }

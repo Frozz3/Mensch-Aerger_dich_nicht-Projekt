@@ -127,15 +127,16 @@ Header Anfang
   background: #f5f5f5;
 }
 
-.text-logout{
+.text-logout {
   text-align: center;
-display: block;
-font-size: 19px;
-width: 90%;
-margin-left: 0px;
-margin: 0 auto;
+  display: block;
+  font-size: 19px;
+  width: 90%;
+  margin-left: 0px;
+  margin: 0 auto;
 }
-#logout-btn{
+
+#logout-btn {
   margin-top: 5px;
   width: 250px;
   padding: 10px;
@@ -149,7 +150,7 @@ margin: 0 auto;
   border-radius: 5px;
   margin-bottom: 20px;
   margin-left: 20px;
-  
+
 }
 
 
@@ -257,7 +258,7 @@ ul {
 
 @media screen and (max-width: 800px) {
 
-  
+
   .dontShowOnSmall {
     display: none;
   }
@@ -289,7 +290,7 @@ Game Anfang
 
 }
 
-#game-info{
+#game-info {
   text-align: center;
   color: white;
   padding: 20px;
@@ -703,7 +704,7 @@ footer {
 
 @media only screen and (max-width: 500px) {
 
-  .collapsible{
+  .collapsible {
     display: block;
     width: 40px;
     height: 40px;
@@ -719,7 +720,7 @@ footer {
     display: none;
   }
 
- 
+
   .copy {
     display: block;
     text-align: center;
@@ -733,18 +734,17 @@ footer {
     margin: 0;
   }
 
- .hidden{
-  display: none;
- }
+  .hidden {
+    display: none;
+  }
 
- .hidden{
-  display: block;
-}
+  .hidden {
+    display: block;
+  }
 
- .visible
- {
-  display: none;
- }
+  .visible {
+    display: none;
+  }
 }
 
 /*game*/
@@ -882,8 +882,8 @@ footer {
   opacity: 0.9;
 }
 
-#role-dice {
-  display: none;
+.game-message-conteiner {
+
   margin: 0;
   position: absolute;
   top: 50%;
@@ -893,29 +893,16 @@ footer {
   padding: 10px;
   border: none;
   outline: none;
-  background: #212121;
+  /* background: #212121; */
   color: white;
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
   border-radius: 5px;
-}
-
-#game-message-conteiner {
-
   background-color: gray;
-  padding: 10px;
-  border-radius: 5px;
-  display: none;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
 }
 
-#accapt-game-message {
+.game-message-button {
   display: block;
   margin: 0 auto;
   padding: 10px;

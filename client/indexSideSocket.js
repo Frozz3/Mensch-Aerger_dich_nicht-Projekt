@@ -96,6 +96,54 @@ function getColorOfPlayerIndex(playerIndex) {
     return [color, colorText]
 }
 
+let messageCounter = 0;
+function createMessage(message, zIndex, buttomText, onclickFn) {
+    /* 
+    <button id="role-dice">Würfeln</button>
+    <div id="game-message-conteiner">
+        <p id="game-message"></p>
+        <button id="accapt-game-message">Akzeptieren</button>
+    </div>
+    */
+
+    messageCounter++
+    // blur background
+    const foreground = document.getElementById("foreground-container");
+    foreground.style.display = "block";
+
+    // create conteiner
+    const messageConteiner = document.createElement("div");
+    messageConteiner.classList.add("game-message-conteiner");
+
+
+    // create elements
+    const messageButton = document.createElement("button");
+    const messageText = document.createElement("p");
+
+    messageButton.classList.add("game-message-button");
+    messageText.classList.add("game-message-text");
+
+    messageButton.innerHTML = buttomText;
+    messageText.innerHTML = message;
+
+    foreground.appendChild(messageConteiner);
+    messageConteiner.appendChild(messageText);
+    messageConteiner.appendChild(messageButton);
+
+    // add onclick listener
+    messageButton.addEventListener("click", (event) => {
+
+        messageButton.replaceWith(messageButton.cloneNode(true));
+        messageConteiner.style.display = "none";
+        onclickFn();
+        messageCounter--
+        if (messageCounter == 0) {
+            const foreground = document.getElementById("foreground-container");
+            foreground.style.display = "none";
+        }
+    });
+}
+
 let playerReadiness
 let playerIndex = 0;
 
@@ -195,10 +243,22 @@ function indexSideSocket() {
                 }
             }
 
+            // remove old message
+            const foreground = document.getElementById("foreground-container");
+            foreground.style.display = "none";
 
-
+            const conteiner = document.getElementsByClassName("game-message-conteiner");
+            for (const element of conteiner) {
+                element.remove();
+            }
 
             //game-info
+            const diceinfo = document.getElementById("dice");
+            if (game.inputState == 2 || game.inputState == 1) {
+                diceinfo.style.display = "none";
+            } else {
+                diceinfo.style.display = "inline";
+            }
             const diceValue = document.getElementById("dice-value");
             diceValue.innerHTML = game.temp.dicevelue;
             let playerIndex = getPlayerIndexByNum(game.players, game.playerInLine);
@@ -262,6 +322,16 @@ function indexSideSocket() {
 
             //dice
             if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
+                createMessage(
+                    "",
+                    100,
+                    "Würfeln",
+                    () => {
+                        socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        console.log(`output ${game.inputState}`);
+                    });
+
+                /*
                 const foreground = document.getElementById("foreground-container");
                 foreground.style.display = "block";
                 const roleDiceButton = document.getElementById("role-dice");
@@ -273,9 +343,44 @@ function indexSideSocket() {
                     socket.emit("gameAction", { type: game.inputState, value: 0 });
                     console.log(`output ${game.inputState}`);
                 });
+                */
+            }
+            if (game.temp.data && game.temp.data.old) {
+                createMessage(
+                    "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat eine " + game.temp.data.old.value + " gewürfelt",
+                    100,
+                    "Akzeptieren",
+                    () => { });
+                /*
+                                const foreground = document.getElementById("foreground-container");
+                                foreground.style.display = "block";
+                                const gameMessage = document.getElementById("game-message");
+                
+                                gameMessage.innerHTML = "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat eine " + game.temp.data.old.value + " gewürfelt";
+                
+                                const gameMessageConteiner = document.getElementById("game-message-conteiner");
+                                gameMessageConteiner.style.display = "block";
+                                const accaptGameMessageButton = document.getElementById("accapt-game-message");
+                                accaptGameMessageButton.addEventListener("click", (event) => {
+                                    accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
+                
+                                    foreground.style.display = "none";
+                                    gameMessageConteiner.style.display = "none";
+                                });
+                                */
             }
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
+                createMessage(
+                    game.temp.msg,
+                    100,
+                    "Akzeptieren",
+                    () => {
+                        socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        console.log(`output ${game.inputState}`);
+                    });
+
+                /*
                 const gameMessage = document.getElementById("game-message");
                 gameMessage.innerHTML = game.temp.msg
                 const foreground = document.getElementById("foreground-container");
@@ -289,15 +394,23 @@ function indexSideSocket() {
                     foreground.style.display = "none";
                     gameMessageConteiner.style.display = "none";
 
-                    socket.emit("gameAction", { type: game.inputState, value: 0 });
-                    console.log(`output ${game.inputState}`);
+                    
                 });
+                */
             }
             //end
             if (game.inputState == 5 && game.winner > -1) {
                 const winnerNum = getPlayerIndexByNum(game.players, game.winner);
-                const [color, colorText] = getColorOfPlayerIndex(playerIndex);
+                const [color, colorText] = getColorOfPlayerIndex(winnerNum);
 
+                createMessage(
+                    `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`,
+                    100,
+                    "Akzeptieren",
+                    () => {
+                        console.log(`output ${game.inputState}`);
+                    });
+                /*
                 const gameMessage = document.getElementById("game-message");
                 gameMessage.innerHTML = `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`;
                 const foreground = document.getElementById("foreground-container");
@@ -307,13 +420,15 @@ function indexSideSocket() {
                 const accaptGameMessageButton = document.getElementById("accapt-game-message");
                 accaptGameMessageButton.addEventListener("click", (event) => {
                     accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
-
+ 
                     foreground.style.display = "none";
                     gameMessageConteiner.style.display = "none";
-
+ 
                     //socket.emit("gameAction", { type: game.inputState, value: 0 });
                     console.log(`output ${game.inputState}`);
+   
                 });
+                */
             }
             gameInfoDiv.style.display = "block";
         } else {
