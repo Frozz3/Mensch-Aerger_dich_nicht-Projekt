@@ -18,7 +18,7 @@ dotenv.config({path:__dirname+'../.env'})
 
 const DBOptions = {
    host: process.env.HOST,
-   user: process.env.USER,
+   user: process.env.DBUSER,
    password: process.env.PASSWORD,
    database: 'lfup',
    port: process.env.DBPORT
