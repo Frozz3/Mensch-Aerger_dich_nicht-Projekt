@@ -1,5 +1,6 @@
 body {
   background-color: rgb(80, 80, 80);
+  margin: 0;
 }
 
 * {
@@ -277,14 +278,14 @@ ul {
   background-color: lightgreen;
 }
 
-
+.collapsible {
+  display: none;
+}
 
 
 @media screen and (min-width: 801px) {
 
-  .collapsible {
-    display: none;
-  }
+ 
 
   .menu-btn-container {
     display: none;
@@ -302,17 +303,6 @@ ul {
 
 @media screen and (max-width: 800px) {
 
-  .collapsible {
-    display: block;
-    width: 40px;
-    height: 40px;
-    color: white;
-    background: transparent;
-    font-size: 40px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-  }
 
   .dontShowOnSmall {
     display: none;
@@ -617,8 +607,6 @@ footer {
   }
 
   .wrapper {
-
-    margin: 0;
     grid-template-areas:
       "hdr hdr"
       "uda uda"
@@ -630,11 +618,7 @@ footer {
       "fot fot"
   }
 
-  body
-
-    {
-    margin: 0;
-  }
+  
 
   #open-close-nav {
     width: 100%;
@@ -708,7 +692,6 @@ footer {
 
   .wrapper {
     display: grid;
-  
   }
 
   h1 {
@@ -844,4 +827,23 @@ footer {
   h1 {
     font-size: 20px;
   }
+  .wrapper
+
+    {
+    margin: 0;
+  }
+
+  .collapsible {
+    display: block;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background: transparent;
+    font-size: 40px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+
 }
