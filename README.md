@@ -2,8 +2,9 @@
 
 //create .env file:
 HOST="127.0.0.1"
-USER="root"
+DBUSER="root"
 PASSWORD=""
+DBPORT="3306"
 PORT="80"
 IS_HTTPS="false"
 HTTPS_KEY_PATH=""
