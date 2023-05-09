@@ -210,8 +210,6 @@ margin: 0 auto;
     linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
     url(picture/spielfeld2.jpg);
   background-size: 140%;
-  background-repeat: no-repeat;
-
   animation: animatedBackground 50s linear infinite;
   /* background-image: url('picture/spielfeld2.jpg'); */
 }
