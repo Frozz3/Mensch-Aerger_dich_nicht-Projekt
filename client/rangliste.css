@@ -54,7 +54,7 @@ body {
   font-size: 25px;
   /*border: 1px solid black;*/
   background-color: #232220;
-
+  border-radius: 8px;
 }
 
 .rounded1:hover {
