@@ -66,10 +66,10 @@ export function joinRoom(room, roomId, io, socket) {
                room.userData[index].leftSince = 0;
 
                socket.join(roomId);
-               console.log(`roomIndexOfSocket: ${index}`);
                socket.emit('newIndexInRoom', index);
                io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
                console.log(`${socket.data.authId} joined room ${roomId}`);
+               console.log(`roomIndexOfSocket: ${index}`);
 
 
                return true;
@@ -120,11 +120,12 @@ export function joinRoom(room, roomId, io, socket) {
 
    } catch (error) {
       console.log(room);
-      throw new Error(error);
+      //throw new Error(error);
+      throw error;
    }
 }
 
-export function leaveRoom(rooms, roomId, io, socket) {
+export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
    try {
 
       const room = rooms[roomId];
@@ -155,6 +156,10 @@ export function leaveRoom(rooms, roomId, io, socket) {
             // remove old room if empty
             if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
                delete rooms[roomId];
+               const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
+               if (indexInRoomIdsToFind < 0) {
+                  roomIdsToFind.splice(indexInRoomIdsToFind, 1);
+               }
                console.log(`${roomId} room delete`);
             } else {
                console.log(`${roomId} rooms kept alive`)
@@ -188,7 +193,7 @@ export function changeReadiness(room, roomId, io, socket, status) {
       }
    });
 
-   console.log(`allReady: ${allReady}`);
+   console.log(`all ready: ${allReady}`);
 
    //console.log(`more then one ${countRoomAuthIds(room.userAuthIds)}`);
 
@@ -204,6 +209,10 @@ export function changeReadiness(room, roomId, io, socket, status) {
    }
 
    room.state = 1;
+   const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
+   if (indexInRoomIdsToFind < 0) {
+      roomIdsToFind.splice(indexInRoomIdsToFind, 1);
+   }
 
    let counter = 0
    for (let i = 0; i < room.userAuthIds.length; i++) {

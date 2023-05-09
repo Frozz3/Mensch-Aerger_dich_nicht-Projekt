@@ -148,7 +148,21 @@ let playerReadiness
 let playerIndex = 0;
 
 function indexSideSocket() {
-    console.log("test");
+
+    // reenter room
+    let roomIdRegex = "/game\/([0-9a-f]{5})";
+    const roomId = window.location.pathname.match(roomIdRegex);
+    console.log(`rommId from url: '${roomId}'`);
+
+    if (roomId) {
+        socket.emit('joinRoom', roomId[1]);
+
+        console.log('try joining Room:', roomId[1]);
+    } else {
+        socket.emit('createRoom');
+        console.log('try createRoom');
+    }
+    
     const gameDiv = document.getElementById('game');
     const gameInfoDiv = document.getElementById('game-info');
     const infoUrl = document.getElementById('roomLink');
@@ -161,6 +175,13 @@ function indexSideSocket() {
     const sendMessage = document.getElementById('sendMessage');
     const enterRoom = document.getElementById('enterRoom');
     const createRoom = document.getElementById('createRoom');
+    const findGameButton = document.getElementById('find-game-button');
+
+    //find game
+    findGameButton.addEventListener('click',(event) => {
+        socket.emit('findGame');
+    })
+
 
     //room
     let indexInRoom;
@@ -438,18 +459,4 @@ function indexSideSocket() {
 
         console.log(socket);
     });
-
-    // reenter room
-    let roomIdRegex = "/game\/([0-9a-f]{5})";
-    const roomId = window.location.pathname.match(roomIdRegex);
-    console.log(`rommId from url: '${roomId}'`);
-
-    if (roomId) {
-        socket.emit('joinRoom', roomId[1]);
-
-        console.log('try joining Room:', roomId[1]);
-    } else {
-        socket.emit('createRoom');
-        console.log('try createRoom');
-    }
 }

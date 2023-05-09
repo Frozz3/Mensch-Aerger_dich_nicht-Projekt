@@ -44,6 +44,7 @@ if (process.env.IS_HTTPS == "true") {
 const io = new Server(server);
 
 const rooms = {};
+const roomIdsToFind = []
 
 //routing
 app.use(login.login);
@@ -113,7 +114,6 @@ io.on('connection', async (socket) => {
       joinRoom(rooms[newRoomId], newRoomId, io, socket);
       currentRoomId = newRoomId;
    });
-
 
    socket.on('joinRoom', (roomId) => {
 
@@ -221,6 +221,31 @@ io.on('connection', async (socket) => {
          throw error;
       }
 
+   })
+
+   socket.on('findGame', () => {
+
+      //create room if roomIdsToFind is empty
+
+      let roomsToFindFull = true;
+      roomIdsToFind.forEach(roomId => {
+         roomsToFindFull = (countRoomAuthIds(rooms[roomId].userAuthIds) == 4) ? roomsToFindFull : false;
+      });
+
+      if (!roomIdsToFind.length || roomsToFindFull) {
+         let newRoomId = createRoom(rooms)
+         console.log(`added new room: ${newRoomId} to roomIdsToFind`)
+         roomIdsToFind.push(newRoomId)
+      }
+
+      if (rooms[currentRoomId]) {
+         leaveRoom(rooms, currentRoomId, io, socket);
+         console.log(`left room: ${currentRoomId}`);
+      }
+      let joined_room = joinRoom(rooms[roomIdsToFind[0]], roomIdsToFind[0], io, socket)
+      if (joined_room) {
+         currentRoomId = roomIdsToFind[0];
+      }
    })
 
    //stats
