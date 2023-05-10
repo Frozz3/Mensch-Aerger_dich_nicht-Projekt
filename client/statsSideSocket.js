@@ -2,6 +2,8 @@ function indexSideSocket() {
 
     socket.emit('readStats');
 
+    const usernameElement = document.querySelector("#username-info");
+
     const playedGames = document.querySelector("#stat-played-games > div > .numbersp");
     const wonGames = document.querySelector("#stat-won-games > div > .numbersp"); 
     const lostGames = document.querySelector("#stat-lost-games > div > .numbersp"); 
@@ -17,7 +19,7 @@ function indexSideSocket() {
         console.log("name");
         console.log(name);
 
-        //name
+        usernameElement.innerHTML = name;
         
         console.log("stats");
         console.log(stats);
