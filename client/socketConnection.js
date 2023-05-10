@@ -1,7 +1,7 @@
 //connection
 let authenticationId = localStorage.getItem('authId');
 let loginStatus = false;
-const socket = io({ auth: { token: authenticationId } });
+const socket = io({ auth: { token: authenticationId, transports: ["polling"] } });
 
 function socketConnection() {
 
