@@ -20,7 +20,7 @@ const DBOptions = {
    host: process.env.HOST,
    user: process.env.DBUSER,
    password: process.env.PASSWORD,
-   database: 'lfup',
+   database: process.env.DBNAME,
    port: process.env.DBPORT,
    allowPublicKeyRetrieval: true
 };
