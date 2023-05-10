@@ -656,8 +656,9 @@ footer {
     height: 50px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
+    rotate: 180deg;
   }
-
+  
   .menu_btn_burger {
     width: 50px;
     height: 6px;
@@ -666,7 +667,7 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before,
   .menu_btn_burger::after {
     content: "";
@@ -678,28 +679,30 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before {
     transform: translateY(-16px);
+    transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::after {
     transform: translateY(16px);
+    transition: all 0.5s ease-in-out;
   }
-
-  /*Animation*/
+  
+  /* Animation */
   .menu-btn.open .menu_btn_burger {
-    transform: translateX(-50px);
+    transform: translateX(0);
     background: transparent;
     box-shadow: none;
   }
-
+  
   .menu-btn.open .menu_btn_burger::before {
-    transform: rotate(45deg) translate(35px, -35px);
+    transform: translate(0, 0) rotate(45deg);
   }
-
+  
   .menu-btn.open .menu_btn_burger::after {
-    transform: rotate(-45deg) translate(35px, 35px);
+    transform: translate(0, 0) rotate(-45deg);
   }
 
   #open-close-nav {
@@ -729,7 +732,7 @@ footer {
     transition: all 0.5s ease-in-out;
     rotate: 180deg;
   }
-
+  
   .menu_btn_burger {
     width: 50px;
     height: 6px;
@@ -738,7 +741,7 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before,
   .menu_btn_burger::after {
     content: "";
@@ -750,28 +753,30 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before {
     transform: translateY(-16px);
+    transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::after {
     transform: translateY(16px);
+    transition: all 0.5s ease-in-out;
   }
-
-  /*Animation*/
+  
+  /* Animation */
   .menu-btn.open .menu_btn_burger {
-    transform: translateX(-50px);
+    transform: translateX(0);
     background: transparent;
     box-shadow: none;
   }
-
+  
   .menu-btn.open .menu_btn_burger::before {
-    transform: rotate(45deg) translate(35px, -35px);
+    transform: translate(0, 0) rotate(45deg);
   }
-
+  
   .menu-btn.open .menu_btn_burger::after {
-    transform: rotate(-45deg) translate(35px, 35px);
+    transform: translate(0, 0) rotate(-45deg);
   }
 
   .nav-item {
