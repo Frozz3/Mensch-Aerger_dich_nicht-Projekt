@@ -296,6 +296,8 @@ ul {
   .nav-list-item {
     float: left;
   }
+
+
 }
 
 
@@ -316,6 +318,11 @@ ul {
 
   .nav-list-item {
     text-align: center;
+  }
+
+  h1{
+    font-size: 20px;
+    padding: 20px;
   }
 }
 
@@ -692,10 +699,6 @@ footer {
     display: grid;
   }
 
-  h1 {
-    font-size: 30px;
-    margin-top: 30px;
-  }
 
   .menu-btn {
     z-index: 50;
@@ -824,6 +827,8 @@ footer {
 {
   h1 {
     font-size: 20px;
+    padding: 0;
+    margin-top: 30px;
   }
   .wrapper
 
@@ -842,6 +847,5 @@ footer {
     border-radius: 2px;
     cursor: pointer;
   }
-
 
 }
