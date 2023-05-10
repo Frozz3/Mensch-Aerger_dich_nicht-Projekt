@@ -396,6 +396,7 @@ Buttons Anfang
 
 #roomLink {
   margin-right: 10px;
+  direction: rtl;
 }
 
 .button3 {
