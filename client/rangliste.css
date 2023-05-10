@@ -31,7 +31,22 @@ body {
 
 .uda {
   grid-area: uda;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+
+.username-label{
+  font-size: 30px;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.centered-span {
+  font-size: 50px;
+}
+
 
 .rng {
   grid-area: rng;
