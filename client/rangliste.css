@@ -712,6 +712,7 @@ footer {
     height: 50px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
+    rotate: 180deg;
   }
 
   .menu_btn_burger {
