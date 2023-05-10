@@ -97,25 +97,16 @@ function getColorOfPlayerIndex(playerIndex) {
 }
 
 let messageCounter;
-function createMessage(message, zIndex, buttomText, onclickFn) {
-    /* 
-    <button id="role-dice">Würfeln</button>
-    <div id="game-message-conteiner">
-        <p id="game-message"></p>
-        <button id="accapt-game-message">Akzeptieren</button>
-    </div>
-    */
+function createMessage(foreground, message, zIndex, buttomText, onclickFn) {
 
-    
     messageCounter++
     console.log("messageCounter: " + messageCounter);
-    // blur background
-    const foreground = document.getElementById("foreground-container");
     foreground.style.display = "block";
 
     // create conteiner
     const messageConteiner = document.createElement("div");
     messageConteiner.classList.add("game-message-conteiner");
+    messageConteiner.id = "game-message-" + messageCounter
 
 
     // create elements
@@ -135,18 +126,20 @@ function createMessage(message, zIndex, buttomText, onclickFn) {
     // add onclick listener
     messageButton.addEventListener("click", (event) => {
 
-        messageButton.replaceWith(messageButton.cloneNode(true));
+        messageConteiner.remove();
         onclickFn();
         messageCounter--
         console.log("messageCounter: " + messageCounter);
         if (messageCounter == 0) {
-            const foreground = document.getElementById("foreground-container");
+
             foreground.style.display = "none";
         }
-        messageConteiner.remove();
     });
-}
+    return messageConteiner;
 
+    //setTimeout(() => {foreground.appendChild(messageConteiner);}, 8000);
+
+}
 let playerReadiness
 let playerIndex = 0;
 
@@ -265,7 +258,7 @@ function indexSideSocket() {
         gameDrawing: if (room.state) {
             const pawnConteiner = document.getElementById('pawn-container');
             let game = room.game;
-            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine && (infoUrl.getAttribute('value') != `${origin}/game/${roomId}`)) {
+            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine && (infoUrl.getAttribute('value') == `${origin}/game/${roomId}`)) {
 
                 break gameDrawing;
             }
@@ -287,8 +280,11 @@ function indexSideSocket() {
             foreground.style.display = "none";
 
             const conteiner = document.getElementsByClassName("game-message-conteiner");
-            console.log(conteiner)
-            for (const element of conteiner) {
+            console.log(conteiner);
+            for (i = conteiner.length - 1; i > -1; i--) {
+                const element = conteiner[i];
+                console.log(i + " remove element: " + element.id)
+                console.log(element);
                 element.remove();
             }
 
@@ -363,6 +359,7 @@ function indexSideSocket() {
             //dice
             if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
                 createMessage(
+                    foreground,
                     "",
                     100,
                     "Würfeln",
@@ -374,15 +371,31 @@ function indexSideSocket() {
             console.log(game.temp.data);
             if (game.temp.data && game.temp.data.old) {
                 createMessage(
+                    foreground,
                     "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat eine " + game.temp.data.old.value + " gewürfelt",
                     100,
+                    "Akzeptieren", () => { });
+            }
+            //gameInfo
+            if (needToAccaptInfo1 && game.inputState == 2) {
+                createMessage(
+                    foreground, "blablabla 2",
+                    100,
                     "Akzeptieren",
-                    () => { });
+                    () => {
+                        needToAccaptInfo1 = false;
+                    });
+            }
+            if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo0 = true;
+                //console.log("1test1234");
+            } else if (game.inputState == 2 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo1 = true;
             }
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
                 createMessage(
-                    game.temp.msg,
+                    foreground, game.temp.msg,
                     100,
                     "Akzeptieren",
                     () => {
@@ -391,28 +404,23 @@ function indexSideSocket() {
                     });
             }
             //gameInfo
-            /*
-            if ((game.temp.data && (!game.temp.data.old))) {
-                needToAccaptInfo0 = true;
-            }
             if (needToAccaptInfo0 && game.inputState == 1) {
-                console.log("test1234")
                 createMessage(
-                    "blablabla 1",
+                    foreground, "blablabla 1",
                     100,
                     "Akzeptieren",
                     () => {
                         needToAccaptInfo0 = false;
                     });
             }
-            */
+
             //end
             if (game.inputState == 5 && game.winner > -1) {
                 const winnerNum = getPlayerIndexByNum(game.players, game.winner);
                 const [color, colorText] = getColorOfPlayerIndex(winnerNum);
 
                 createMessage(
-                    `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`,
+                    foreground, `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`,
                     100,
                     "Akzeptieren",
                     () => {
@@ -422,7 +430,6 @@ function indexSideSocket() {
             gameInfoDiv.style.display = "block";
         } else {
             gameInfoDiv.style.display = "none";
-            foreground.style.display = "none";
         }
         console.log(msgs);
 

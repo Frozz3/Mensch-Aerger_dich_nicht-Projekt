@@ -148,7 +148,7 @@ io.on('connection', async (socket) => {
             new: {
                value: room.game.temp.dicevelue,
                player: room.game.playerInLine,
-            }, old: null
+            },firstOfInputType: true
          }
       }
       io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
@@ -218,7 +218,15 @@ io.on('connection', async (socket) => {
 
             }
 
-            room.game.temp.data = { old: tempData, new: tempData }
+            let firstOfInputType = false;
+
+            if (room.game.inputState == 2 && tempData) {
+               firstOfInputType = true;
+            }
+
+            room.game.temp.data = { old: tempData, firstOfInputType: firstOfInputType }
+
+
 
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }
