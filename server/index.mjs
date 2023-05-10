@@ -17,9 +17,9 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 dotenv.config({ path: __dirname + '../.env' })
 
 const DBOptions = {
-   host: process.env.HOST,
+   host: process.env.DBHOST,
    user: process.env.DBUSER,
-   password: process.env.PASSWORD,
+   password: process.env.DBPASSWORD,
    database: process.env.DBNAME,
    port: process.env.DBPORT,
    allowPublicKeyRetrieval: true
