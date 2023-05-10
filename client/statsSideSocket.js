@@ -13,7 +13,12 @@ function indexSideSocket() {
     const rankPlayer = document.querySelector("#rankedT > .spieler");
     const rankWins = document.querySelector("#rankedT > .siege");
 
-    socket.on('stats', (stats,ranklist) => {
+    socket.on('stats', (name,stats,ranklist) => {
+        console.log("name");
+        console.log(name);
+
+        //name
+        
         console.log("stats");
         console.log(stats);
         playedGames.innerHTML = stats.playedGames;

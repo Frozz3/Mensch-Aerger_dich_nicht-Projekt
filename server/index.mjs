@@ -269,8 +269,8 @@ io.on('connection', async (socket) => {
 
    //stats
    socket.on('readStats', async () => {
-      const [stats, ranklist] = await getStats(pool, socket.data.authId);
-      socket.emit('stats', stats, ranklist)
+      const [name,stats, ranklist] = await getStats(pool, socket.data.authId);
+      socket.emit('stats',name, stats, ranklist)
    });
 
    //login
