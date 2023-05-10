@@ -138,7 +138,10 @@ io.on('connection', async (socket) => {
 
    socket.on('changeReadiness', (status) => {
       const room = rooms[currentRoomId]
-      changeReadiness(room, currentRoomId, io, socket, status);
+      if (!room) {
+         return;
+      }
+      changeReadiness(room, currentRoomId, io, socket, status, roomIdsToFind);
 
       if (room.state == 1) {
          room.game.temp.data = {
@@ -148,12 +151,15 @@ io.on('connection', async (socket) => {
             }, old: null
          }
       }
+      io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
    });
 
    socket.on('gameAction', (playerAction) => {
       try {
-
-         const room = rooms[currentRoomId];
+         const room = rooms[currentRoomId]
+         if (!room) {
+            return;
+         }
          if (room.state == 0) {
             return;
          }
@@ -212,7 +218,7 @@ io.on('connection', async (socket) => {
 
             }
 
-            room.game.temp.data = { old: room.game.temp.data.new, new: tempData }
+            room.game.temp.data = { old: tempData, new: tempData }
 
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }

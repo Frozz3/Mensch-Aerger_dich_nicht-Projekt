@@ -274,11 +274,11 @@ ul {
     text-align: center;
   }
 
-  .copy{
+  .copy {
     margin-bottom: 10px;
   }
 
-  .button-search{
+  .button-search {
     margin-top: 20px;
   }
 
@@ -331,6 +331,7 @@ Player Anfang
 .button_player {
   margin-left: 10px;
   width: 130px;
+  height: 58px;
 }
 
 .input-style {
@@ -443,7 +444,7 @@ footer {
   font-weight: 500;
   text-transform: capitalize;
   line-height: 3rem;
-  
+
 }
 
 .fa {
@@ -657,13 +658,13 @@ footer {
     grid-row-end: 5;
   }
 
-.button-search{
-  margin-top: 20px;
-}
+  .button-search {
+    margin-top: 20px;
+  }
 
-.copy{
-  margin-bottom: 10px;
-}
+  .copy {
+    margin-bottom: 10px;
+  }
 
 
 
@@ -678,7 +679,7 @@ footer {
     justify-content: center;
   }
 
-  
+
 
   .copyright p {
     margin: 0;
@@ -882,8 +883,7 @@ footer {
   opacity: 0.9;
 }
 
-#role-dice {
-  display: none;
+.game-message-conteiner {
   margin: 0;
   position: absolute;
   top: 50%;

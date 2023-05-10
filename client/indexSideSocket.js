@@ -96,7 +96,7 @@ function getColorOfPlayerIndex(playerIndex) {
     return [color, colorText]
 }
 
-let messageCounter = 0;
+let messageCounter;
 function createMessage(message, zIndex, buttomText, onclickFn) {
     /* 
     <button id="role-dice">Würfeln</button>
@@ -106,7 +106,9 @@ function createMessage(message, zIndex, buttomText, onclickFn) {
     </div>
     */
 
+    
     messageCounter++
+    console.log("messageCounter: " + messageCounter);
     // blur background
     const foreground = document.getElementById("foreground-container");
     foreground.style.display = "block";
@@ -134,18 +136,22 @@ function createMessage(message, zIndex, buttomText, onclickFn) {
     messageButton.addEventListener("click", (event) => {
 
         messageButton.replaceWith(messageButton.cloneNode(true));
-        messageConteiner.style.display = "none";
         onclickFn();
         messageCounter--
+        console.log("messageCounter: " + messageCounter);
         if (messageCounter == 0) {
             const foreground = document.getElementById("foreground-container");
             foreground.style.display = "none";
         }
+        messageConteiner.remove();
     });
 }
 
 let playerReadiness
 let playerIndex = 0;
+
+let needToAccaptInfo0 = false;
+let needToAccaptInfo1 = false;
 
 function indexSideSocket() {
 
@@ -162,7 +168,7 @@ function indexSideSocket() {
         socket.emit('createRoom');
         console.log('try createRoom');
     }
-    
+
     const gameDiv = document.getElementById('game');
     const gameInfoDiv = document.getElementById('game-info');
     const infoUrl = document.getElementById('roomLink');
@@ -176,9 +182,10 @@ function indexSideSocket() {
     const enterRoom = document.getElementById('enterRoom');
     const createRoom = document.getElementById('createRoom');
     const findGameButton = document.getElementById('find-game-button');
+    const foreground = document.getElementById("foreground-container");
 
     //find game
-    findGameButton.addEventListener('click',(event) => {
+    findGameButton.addEventListener('click', (event) => {
         socket.emit('findGame');
     })
 
@@ -206,39 +213,51 @@ function indexSideSocket() {
         let origin = currentUrl.origin;
         console.log(`origin: '${origin}'`);
 
-        if (infoUrl.getAttribute('value') != `${origin}/game/${roomId}` + roomId) {
+        if (infoUrl.getAttribute('value') != `${origin}/game/${roomId}`) {
 
             infoUrl.setAttribute('value', `${origin}/game/` + roomId);
 
             history.pushState(null, "", `${origin}/game/` + roomId);
-
-
         }
 
         //users
         for (let i = 0; i < 4; i++) {
+
+            playerNames[i].setAttribute('value', "");
+            playerNames[i].setAttribute('style', "");
+            playerReadiness[i].setAttribute('value', "");
+            playerReadiness[i].setAttribute('style', "");
+            playerReadiness[i].innerHTML = "Nicht Breit";
+
             if (room.userData[i].name !== null) {
-                playerNames[i].setAttribute('value', room.userData[i].name);
                 playerReadiness[i].setAttribute('value', room.userData[i].status);
+
+                playerNames[i].setAttribute('value', room.userData[i].name);
+                playerNames[i].style.color = "#b7b7b7";
+
                 if (indexInRoom == i) {
-                    playerNames[i].setAttribute("style", 'background: #37d037');
+                    playerNames[i].setAttribute('value', room.userData[i].name + " (Du)");
+                    playerNames[i].style.color = "#ffffff";
                     playerIndex = i;
                 }
-                else {
-                    playerNames[i].setAttribute("style", '');
-                }
-                if (room.userData[i].status == true) {
-                    playerReadiness[i].innerHTML = "Bereit";
-                }
-                else {
-                    playerReadiness[i].innerHTML = "Nicht Breit";
-                }
+                if (room.state) {
+                    const playerColor = getColorOfPlayerIndex(getPlayerIndexByNum(room.game.players, room.userData[i].num));
+                    playerReadiness[i].innerHTML = playerColor[1];
+                    playerReadiness[i].style.backgroundColor = playerColor[0];
+                } else {
 
-            } else {
-                playerNames[i].setAttribute('value', "");
-                playerReadiness[i].setAttribute('value', null);
+                    //playerReadiness[i].style.backgroundColor = "white";
+                    if (room.userData[i].status == true) {
+                        playerReadiness[i].innerHTML = "Bereit";
+                    }
+                    else {
+                        playerReadiness[i].innerHTML = "Nicht Breit";
+                    }
+                }
+            } else if (room.state) {
+                playerReadiness[i].innerHTML = "";
+                //playerReadiness[i].style.backgroundColor = "#b7b7b7";
             }
-
         }
 
         //game
@@ -246,11 +265,11 @@ function indexSideSocket() {
         gameDrawing: if (room.state) {
             const pawnConteiner = document.getElementById('pawn-container');
             let game = room.game;
-            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine) {
+            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine && (infoUrl.getAttribute('value') != `${origin}/game/${roomId}`)) {
 
                 break gameDrawing;
             }
-
+            messageCounter = 0
             lastInputState = game.inputState;
             lastPlayerInLine = game.playerInLine;
 
@@ -265,10 +284,10 @@ function indexSideSocket() {
             }
 
             // remove old message
-            const foreground = document.getElementById("foreground-container");
             foreground.style.display = "none";
 
             const conteiner = document.getElementsByClassName("game-message-conteiner");
+            console.log(conteiner)
             for (const element of conteiner) {
                 element.remove();
             }
@@ -351,44 +370,14 @@ function indexSideSocket() {
                         socket.emit("gameAction", { type: game.inputState, value: 0 });
                         console.log(`output ${game.inputState}`);
                     });
-
-                /*
-                const foreground = document.getElementById("foreground-container");
-                foreground.style.display = "block";
-                const roleDiceButton = document.getElementById("role-dice");
-                roleDiceButton.style.display = "block";
-                roleDiceButton.addEventListener("click", (event) => {
-                    roleDiceButton.replaceWith(roleDiceButton.cloneNode(true));
-                    foreground.style.display = "none";
-                    roleDiceButton.style.display = "none";
-                    socket.emit("gameAction", { type: game.inputState, value: 0 });
-                    console.log(`output ${game.inputState}`);
-                });
-                */
             }
+            console.log(game.temp.data);
             if (game.temp.data && game.temp.data.old) {
                 createMessage(
                     "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat eine " + game.temp.data.old.value + " gewürfelt",
                     100,
                     "Akzeptieren",
                     () => { });
-                /*
-                                const foreground = document.getElementById("foreground-container");
-                                foreground.style.display = "block";
-                                const gameMessage = document.getElementById("game-message");
-                
-                                gameMessage.innerHTML = "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat eine " + game.temp.data.old.value + " gewürfelt";
-                
-                                const gameMessageConteiner = document.getElementById("game-message-conteiner");
-                                gameMessageConteiner.style.display = "block";
-                                const accaptGameMessageButton = document.getElementById("accapt-game-message");
-                                accaptGameMessageButton.addEventListener("click", (event) => {
-                                    accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
-                
-                                    foreground.style.display = "none";
-                                    gameMessageConteiner.style.display = "none";
-                                });
-                                */
             }
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
@@ -400,25 +389,23 @@ function indexSideSocket() {
                         socket.emit("gameAction", { type: game.inputState, value: 0 });
                         console.log(`output ${game.inputState}`);
                     });
-
-                /*
-                const gameMessage = document.getElementById("game-message");
-                gameMessage.innerHTML = game.temp.msg
-                const foreground = document.getElementById("foreground-container");
-                foreground.style.display = "block";
-                const gameMessageConteiner = document.getElementById("game-message-conteiner");
-                gameMessageConteiner.style.display = "block";
-                const accaptGameMessageButton = document.getElementById("accapt-game-message");
-                accaptGameMessageButton.addEventListener("click", (event) => {
-                    accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
-
-                    foreground.style.display = "none";
-                    gameMessageConteiner.style.display = "none";
-
-                    
-                });
-                */
             }
+            //gameInfo
+            /*
+            if ((game.temp.data && (!game.temp.data.old))) {
+                needToAccaptInfo0 = true;
+            }
+            if (needToAccaptInfo0 && game.inputState == 1) {
+                console.log("test1234")
+                createMessage(
+                    "blablabla 1",
+                    100,
+                    "Akzeptieren",
+                    () => {
+                        needToAccaptInfo0 = false;
+                    });
+            }
+            */
             //end
             if (game.inputState == 5 && game.winner > -1) {
                 const winnerNum = getPlayerIndexByNum(game.players, game.winner);
@@ -431,29 +418,11 @@ function indexSideSocket() {
                     () => {
                         console.log(`output ${game.inputState}`);
                     });
-                /*
-                const gameMessage = document.getElementById("game-message");
-                gameMessage.innerHTML = `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`;
-                const foreground = document.getElementById("foreground-container");
-                foreground.style.display = "block";
-                const gameMessageConteiner = document.getElementById("game-message-conteiner");
-                gameMessageConteiner.style.display = "block";
-                const accaptGameMessageButton = document.getElementById("accapt-game-message");
-                accaptGameMessageButton.addEventListener("click", (event) => {
-                    accaptGameMessageButton.replaceWith(accaptGameMessageButton.cloneNode(true));
- 
-                    foreground.style.display = "none";
-                    gameMessageConteiner.style.display = "none";
- 
-                    //socket.emit("gameAction", { type: game.inputState, value: 0 });
-                    console.log(`output ${game.inputState}`);
-   
-                });
-                */
             }
             gameInfoDiv.style.display = "block";
         } else {
             gameInfoDiv.style.display = "none";
+            foreground.style.display = "none";
         }
         console.log(msgs);
 

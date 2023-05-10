@@ -156,10 +156,16 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
             // remove old room if empty
             if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
                delete rooms[roomId];
+
                const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
-               if (indexInRoomIdsToFind < 0) {
+               console.log("roomId: " + roomId)
+               console.log(roomIdsToFind);
+               console.log("indexInRoomIdsToFind " + indexInRoomIdsToFind)
+               if (indexInRoomIdsToFind > -1) {
+                  console.log(`removed ${roomId} from roomIdsToFind`);
                   roomIdsToFind.splice(indexInRoomIdsToFind, 1);
                }
+
                console.log(`${roomId} room delete`);
             } else {
                console.log(`${roomId} rooms kept alive`)
@@ -174,7 +180,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
    }
 }
 
-export function changeReadiness(room, roomId, io, socket, status) {
+export function changeReadiness(room, roomId, io, socket, status, roomIdsToFind) {
    if (!room) {
       return;
    }
@@ -209,8 +215,13 @@ export function changeReadiness(room, roomId, io, socket, status) {
    }
 
    room.state = 1;
+
    const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
-   if (indexInRoomIdsToFind < 0) {
+   console.log("roomId: " + roomId)
+   console.log(roomIdsToFind);
+   console.log("indexInRoomIdsToFind " + indexInRoomIdsToFind)
+   if (indexInRoomIdsToFind > -1) {
+      console.log(`removed ${roomId} from roomIdsToFind`);
       roomIdsToFind.splice(indexInRoomIdsToFind, 1);
    }
 
