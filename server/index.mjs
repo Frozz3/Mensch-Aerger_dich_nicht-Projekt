@@ -141,7 +141,13 @@ io.on('connection', async (socket) => {
       if (!room) {
          return;
       }
-      changeReadiness(room, currentRoomId, io, socket, status, roomIdsToFind);
+      let ok = changeReadiness(room, currentRoomId, io, socket, status, roomIdsToFind);
+
+      console.log("roomId: " + currentRoomId);
+      console.log(room);
+      if (!ok) {
+         return;
+      }
 
       if (room.state == 1) {
          room.game.temp.data = {
@@ -222,12 +228,11 @@ io.on('connection', async (socket) => {
 
             if (room.game.inputState == 2 && tempData) {
                firstOfInputType = true;
+               console.log("firstOfInputType");
             }
+            //test
 
             room.game.temp.data = { old: tempData, firstOfInputType: firstOfInputType }
-
-
-
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }
       } catch (error) {

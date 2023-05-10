@@ -182,10 +182,10 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
 
 export function changeReadiness(room, roomId, io, socket, status, roomIdsToFind) {
    if (!room) {
-      return;
+      return false;
    }
    if (room.state == 1) {
-      return;
+      return false;
    }
    const userindex = room.userAuthIds.indexOf(socket.data.authId);
    console.log(`${socket.data.authId} has index: ${userindex} and gets status: ${status}`);
@@ -206,12 +206,7 @@ export function changeReadiness(room, roomId, io, socket, status, roomIdsToFind)
    //Update roomstatus if all users are ready
    let numberOfAuthIds = countRoomAuthIds(room.userAuthIds);
    if (!allReady || (numberOfAuthIds <= 1)) {
-      console.log("sockets in group:");
-      console.log(io.sockets.adapter.rooms);
-      console.log("roomId: " + roomId);
-      console.log(room);
-      io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
-      return;
+      return true;
    }
 
    room.state = 1;
@@ -235,8 +230,6 @@ export function changeReadiness(room, roomId, io, socket, status, roomIdsToFind)
    }
 
    room.game = madn.createGameObject(numberOfAuthIds);
-   io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
-   console.log("roomId: " + roomId);
-   console.log(room);
+   return true;
 
 }

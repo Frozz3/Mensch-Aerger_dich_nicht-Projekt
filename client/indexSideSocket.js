@@ -192,10 +192,10 @@ function indexSideSocket() {
 
     let lastInputState;
     let lastPlayerInLine;
+    let lastUrl;
     socket.on('update', (msgs) => {
 
         console.log('update');
-        console.log(msgs[1])
 
         const roomId = msgs[0];
         const room = msgs[1];
@@ -258,13 +258,16 @@ function indexSideSocket() {
         gameDrawing: if (room.state) {
             const pawnConteiner = document.getElementById('pawn-container');
             let game = room.game;
-            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine && (infoUrl.getAttribute('value') == `${origin}/game/${roomId}`)) {
+            let currentUrl = infoUrl.getAttribute('value');
+            if (game.inputState == lastInputState && game.playerInLine == lastPlayerInLine && (currentUrl == lastUrl)) {
 
                 break gameDrawing;
             }
+            console.log("gameDrawing");
             messageCounter = 0
             lastInputState = game.inputState;
             lastPlayerInLine = game.playerInLine;
+            lastUrl = currentUrl;
 
             let clientIsPlayerInLine = false;
 
@@ -364,7 +367,7 @@ function indexSideSocket() {
                     100,
                     "Würfeln",
                     () => {
-                        socket.emit("gameAction", { type: game.inputState, value: 0 });
+                        socket.emit("gameAction", { type: game.inputState});
                         console.log(`output ${game.inputState}`);
                     });
             }
@@ -377,6 +380,13 @@ function indexSideSocket() {
                     "Akzeptieren", () => { });
             }
             //gameInfo
+            if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo0 = true;
+                //console.log("1test1234");
+            }
+            if (game.inputState == 2 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo1 = true;
+            }
             if (needToAccaptInfo1 && game.inputState == 2) {
                 createMessage(
                     foreground, "blablabla 2",
@@ -385,12 +395,6 @@ function indexSideSocket() {
                     () => {
                         needToAccaptInfo1 = false;
                     });
-            }
-            if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
-                needToAccaptInfo0 = true;
-                //console.log("1test1234");
-            } else if (game.inputState == 2 && game.temp.data && game.temp.data.firstOfInputType) {
-                needToAccaptInfo1 = true;
             }
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
@@ -424,15 +428,13 @@ function indexSideSocket() {
                     100,
                     "Akzeptieren",
                     () => {
-                        console.log(`output ${game.inputState}`);
                     });
             }
             gameInfoDiv.style.display = "block";
         } else {
             gameInfoDiv.style.display = "none";
+            foreground.style.display = "none";
         }
         console.log(msgs);
-
-        console.log(socket);
     });
 }
