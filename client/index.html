@@ -14,6 +14,7 @@
     <script language="javascript" type="text/javascript" src="change_button_player.js"></script>
     <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
     <script language="javascript" type="text/javascript" src="open_nav.js"></script>
+    <script src="burger.js"></script>
     <script src="collabsible.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -67,7 +68,7 @@
                 <div class="tab-body">
                     <div class="form-element">
                         <span class="text-logout">Wollen sie sich wirklich Abmelden?</span>
-                        <button id="logout-btn">Abmelden</button>            
+                        <button id="logout-btn">Abmelden</button>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,6 @@
                     <div class="menu_btn_burger">
                     </div>
                 </div>
-                <script src="burger.js"></script>
             </div>
             <h1>
                 MENSCH ÄRGERE DICH NICHT
@@ -91,7 +91,9 @@
                 <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
                 <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
                 <li id="login-list-item" class="nav-list-item">
-                    <button id="logout-button" class="nav-item" onclick="togglePopup()" style="display: none;">Logout</button>
+                    <button id="logout-button" class="nav-item" style="display: none;" onclick=togglePopup()>
+                        Logout
+                    </button>
                     <button id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
                 </li>
                 <script>
@@ -425,7 +427,7 @@
                 <div class="fot-content">
 
                     <h3>Mensch Ärgere Dich Nicht</h3>
-                    <p>Viel spaß beim spielen</p>  
+                    <p>Viel spaß beim spielen</p>
 
 
 

@@ -3,4 +3,5 @@ window.onload = function () {
     collabsible();
     indexSideSocket();
     loginLogic();
+    burgerMenu();
 }
