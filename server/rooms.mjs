@@ -156,10 +156,16 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
             // remove old room if empty
             if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
                delete rooms[roomId];
+
                const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
-               if (indexInRoomIdsToFind < 0) {
+               console.log("roomId: " + roomId)
+               console.log(roomIdsToFind);
+               console.log("indexInRoomIdsToFind " + indexInRoomIdsToFind)
+               if (indexInRoomIdsToFind > -1) {
+                  console.log(`removed ${roomId} from roomIdsToFind`);
                   roomIdsToFind.splice(indexInRoomIdsToFind, 1);
                }
+
                console.log(`${roomId} room delete`);
             } else {
                console.log(`${roomId} rooms kept alive`)
@@ -174,12 +180,12 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
    }
 }
 
-export function changeReadiness(room, roomId, io, socket, status) {
+export function changeReadiness(room, roomId, io, socket, status, roomIdsToFind) {
    if (!room) {
-      return;
+      return false;
    }
    if (room.state == 1) {
-      return;
+      return false;
    }
    const userindex = room.userAuthIds.indexOf(socket.data.authId);
    console.log(`${socket.data.authId} has index: ${userindex} and gets status: ${status}`);
@@ -200,17 +206,17 @@ export function changeReadiness(room, roomId, io, socket, status) {
    //Update roomstatus if all users are ready
    let numberOfAuthIds = countRoomAuthIds(room.userAuthIds);
    if (!allReady || (numberOfAuthIds <= 1)) {
-      console.log("sockets in group:");
-      console.log(io.sockets.adapter.rooms);
-      console.log("roomId: " + roomId);
-      console.log(room);
-      io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
-      return;
+      return true;
    }
 
    room.state = 1;
+
    const indexInRoomIdsToFind = roomIdsToFind.indexOf(roomId)
-   if (indexInRoomIdsToFind < 0) {
+   console.log("roomId: " + roomId)
+   console.log(roomIdsToFind);
+   console.log("indexInRoomIdsToFind " + indexInRoomIdsToFind)
+   if (indexInRoomIdsToFind > -1) {
+      console.log(`removed ${roomId} from roomIdsToFind`);
       roomIdsToFind.splice(indexInRoomIdsToFind, 1);
    }
 
@@ -224,8 +230,6 @@ export function changeReadiness(room, roomId, io, socket, status) {
    }
 
    room.game = madn.createGameObject(numberOfAuthIds);
-   io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
-   console.log("roomId: " + roomId);
-   console.log(room);
+   return true;
 
 }

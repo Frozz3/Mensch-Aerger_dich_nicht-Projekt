@@ -1,5 +1,6 @@
 body {
   background-color: rgb(80, 80, 80);
+  margin: 0;
 }
 
 * {
@@ -30,7 +31,22 @@ body {
 
 .uda {
   grid-area: uda;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+
+.username-label{
+  font-size: 30px;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.centered-span {
+  font-size: 50px;
+}
+
 
 .rng {
   grid-area: rng;
@@ -54,7 +70,7 @@ body {
   font-size: 25px;
   /*border: 1px solid black;*/
   background-color: #232220;
-
+  border-radius: 8px;
 }
 
 .rounded1:hover {
@@ -209,8 +225,6 @@ margin: 0 auto;
     linear-gradient(0deg, rgba(0, 0, 0, 0.9), hsla(0, 0%, 0%, 0.4)),
     url(picture/spielfeld2.jpg);
   background-size: 140%;
-  background-repeat: no-repeat;
-
   animation: animatedBackground 50s linear infinite;
   /* background-image: url('picture/spielfeld2.jpg'); */
 }
@@ -277,14 +291,14 @@ ul {
   background-color: lightgreen;
 }
 
-
+.collapsible {
+  display: none;
+}
 
 
 @media screen and (min-width: 801px) {
 
-  .collapsible {
-    display: none;
-  }
+ 
 
   .menu-btn-container {
     display: none;
@@ -297,22 +311,13 @@ ul {
   .nav-list-item {
     float: left;
   }
+
+
 }
 
 
 @media screen and (max-width: 800px) {
 
-  .collapsible {
-    display: block;
-    width: 40px;
-    height: 40px;
-    color: white;
-    background: transparent;
-    font-size: 40px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-  }
 
   .dontShowOnSmall {
     display: none;
@@ -328,6 +333,11 @@ ul {
 
   .nav-list-item {
     text-align: center;
+  }
+
+  h1{
+    font-size: 20px;
+    padding: 20px;
   }
 }
 
@@ -617,8 +627,6 @@ footer {
   }
 
   .wrapper {
-
-    margin: 0;
     grid-template-areas:
       "hdr hdr"
       "uda uda"
@@ -630,11 +638,7 @@ footer {
       "fot fot"
   }
 
-  body
-
-    {
-    margin: 0;
-  }
+  
 
   #open-close-nav {
     width: 100%;
@@ -652,8 +656,9 @@ footer {
     height: 50px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
+    rotate: 180deg;
   }
-
+  
   .menu_btn_burger {
     width: 50px;
     height: 6px;
@@ -662,7 +667,7 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before,
   .menu_btn_burger::after {
     content: "";
@@ -674,28 +679,30 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before {
     transform: translateY(-16px);
+    transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::after {
     transform: translateY(16px);
+    transition: all 0.5s ease-in-out;
   }
-
-  /*Animation*/
+  
+  /* Animation */
   .menu-btn.open .menu_btn_burger {
-    transform: translateX(-50px);
+    transform: translateX(0);
     background: transparent;
     box-shadow: none;
   }
-
+  
   .menu-btn.open .menu_btn_burger::before {
-    transform: rotate(45deg) translate(35px, -35px);
+    transform: translate(0, 0) rotate(45deg);
   }
-
+  
   .menu-btn.open .menu_btn_burger::after {
-    transform: rotate(-45deg) translate(35px, 35px);
+    transform: translate(0, 0) rotate(-45deg);
   }
 
   #open-close-nav {
@@ -708,13 +715,8 @@ footer {
 
   .wrapper {
     display: grid;
-  
   }
 
-  h1 {
-    font-size: 30px;
-    margin-top: 30px;
-  }
 
   .menu-btn {
     z-index: 50;
@@ -728,8 +730,9 @@ footer {
     height: 50px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
+    rotate: 180deg;
   }
-
+  
   .menu_btn_burger {
     width: 50px;
     height: 6px;
@@ -738,7 +741,7 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before,
   .menu_btn_burger::after {
     content: "";
@@ -750,28 +753,30 @@ footer {
     box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
     transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::before {
     transform: translateY(-16px);
+    transition: all 0.5s ease-in-out;
   }
-
+  
   .menu_btn_burger::after {
     transform: translateY(16px);
+    transition: all 0.5s ease-in-out;
   }
-
-  /*Animation*/
+  
+  /* Animation */
   .menu-btn.open .menu_btn_burger {
-    transform: translateX(-50px);
+    transform: translateX(0);
     background: transparent;
     box-shadow: none;
   }
-
+  
   .menu-btn.open .menu_btn_burger::before {
-    transform: rotate(45deg) translate(35px, -35px);
+    transform: translate(0, 0) rotate(45deg);
   }
-
+  
   .menu-btn.open .menu_btn_burger::after {
-    transform: rotate(-45deg) translate(35px, 35px);
+    transform: translate(0, 0) rotate(-45deg);
   }
 
   .nav-item {
@@ -843,5 +848,25 @@ footer {
 {
   h1 {
     font-size: 20px;
+    padding: 0;
+    margin-top: 30px;
   }
+  .wrapper
+
+    {
+    margin: 0;
+  }
+
+  .collapsible {
+    display: block;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background: transparent;
+    font-size: 40px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
 }

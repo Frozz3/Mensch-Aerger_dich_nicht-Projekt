@@ -2,17 +2,19 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="picture/favicon.ico">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="index.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <base href="/" />
-    <title>Startseite</title>
+    <title>Neuer Raum</title>
     <script language="javascript" type="text/javascript" src="copylink.js"></script>
     <script language="javascript" type="text/javascript" src="change_button_player.js"></script>
     <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
     <script language="javascript" type="text/javascript" src="open_nav.js"></script>
+    <script src="burger.js"></script>
     <script src="collabsible.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -66,7 +68,7 @@
                 <div class="tab-body">
                     <div class="form-element">
                         <span class="text-logout">Wollen sie sich wirklich Abmelden?</span>
-                        <button id="logout-btn">Abmelden</button>            
+                        <button id="logout-btn">Abmelden</button>
                     </div>
                 </div>
             </div>
@@ -79,7 +81,6 @@
                     <div class="menu_btn_burger">
                     </div>
                 </div>
-                <script src="burger.js"></script>
             </div>
             <h1>
                 MENSCH ÄRGERE DICH NICHT
@@ -90,7 +91,9 @@
                 <li class="nav-list-item"><a class="nav-item" href="./">Neuer Raum</a></li>
                 <li class="nav-list-item"><a class="nav-item" href="./rangliste">Rangliste/Statistik</a></li>
                 <li id="login-list-item" class="nav-list-item">
-                    <button id="logout-button" class="nav-item" onclick="togglePopup()" style="display: none;">Logout</button>
+                    <button id="logout-button" class="nav-item" style="display: none;" onclick=togglePopup()>
+                        Logout
+                    </button>
                     <button id="login-button" class="nav-item" onclick="togglePopup()">Login</button>
                 </li>
                 <script>
@@ -412,11 +415,11 @@
             </div>
         </div>
         <div id="collapsible_item2" class="content-buttons bordered hidden">
-            <button id="find-game-button" class="button button-search" type="button">Zufälliges Spiel!</button>
+            <button id="find-game-button" class="button button-search" type="button">Spiel suchen!</button>
             <br />
             <div class="copy">
                 <input type="text" value="" class="input-style" readonly id="roomLink">
-                <button class="button3 button" onclick="copylink()">Copy text</button>
+                <button class="button3 button" onclick="copylink()">Raum teilen</button>
             </div>
         </div>
         <div class="fot bordered">
@@ -424,8 +427,7 @@
                 <div class="fot-content">
 
                     <h3>Mensch Ärgere Dich Nicht</h3>
-                    Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit, sed do eiusmod tempor.
+                    <p>Viel spaß beim spielen</p>
 
 
 
@@ -435,7 +437,7 @@
                     <div class="fot-nav">
                         <ul class="fot-menu">
                             <li><a href="mailto:Ärger_dichGmbH@gmail.com">Kontakt</a></li>
-                            <li><a href="">Starteite</a></li>
+                            <li><a href="">Neuer Raum</a></li>
                         </ul>
                     </div>
                 </div>

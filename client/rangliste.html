@@ -2,16 +2,17 @@
 <html lang="de">
 
 <head>
+   <link rel="icon" href="picture/favicon.ico">
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Combatible" content="IE-edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <base href="/" />
    <link rel="stylesheet" href="rangliste.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   <title>TEST</title>
+   <title>Rangliste/Statistik</title>
    <script language="javascript" type="text/javascript" src="open_nav.js"></script>
    <script language="javascript" type="text/javascript" src="switch-tabs.js"></script>
-
+   <script src="burger.js"></script>
 
    <script src="/socket.io/socket.io.js"></script>
    <script src="socketConnection.js"></script>
@@ -79,7 +80,6 @@
                <div class="menu_btn_burger">
                </div>
             </div>
-            <script src="burger.js"></script>
          </div>
          <h1>
             MENSCH ÄRGERE DICH NICHT
@@ -105,7 +105,10 @@
       </header>
 
       <div class="uda bordered rounded3">
-         uda
+         <div class="centered-span">
+            <p class="username-label">Name:</p>
+            <span id="username-info">Hürgen555</span>
+        </div>
       </div>
       <div id="ranked" class="rng bordered rounded2">
          <h2 class="rangüberschrift">Rangliste</h2>
@@ -200,8 +203,7 @@
             <div class="fot-content">
 
                <h3>Mensch Ärgere Dich Nicht</h3>
-               Lorem ipsum dolor sit amet, consectetur
-               adipiscing elit, sed do eiusmod tempor.
+               <p>Viel spaß beim spielen</p>
 
 
 
@@ -211,7 +213,7 @@
                <div class="fot-nav">
                   <ul class="fot-menu">
                      <li><a href="mailto:Ärger_dichGmbH@gmail.com">Kontakt</a></li>
-                     <li><a href="index.html">Startseite</a></li>
+                     <li><a href="index.html">Neuer Raum</a></li>
                   </ul>
                </div>
             </div>

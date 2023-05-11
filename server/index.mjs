@@ -17,10 +17,10 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 dotenv.config({ path: __dirname + '../.env' })
 
 const DBOptions = {
-   host: process.env.HOST,
+   host: process.env.DBHOST,
    user: process.env.DBUSER,
-   password: process.env.PASSWORD,
-   database: 'lfup',
+   password: process.env.DBPASSWORD,
+   database: process.env.DBNAME,
    port: process.env.DBPORT,
    allowPublicKeyRetrieval: true
 };
@@ -138,22 +138,34 @@ io.on('connection', async (socket) => {
 
    socket.on('changeReadiness', (status) => {
       const room = rooms[currentRoomId]
-      changeReadiness(room, currentRoomId, io, socket, status);
+      if (!room) {
+         return;
+      }
+      let ok = changeReadiness(room, currentRoomId, io, socket, status, roomIdsToFind);
+
+      console.log("roomId: " + currentRoomId);
+      console.log(room);
+      if (!ok) {
+         return;
+      }
 
       if (room.state == 1) {
          room.game.temp.data = {
             new: {
                value: room.game.temp.dicevelue,
                player: room.game.playerInLine,
-            }, old: null
+            },firstOfInputType: true
          }
       }
+      io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
    });
 
    socket.on('gameAction', (playerAction) => {
       try {
-
-         const room = rooms[currentRoomId];
+         const room = rooms[currentRoomId]
+         if (!room) {
+            return;
+         }
          if (room.state == 0) {
             return;
          }
@@ -212,8 +224,15 @@ io.on('connection', async (socket) => {
 
             }
 
-            room.game.temp.data = { old: room.game.temp.data.new, new: tempData }
+            let firstOfInputType = false;
 
+            if (room.game.inputState == 2 && tempData) {
+               firstOfInputType = true;
+               console.log("firstOfInputType");
+            }
+            //test
+
+            room.game.temp.data = { old: tempData, firstOfInputType: firstOfInputType }
             io.to(currentRoomId).emit('update', [currentRoomId, formateRoomForUpdate(room)]);
          }
       } catch (error) {
@@ -250,8 +269,8 @@ io.on('connection', async (socket) => {
 
    //stats
    socket.on('readStats', async () => {
-      const [stats, ranklist] = await getStats(pool, socket.data.authId);
-      socket.emit('stats', stats, ranklist)
+      const [name,stats, ranklist] = await getStats(pool, socket.data.authId);
+      socket.emit('stats',name, stats, ranklist)
    });
 
    //login

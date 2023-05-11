@@ -2,6 +2,8 @@ function indexSideSocket() {
 
     socket.emit('readStats');
 
+    const usernameElement = document.querySelector("#username-info");
+
     const playedGames = document.querySelector("#stat-played-games > div > .numbersp");
     const wonGames = document.querySelector("#stat-won-games > div > .numbersp"); 
     const lostGames = document.querySelector("#stat-lost-games > div > .numbersp"); 
@@ -13,7 +15,12 @@ function indexSideSocket() {
     const rankPlayer = document.querySelector("#rankedT > .spieler");
     const rankWins = document.querySelector("#rankedT > .siege");
 
-    socket.on('stats', (stats,ranklist) => {
+    socket.on('stats', (name,stats,ranklist) => {
+        console.log("name");
+        console.log(name);
+
+        usernameElement.innerHTML = name;
+        
         console.log("stats");
         console.log(stats);
         playedGames.innerHTML = stats.playedGames;
