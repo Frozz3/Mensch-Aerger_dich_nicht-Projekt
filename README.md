@@ -12,7 +12,7 @@ Schritt 4: Datenbank "lfup" erstellen
 
 Schritt 5: lfupv4 (Server Ordner) importieren.
 
-Schritt 6: "nmp i" in der Konsole eingeben um Pakete herunterzuladen.
+Schritt 6: "npm i" in der Konsole eingeben um Pakete herunterzuladen.
 
 Schritt 7: Dotenv (.env) Datei erstellen und folgenden Daten eintragen (WICHTIG: Im Projekt Ordner nicht in einem Unterordner).
 
