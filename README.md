@@ -10,7 +10,7 @@ Schritt 3: Node.js herunterladen.
 
 Schritt 4: Datenbank "lfup" erstellen 
 
-Schritt 5: lfupv3 (Server Ordner) importieren.
+Schritt 5: lfupv4 (Server Ordner) importieren.
 
 Schritt 6: "nmp i" in der Konsole eingeben um Pakete herunterzuladen.
 
