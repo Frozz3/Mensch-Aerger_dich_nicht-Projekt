@@ -1,6 +1,6 @@
 # Mensch-Aerger_dich_nicht-Projekt
 
-Anleitung zum Deploy (aufsetzten der Seite auf Lokalem Server):
+Anleitung zum deployen (aufsetzten der Seite auf Lokalem Server):
 
 Schritt 1: Git herunterladen.
 
@@ -28,9 +28,9 @@ HTTPS_CERT_PATH=""
 
 Schritt 9: XAAMP: nur mySQL Starten.
 
-Schritt 10: in Konsole "node ./server/index.mjs" eintragen um Server zu starten.
-Wenn Anmeldung benötigt wird:
-username = username
+Schritt 10: in Konsole "node ./server/index.mjs" eintragen um Server zu starten.   
+Wenn Anmeldung benötigt wird:     
+username = username    
 password = password
 
 
