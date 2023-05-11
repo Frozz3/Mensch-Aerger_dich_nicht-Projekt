@@ -10,20 +10,34 @@ Schritt 3: Node.js herunterladen.
 
 Schritt 4: Datenbank "lfup" erstellen 
 
-Schritt 5: lfupv3 (Server Ordner) importieren.
+Schritt 5: lfupv4 (Server Ordner) importieren.
 
-Schritt 6: "nmp i" in der Konsole eingeben um Pakete herunterzuladen.
+Schritt 6: "npm i" in der Konsole eingeben um Pakete herunterzuladen.
 
 Schritt 7: Dotenv (.env) Datei erstellen und folgenden Daten eintragen (WICHTIG: Im Projekt Ordner nicht in einem Unterordner).
 
-Datenbank HOST: DBHOST="127.0.0.1"      
-Datenbank Benutzer: DBUSER="root"   
-Datenbank Passwort: DBPASSWORD=""  
-Datenbank Name: DBNAME ="lfup"     
-Datenbank Port: DBPORT="3306"  
-Server Port: PORT="80"     
+env Inhalt:
+
+ #Datenbank HOST                   
+DBHOST="127.0.0.1"   
+
+#Datenbank Benutzer   
+DBUSER="root"      
+
+#Datenbank Passwort                   
+DBPASSWORD=""  
+
+#Datenbank Name                   
+DBNAME ="lfup"   
+
+#Datenbank Port                   
+DBPORT="3306"  
+
+#Server Port  
+PORT="80"     
+
 IS_HTTPS="false"
-HTTPS_KEY_PATH=""
+HTTPS_KEY_PATH=""               
 HTTPS_CERT_PATH=""
 
 Schritt 9: XAAMP: nur mySQL Starten.
