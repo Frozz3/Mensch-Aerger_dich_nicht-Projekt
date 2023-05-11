@@ -153,6 +153,12 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
             room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0 };
             console.log(`${socket.data.authId} removed from room ${roomId}`);
 
+            //console.log(room.state);
+            
+            if (room.state == true) {
+               socket.emit('error', "player left the game. game stopped", { roomId: roomId });
+            }
+
             // remove old room if empty
             if ((room.emptySince == timeStamp) && (countRoomAuthIds(room.userAuthIds) === 0)) {
                delete rooms[roomId];
