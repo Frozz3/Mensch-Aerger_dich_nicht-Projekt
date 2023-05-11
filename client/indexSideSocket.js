@@ -358,7 +358,23 @@ function indexSideSocket() {
                     }
                 }
             }
-
+            //gameInfo
+            if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo0 = true;
+            }
+            if (game.inputState == 2 && game.temp.data && game.temp.data.firstOfInputType) {
+                needToAccaptInfo1 = true;
+            }
+            if (needToAccaptInfo1 && game.inputState == 2) {
+                createMessage(
+                    foreground,
+                    "Spieler " + getColorOfPlayerIndex(getPlayerIndexByNum(game.players, game.temp.data.old.player))[1] + " hat die höchste zahl gewürfelt und fängt an",
+                    100,
+                    "Akzeptieren",
+                    () => {
+                        needToAccaptInfo1 = false;
+                    });
+            }
             //dice
             if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
                 createMessage(
@@ -367,7 +383,7 @@ function indexSideSocket() {
                     100,
                     "Würfeln",
                     () => {
-                        socket.emit("gameAction", { type: game.inputState});
+                        socket.emit("gameAction", { type: game.inputState });
                         console.log(`output ${game.inputState}`);
                     });
             }
@@ -379,23 +395,7 @@ function indexSideSocket() {
                     100,
                     "Akzeptieren", () => { });
             }
-            //gameInfo
-            if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
-                needToAccaptInfo0 = true;
-                //console.log("1test1234");
-            }
-            if (game.inputState == 2 && game.temp.data && game.temp.data.firstOfInputType) {
-                needToAccaptInfo1 = true;
-            }
-            if (needToAccaptInfo1 && game.inputState == 2) {
-                createMessage(
-                    foreground, "blablabla 2",
-                    100,
-                    "Akzeptieren",
-                    () => {
-                        needToAccaptInfo1 = false;
-                    });
-            }
+
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
                 createMessage(
@@ -410,7 +410,7 @@ function indexSideSocket() {
             //gameInfo
             if (needToAccaptInfo0 && game.inputState == 1) {
                 createMessage(
-                    foreground, "blablabla 1",
+                    foreground, "Jeder Spieler würfelt einmal. Der spieler mit der höchsten Zahl beginnt das Spiel.",
                     100,
                     "Akzeptieren",
                     () => {
