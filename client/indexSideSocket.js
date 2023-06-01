@@ -76,19 +76,19 @@ function getColorOfPlayerIndex(playerIndex) {
         case 0:
             color = "yellow";
 
-            colorText = "gelb";
+            colorText = "Gelb";
             break;
         case 1:
             color = "green";
-            colorText = "grün";
+            colorText = "Grün";
             break;
         case 2:
             color = "red";
-            colorText = "rot";
+            colorText = "Rot";
             break;
         case 3:
             color = "blue";
-            colorText = "blue";
+            colorText = "Blau";
             break;
         default:
             break;
@@ -300,11 +300,11 @@ function indexSideSocket() {
             }
             const diceValue = document.getElementById("dice-value");
             diceValue.innerHTML = game.temp.dicevelue;
-            let playerIndex = getPlayerIndexByNum(game.players, game.playerInLine);
-            const [color, colorText] = getColorOfPlayerIndex(playerIndex);
+            let playerInLineIndex = getPlayerIndexByNum(game.players, game.playerInLine);
+            const [color, colorText] = getColorOfPlayerIndex(playerInLineIndex);
 
             const colorElement = document.getElementById("player-in-line-color");
-            colorElement.innerHTML = colorText;
+            colorElement.innerHTML = room.userData[playerInLineIndex].name;  //colorText; //todo inlinePlayer name
             colorElement.style.color = color;
 
             //draw pawnpositions
@@ -358,6 +358,19 @@ function indexSideSocket() {
                     }
                 }
             }
+            
+            //dice
+            if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
+                createMessage(
+                    foreground,
+                    "",
+                    100,
+                    "Würfeln",
+                    () => {
+                        socket.emit("gameAction", { type: game.inputState });
+                        console.log(`output ${game.inputState}`);
+                    });
+            }
             //gameInfo
             if (game.inputState == 1 && game.temp.data && game.temp.data.firstOfInputType) {
                 needToAccaptInfo0 = true;
@@ -375,18 +388,6 @@ function indexSideSocket() {
                         needToAccaptInfo1 = false;
                     });
             }
-            //dice
-            if (clientIsPlayerInLine && (game.inputState == 2 || game.inputState == 1)) {
-                createMessage(
-                    foreground,
-                    "",
-                    100,
-                    "Würfeln",
-                    () => {
-                        socket.emit("gameAction", { type: game.inputState });
-                        console.log(`output ${game.inputState}`);
-                    });
-            }
             console.log(game.temp.data);
             if (game.temp.data && game.temp.data.old) {
                 createMessage(
@@ -399,7 +400,8 @@ function indexSideSocket() {
             //message
             if (clientIsPlayerInLine && game.inputState == 4) {
                 createMessage(
-                    foreground, game.temp.msg,
+                    foreground, 
+                    game.temp.msg,
                     100,
                     "Akzeptieren",
                     () => {
@@ -410,7 +412,8 @@ function indexSideSocket() {
             //gameInfo
             if (needToAccaptInfo0 && game.inputState == 1) {
                 createMessage(
-                    foreground, "Jeder Spieler würfelt einmal. Der spieler mit der höchsten Zahl beginnt das Spiel.",
+                    foreground, 
+                    "Jeder Spieler würfelt einmal. Der spieler mit der höchsten Zahl beginnt das Spiel.",
                     100,
                     "Akzeptieren",
                     () => {
@@ -422,9 +425,9 @@ function indexSideSocket() {
             if (game.inputState == 5 && game.winner > -1) {
                 const winnerNum = getPlayerIndexByNum(game.players, game.winner);
                 const [color, colorText] = getColorOfPlayerIndex(winnerNum);
-
                 createMessage(
-                    foreground, `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`,
+                    foreground, 
+                    `Spieler <span style="color: ${color};"> ${colorText} </span> hat gewonnen!`,
                     100,
                     "Akzeptieren",
                     () => {

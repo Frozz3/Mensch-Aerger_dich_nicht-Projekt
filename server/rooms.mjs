@@ -130,6 +130,7 @@ export function joinRoom(room, roomId, io, socket) {
 export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
    try {
 
+      const oldRoomId = roomId;
       const room = rooms[roomId];
       //remove socket-connection to room
       socket.leave(roomId);
@@ -146,7 +147,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
       // if room is empty, set emptysince
       if (countRoomAuthIds(room.userAuthIds) === 0) {
          room.emptySince = timeStamp
-         console.log(`${roomId} room empty ${room.emptySince}`)
+         console.log(`${oldRoomId} room empty ${room.emptySince}`)
       }
       //wait for rejoin
       setTimeout(() => {
@@ -154,12 +155,12 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
          if (room.userData[roomIndexOfSocket].leftSince == timeStamp) {
             room.userAuthIds[roomIndexOfSocket] = null;
             room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0, num: null };
-            console.log(`${socket.data.authId} removed from room ${roomId}`);
+            console.log(`${socket.data.authId} removed from room ${oldRoomId}`);
 
             //console.log(room.state);
 
             if (room.state == true) {
-               socket.emit('error', "player left the game. game stopped", { roomId: roomId });
+               io.to(roomId).emit('error', "player left the game. game stopped", { roomId: oldRoomId });
             }
 
             // remove old room if empty
@@ -181,7 +182,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
             }
          }
 
-         io.to(roomId).emit('update', [roomId, formateRoomForUpdate(room)]);
+         io.to(roomId).emit('update', [oldRoomId, formateRoomForUpdate(room)]);
       }, 1000);
    } catch (error) {
       console.log(error);
