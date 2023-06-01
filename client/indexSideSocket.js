@@ -220,7 +220,7 @@ function indexSideSocket() {
             playerNames[i].setAttribute('style', "");
             playerReadiness[i].setAttribute('value', "");
             playerReadiness[i].setAttribute('style', "");
-            playerReadiness[i].innerHTML = "Nicht Breit";
+            playerReadiness[i].innerHTML = "Nicht Bereit";
 
             if (room.userData[i].name !== null) {
                 playerReadiness[i].setAttribute('value', room.userData[i].status);
@@ -244,7 +244,7 @@ function indexSideSocket() {
                         playerReadiness[i].innerHTML = "Bereit";
                     }
                     else {
-                        playerReadiness[i].innerHTML = "Nicht Breit";
+                        playerReadiness[i].innerHTML = "Nicht Bereit";
                     }
                 }
             } else if (room.state) {
