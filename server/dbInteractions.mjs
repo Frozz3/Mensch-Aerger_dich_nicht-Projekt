@@ -55,7 +55,7 @@ export async function fetchUserdata(socketData, pool) {
       const result = await pool.query("select ld.id ldId, u.* from users u left join login_data ld on u.id = ld.usersId WHERE u.authId = (?);", [socketData.authId]);
       socketData.name = result[0].username;
       socketData.loggedIn = (result[0].ldId == null) ? false : true;
-      console.log(socketData.logedIn);
+      console.log("loggedIn:",socketData.loggedIn);
    } catch (error) {
       throw error;
    }
@@ -122,7 +122,7 @@ export async function registerUser(pool, authId, name, pw, email) {
       }
 
       const hash = await bcrypt.hash(pw, saltRounds);
-      console.log(hash)
+      console.log("hash:",hash)
       await pool.query("insert into login_data (usersId, email, password) select id, (?),(?) from users where authId = (?);", [email, hash, authId]);
 
       await pool.query("update users set username = (?) where authId = (?);", [name, authId]);
