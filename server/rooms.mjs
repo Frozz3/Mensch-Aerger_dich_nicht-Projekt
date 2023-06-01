@@ -58,10 +58,17 @@ export function joinRoom(room, roomId, io, socket) {
 
          if (element == socket.data.authId) {
             if (room.userData[index].leftSince == 0) {
-               console.log(`${socket.data.authId} did not join room ${roomId} because it was already connected: ${element.authId}`);
-               socket.emit('error', "already connected", { roomId: roomId });
-               alreadyConnected = true;
-            } else {
+               // fixes Race-Condition by rejoin
+               setTimeout(() => {
+                  if (room.userData[index].leftSince == 0) {
+                     console.log("left since:", room.userData[index].leftSince);
+                     console.log(`${socket.data.authId} did not join room ${roomId} because it was already connected: ${element}`);
+                     socket.emit('error', "already connected", { roomId: roomId });
+                     alreadyConnected = true;
+                  }
+               }, 100);
+            }
+            if (!alreadyConnected) {
                room.userData[index].name = socket.data.name;
                room.userData[index].leftSince = 0;
 
@@ -133,12 +140,13 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
       socket.leave(roomId);
 
       let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
-      let timeStamp = Date.now();
+      
+      // store the time the user left (override old)
+      room.userData[roomIndexOfSocket].leftSince = Date.now();
+      let timeStamp = room.userData[roomIndexOfSocket].leftSince
       console.log("authId:", socket.data.authId);
       console.log(room);
 
-      // store the time the user left (override old)
-      room.userData[roomIndexOfSocket].leftSince = timeStamp;
 
       // if room is empty, set emptysince
       if (countRoomAuthIds(room.userAuthIds) === 0) {
@@ -150,7 +158,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
          //leave room if leftsince has not changed
          if (room.userData[roomIndexOfSocket].leftSince == timeStamp) {
             room.userAuthIds[roomIndexOfSocket] = null;
-            room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0 };
+            room.userData[roomIndexOfSocket] = { name: null, status: null, leftSince: 0, num: null };
             console.log(`${socket.data.authId} removed from room ${roomId}`);
 
             //console.log(room.state);
