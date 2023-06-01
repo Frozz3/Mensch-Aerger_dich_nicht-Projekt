@@ -58,15 +58,10 @@ export function joinRoom(room, roomId, io, socket) {
 
          if (element == socket.data.authId) {
             if (room.userData[index].leftSince == 0) {
-               // fixes Race-Condition by rejoin
-               setTimeout(() => {
-                  if (room.userData[index].leftSince == 0) {
-                     console.log("left since:", room.userData[index].leftSince);
-                     console.log(`${socket.data.authId} did not join room ${roomId} because it was already connected: ${element}`);
-                     socket.emit('error', "already connected", { roomId: roomId });
-                     alreadyConnected = true;
-                  }
-               }, 100);
+               console.log("left since:", room.userData[index].leftSince);
+               console.log(`${socket.data.authId} did not join room ${roomId} because it was already connected: ${element}`);
+               socket.emit('error', "already connected", { roomId: roomId });
+               alreadyConnected = true;
             }
             if (!alreadyConnected) {
                room.userData[index].name = socket.data.name;
@@ -140,7 +135,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
       socket.leave(roomId);
 
       let roomIndexOfSocket = room.userAuthIds.indexOf(socket.data.authId);
-      
+
       // store the time the user left (override old)
       room.userData[roomIndexOfSocket].leftSince = Date.now();
       let timeStamp = room.userData[roomIndexOfSocket].leftSince
@@ -162,7 +157,7 @@ export function leaveRoom(rooms, roomId, io, socket, roomIdsToFind) {
             console.log(`${socket.data.authId} removed from room ${roomId}`);
 
             //console.log(room.state);
-            
+
             if (room.state == true) {
                socket.emit('error', "player left the game. game stopped", { roomId: roomId });
             }
