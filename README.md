@@ -37,7 +37,9 @@ DBPORT="3306"
 PORT="80"     
 
 IS_HTTPS="false"
-HTTPS_KEY_PATH=""               
+
+HTTPS_KEY_PATH=""
+          
 HTTPS_CERT_PATH=""
 
 Schritt 9: XAAMP: nur mySQL Starten.
